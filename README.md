@@ -1,3 +1,3 @@
 # Tetris game
 
-Nuxt3 tetris game example
+Nuxt3 tetris game
