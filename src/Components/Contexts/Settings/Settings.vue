@@ -1,6 +1,6 @@
 <template>
     <div class="settings screen">
         <a @click.prevent="$emit('back')" class="back" href="#">Назад &rarr;</a>
-        Настройки
+        {{ $services.lang.t('Settings') }}
     </div>
 </template>

@@ -1,6 +1,8 @@
 <template>
     <div class="game screen">
-        <a @click.prevent="$emit('back')" class="back" href="#">Назад &rarr;</a>
+        <a @click.prevent="$emit('back')" class="back" href="#">
+            {{ $services.lang.t('Back') }} &rarr;
+        </a>
         <GridView />
     </div>
 </template>
