@@ -1,27 +1,19 @@
 <template>
     <div ref="gridView" class="grid-view">
-        <Pixel class="etalon-pixel" ref="etalonPixel" />
-        <Pixel v-for="_ in pixelsCount" />
+        <div v-for="column in grid" class="row">
+            <Pixel :filled="pixel" v-for="pixel in column" />
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "#imports";
 import Pixel from "@/src/Components/Contexts/GridView/Pixel.vue";
 
-const gridView = ref(null);
-const etalonPixel = ref(null);
-const pixelsCount = ref(1);
-
-onMounted(() => {
-    const gridElement = gridView.value as HTMLElement;
-    const {clientHeight, clientWidth} = gridElement;
-    const etalonPixelElement = etalonPixel.value as any;
-    // +2 потому что границы есть
-    const pixelSize = etalonPixelElement.$el.clientHeight + 3;
-    const {floor} = Math;
-
-    pixelsCount.value = floor(clientWidth / pixelSize) * floor(clientHeight / pixelSize);
+defineProps({
+    grid: {
+        type: Array,
+        default: () => [[]],
+    },
 });
 </script>
 
@@ -38,7 +30,6 @@ onMounted(() => {
     align-content: flex-start;
     flex-grow: 1;
     overflow: hidden;
-    gap: 1px;
 }
 
 .etalon-pixel {
