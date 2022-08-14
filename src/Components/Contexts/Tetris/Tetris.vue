@@ -13,9 +13,10 @@
 </template>
 
 <script setup>
-import Menu from "@/src/Components/Contexts/Menu/Menu";
-import Settings from "@/src/Components/Contexts/Settings/Settings";
-import TetrisGame from "~/src/Components/Contexts/Tetris/TetrisGame";
+import { ref } from "#imports";
+import Menu from "@/src/Components/Contexts/Menu/Menu.vue";
+import Settings from "@/src/Components/Contexts/Settings/Settings.vue";
+import TetrisGame from "@/src/Components/Contexts/Tetris/TetrisGame.vue";
 
 const screen = ref('');
 
