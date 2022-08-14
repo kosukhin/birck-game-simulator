@@ -39,6 +39,8 @@ body {
     flex-direction: column;
     gap: 8px;
     background: #fff;
+    box-sizing: border-box;
+    padding-top: 12px;
 }
 
 .back {
@@ -46,5 +48,6 @@ body {
     top: 0;
     right: 0;
     font-size: 12px;
+    z-index: 1;
 }
 </style>
