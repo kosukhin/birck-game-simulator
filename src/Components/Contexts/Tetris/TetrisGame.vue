@@ -10,8 +10,6 @@
 <script setup>
 import GridView from "~~/src/Components/Contexts/GridView/GridView.vue";
 
-const width = ref(10);
-const height = ref(11);
 const app = useNuxtApp();
 
 app.$services.keyboard.clearSubscribers();
