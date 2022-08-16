@@ -20,6 +20,6 @@ defineProps({
 }
 
 .filled {
-    background: pink;
+    background: red;
 }
 </style>

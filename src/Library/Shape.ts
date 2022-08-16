@@ -1,3 +1,5 @@
+import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
+
 /**
  * Одна фигура игры
  */
@@ -23,6 +25,10 @@ export class Shape {
             x: this.x,
             y: this.y,
         };
+    }
+
+    setBitmap(bitmap) {
+        this.bitmap = bitmap;
     }
 
     setPosition(x: number, y: number) {

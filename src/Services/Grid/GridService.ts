@@ -1,3 +1,4 @@
+import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Library/Shape";
 
 export class GridService {
@@ -10,13 +11,52 @@ export class GridService {
         this.clearGrid();
     }
 
+    canGoNextStep(): boolean {
+        if (!this.activeShape) {
+            return true;
+        }
+
+        const grid = this.girdArray;
+        const gridShape = this.activeShape.grid;
+        const y = Number(this.activeShape.position.y);
+        const x = Number(this.activeShape.position.x);
+        const bottomLine = gridShape[gridShape.length - 1];
+        let maxX = x;
+        const maxY = grid.length - 1;
+        bottomLine.reverse().forEach((val, index) => {
+            const relativeIndex = x + index;
+
+            if (val && maxX < relativeIndex) {
+                maxX = relativeIndex;
+            }
+        });
+
+        if (y === maxY) {
+            console.log('maxy');
+
+            return false;
+        }
+
+        for(const i in grid[y]) {
+            const ix = Number(i);
+            if (grid[y][i] && ix >= x && ix <= maxX) {
+                console.log('reached x', x, maxX);
+
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
     /**
      * Динамический геттер, который мержит
      * свое состояние состоянием текущей активной фигуры
      * @returns Array
      */
     getGrid() {
-        const grid = JSON.parse(JSON.stringify(this.girdArray));
+        const grid = ObjectsHelper.clone(this.girdArray);
         const app = useNuxtApp();
 
         if (!this.activeShape) {
@@ -24,7 +64,6 @@ export class GridService {
         }
 
         if (this.activeShape) {
-            const subGrid = this.createEmptyGrid();
             const activeShape = this.activeShape;
 
             // Копируем фигуру на грид
@@ -34,14 +73,7 @@ export class GridService {
 
                 for(const j in this.activeShape.grid[i]) {
 
-                    subGrid[x + Number(i)][y + Number(j)] = this.activeShape.grid[i][j];
-                }
-            }
-
-
-            for (const i in grid) {
-                for (const j in grid[i]) {
-                    grid[i][j] = grid[i][j] || subGrid[i][j];
+                    grid[x + Number(i)][y + Number(j)] = this.activeShape.grid[i][j];
                 }
             }
         }
@@ -69,7 +101,6 @@ export class GridService {
     }
 
     saveCurrentGrid() {
-        this.activeShape = undefined;
         this.girdArray = this.getGrid();
     }
 
