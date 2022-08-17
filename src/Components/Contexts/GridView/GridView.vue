@@ -24,12 +24,16 @@ defineProps({
     left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
+    display: block;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
     flex-grow: 1;
     overflow: hidden;
+}
+
+.row {
+    display: flex;
 }
 
 .etalon-pixel {

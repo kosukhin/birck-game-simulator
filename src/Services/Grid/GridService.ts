@@ -2,8 +2,8 @@ import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Library/Shape";
 
 export class GridService {
-    private width = 20;
-    private height = 30;
+    private width = 10;
+    private height = 10;
     private girdArray: number[][] = [];
     private activeShape?: Shape;
 
@@ -22,7 +22,7 @@ export class GridService {
         const x = Number(this.activeShape.position.x);
         const bottomLine = gridShape[gridShape.length - 1];
         let maxX = x;
-        const maxY = grid.length - 1;
+        const maxY = grid.length - gridShape.length;
         bottomLine.reverse().forEach((val, index) => {
             const relativeIndex = x + index;
 
@@ -32,16 +32,12 @@ export class GridService {
         });
 
         if (y === maxY) {
-            console.log('maxy');
-
             return false;
         }
 
         for(const i in grid[y]) {
             const ix = Number(i);
             if (grid[y][i] && ix >= x && ix <= maxX) {
-                console.log('reached x', x, maxX);
-
                 return false;
             }
         }
@@ -73,10 +69,14 @@ export class GridService {
 
                 for(const j in this.activeShape.grid[i]) {
 
-                    grid[x + Number(i)][y + Number(j)] = this.activeShape.grid[i][j];
+                    grid[y + Number(i)][x + Number(j)] = activeShape.grid[i][j];
                 }
             }
+
+            app.$services.logger.log('shape', activeShape.position);
         }
+
+        app.$services.logger.log('shape', grid);
 
         return grid;
     }
@@ -107,10 +107,10 @@ export class GridService {
     createEmptyGrid() {
         const newGrid = [];
 
-        for (let i = 0; i < this.width; i++) {
+        for (let i = 0; i < this.height; i++) {
             newGrid[i] || (newGrid[i] = []);
 
-            for (let j = 0; j < this.height; j++) {
+            for (let j = 0; j < this.width; j++) {
                 newGrid[i][j] = 0;
             }
         }

@@ -21,7 +21,7 @@ app.$services.game.run(() => {
     const shape = app.$services.grid.getActiveShape();
     const nextStep = app.$services.grid.canGoNextStep();
 
-    console.log('nuxtStep', nextStep);
+    app.$services.logger.log('move', 'nuxtStep', nextStep);
 
     if (!nextStep) {
         app.$services.grid.saveCurrentGrid();
@@ -53,17 +53,14 @@ app.$services.keyboard.registerKeySubscriber(key => {
     }
 
     if (key === 's') {
-        console.log('down');
         position.y = y + 1;
     }
 
     if (key === 'a') {
-        console.log('left');
         position.x = x - 1;
     }
 
     if (key === 'd') {
-        console.log('right');
         position.x = x + 1;
     }
 

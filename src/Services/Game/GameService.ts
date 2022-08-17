@@ -17,7 +17,9 @@ export class GameService {
 
     addRandomShapeToGrid() {
         const app = useNuxtApp();
-        const bitmap = Shapes[Math.round(Math.random()*Shapes.length) - 1];
+        const index = Math.round(Math.random()*(Shapes.length - 1));
+        app.$services.logger.log('shape', index);
+        const bitmap = Shapes[index];
         const shape = new Shape(bitmap);
         app.$services.grid.addActiveShape(shape);
     }
