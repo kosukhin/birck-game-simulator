@@ -27,6 +27,18 @@ export class Shape {
         };
     }
 
+    get maxX(): number {
+        const xAdd = Number(this.bitmap[0].length);
+
+        return this.x + xAdd;
+    }
+
+    get maxY(): number {
+        const yAdd = Number(this.bitmap.length);
+
+        return this.y + yAdd;
+    }
+
     setBitmap(bitmap) {
         this.bitmap = bitmap;
     }

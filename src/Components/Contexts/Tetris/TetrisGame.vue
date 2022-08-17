@@ -64,6 +64,7 @@ app.$services.keyboard.registerKeySubscriber(key => {
         position.x = x + 1;
     }
 
+    app.$services.logger.log('shape', 'new position', position);
     shape.setPosition(position.x, position.y);
     updateCounter.value++;
 });

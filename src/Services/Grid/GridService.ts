@@ -3,7 +3,7 @@ import { Shape } from "~~/src/Library/Shape";
 
 export class GridService {
     private width = 10;
-    private height = 10;
+    private height = 15;
     private girdArray: number[][] = [];
     private activeShape?: Shape;
 
@@ -16,6 +16,7 @@ export class GridService {
             return true;
         }
 
+        const shape = this.activeShape;
         const grid = this.girdArray;
         const gridShape = this.activeShape.grid;
         const y = Number(this.activeShape.position.y);
@@ -35,13 +36,11 @@ export class GridService {
             return false;
         }
 
-        for(const i in grid[y]) {
-            const ix = Number(i);
-            if (grid[y][i] && ix >= x && ix <= maxX) {
+        for (let ix = x; ix <= shape.maxX; ix++) {
+            if (grid[shape.maxY][ix]) {
                 return false;
             }
         }
-
 
         return true;
     }
@@ -67,9 +66,26 @@ export class GridService {
                 let x = Number(activeShape.position.x);
                 let y = Number(activeShape.position.y);
 
-                for(const j in this.activeShape.grid[i]) {
+                app.$services.logger.log(
+                    'max',
+                    'maxX', activeShape.maxX,
+                    'maxY', activeShape.maxY,
+                )
 
-                    grid[y + Number(i)][x + Number(j)] = activeShape.grid[i][j];
+                if (activeShape.maxX > this.width) {
+                    x = this.width - activeShape.maxX;
+                    activeShape.setPosition(x, y);
+                }
+
+                if (activeShape.position.x < 0) {
+                    x = 0;
+                    activeShape.setPosition(x, y);
+                }
+
+                for(const j in this.activeShape.grid[i]) {
+                    const nextY = y + Number(i);
+                    const nextX = x + Number(j);
+                    grid[nextY][nextX] = activeShape.grid[i][j];
                 }
             }
 

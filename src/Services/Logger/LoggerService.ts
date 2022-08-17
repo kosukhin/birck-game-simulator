@@ -2,7 +2,8 @@
 export class LoggerService {
     private config = {
         limit: true,
-        shape: true,
+        shape: false,
+        max: true,
     }
 
     log(tag, ...rest) {
