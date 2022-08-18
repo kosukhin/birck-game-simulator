@@ -15,7 +15,7 @@ import Tetris from "~/src/Components/Contexts/Tetris/Tetris.vue";
 }
 
 a {
-    color: cornflowerblue;
+    color: #000200;
     text-decoration: none;
 }
 
@@ -38,7 +38,7 @@ body {
     justify-content: center;
     flex-direction: column;
     gap: 8px;
-    background: #fff;
+    background: #9fb08f;
     box-sizing: border-box;
     padding-top: 12px;
 }

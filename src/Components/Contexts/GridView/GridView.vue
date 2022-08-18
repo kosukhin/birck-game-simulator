@@ -34,6 +34,7 @@ defineProps({
 
 .row {
     display: flex;
+    margin-bottom: 1px;
 }
 
 .etalon-pixel {
@@ -41,5 +42,19 @@ defineProps({
     position: absolute;
     top: -999px;
     left: -999px;
+}
+</style>
+
+<style>
+.row .pixel {
+    margin-right: 1px;
+}
+
+.row .pixel:last-child {
+    border-right: solid 1px #000200;
+}
+
+.row:last-child .pixel {
+    border-bottom: solid 1px #000200;
 }
 </style>

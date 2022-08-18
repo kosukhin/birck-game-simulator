@@ -36,7 +36,7 @@ export class GridService {
             return false;
         }
 
-        for (let ix = x; ix <= shape.maxX; ix++) {
+        for (let ix = x; ix <= shape.maxX-1; ix++) {
             if (grid[shape.maxY][ix]) {
                 return false;
             }

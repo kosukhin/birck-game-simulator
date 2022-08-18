@@ -15,11 +15,22 @@ defineProps({
 .pixel {
     width: 10px;
     height: 10px;
-    border: solid 1px #eee;
-    background: #fff;
+    border: solid 1px transparent;
 }
 
 .filled {
-    background: red;
+    border: solid 1px #000200;
+    position: relative;
+}
+
+.filled::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 6px;
+    height: 6px;
+    background: #000200;
 }
 </style>

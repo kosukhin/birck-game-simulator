@@ -1,9 +1,9 @@
 
 export class LoggerService {
     private config = {
-        limit: true,
+        limit: false,
         shape: false,
-        max: true,
+        max: false,
     }
 
     log(tag, ...rest) {
