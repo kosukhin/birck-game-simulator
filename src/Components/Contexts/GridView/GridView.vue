@@ -1,7 +1,15 @@
 <template>
-    <div ref="gridView" class="grid-view">
-        <div v-for="column in grid" class="row">
-            <Pixel :filled="pixel" v-for="pixel in column" />
+    <div class="grid-view-wrapper">
+        <div class="grid-header">
+            Счет:
+            {{ $services.game.score }},
+            Скорость:
+            {{ $services.game.cycleSpeed }}
+        </div>
+        <div class="grid-view">
+            <div v-for="column in grid" class="row">
+                <Pixel :filled="pixel" v-for="pixel in column" />
+            </div>
         </div>
     </div>
 </template>

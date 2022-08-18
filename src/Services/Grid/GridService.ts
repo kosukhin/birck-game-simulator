@@ -1,8 +1,9 @@
+import ArrayHeler from "~~/src/Helpers/ArrayHeler";
 import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Library/Shape";
 
 export class GridService {
-    private width = 10;
+    public width = 10;
     private height = 15;
     private girdArray: number[][] = [];
     private activeShape?: Shape;
@@ -120,6 +121,16 @@ export class GridService {
         this.girdArray = this.getGrid();
     }
 
+    createEmptyRow() {
+        const newRow = [];
+
+        for (let i = 0; i < this.width; i++) {
+            newRow[i] = 0;
+        }
+
+        return newRow;
+    }
+
     createEmptyGrid() {
         const newGrid = [];
 
@@ -132,5 +143,26 @@ export class GridService {
         }
 
         return newGrid;
+    }
+
+    /**
+     * Проверяем заполненность линий
+     * @returns
+     */
+    checkLinesFilled() {
+        const lastLine = this.girdArray[this.height-1];
+
+        if (!ArrayHeler.isAllElementsEqualsTo(lastLine, 1)) {
+            return;
+        }
+
+        const app = useNuxtApp();
+        app.$services.game.score.value += 1;
+        app.$services.game.cycleSpeed.value -= app.$services.game.score.value * 5;
+        const newLine = this.createEmptyRow();
+        this.girdArray.splice(this.height-1, 1);
+        this.girdArray.unshift(newLine);
+        // Рекурсивно проверяем все заполненные линии
+        this.checkLinesFilled();
     }
 }

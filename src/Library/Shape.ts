@@ -39,6 +39,10 @@ export class Shape {
         return this.y + yAdd;
     }
 
+    get width(): number {
+        return this.bitmap[0].length;
+    }
+
     setBitmap(bitmap) {
         this.bitmap = bitmap;
     }

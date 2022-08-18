@@ -26,6 +26,7 @@ app.$services.game.run(() => {
     if (!nextStep) {
         app.$services.grid.saveCurrentGrid();
         counter.value = 1;
+        app.$services.grid.checkLinesFilled();
         app.$services.game.addRandomShapeToGrid();
         return true;
     }
