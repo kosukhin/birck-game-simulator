@@ -24,10 +24,11 @@ defineProps({
     left: 0;
     width: 100%;
     height: 100%;
-    display: block;
+    display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    align-content: flex-start;
+    justify-content: center;
+    align-content: center;
     flex-grow: 1;
     overflow: hidden;
 }
@@ -50,11 +51,19 @@ defineProps({
     margin-right: 1px;
 }
 
+.row .pixel:first-child {
+    border-left: solid 1px #000200;
+}
+
 .row .pixel:last-child {
     border-right: solid 1px #000200;
 }
 
 .row:last-child .pixel {
     border-bottom: solid 1px #000200;
+}
+
+.row:first-child .pixel {
+    border-top: solid 1px #000200;
 }
 </style>
