@@ -17,7 +17,7 @@ export class Shape {
     }
 
     get grid() {
-        return this.bitmap;
+        return ObjectsHelper.clone(this.bitmap);
     }
 
     get position(): {x: number, y: number} {
@@ -44,6 +44,8 @@ export class Shape {
     }
 
     setBitmap(bitmap) {
+        const app = useNuxtApp();
+        app.$services.logger.log('shape_form', 'change form');
         this.bitmap = bitmap;
     }
 

@@ -19,10 +19,10 @@ export class GridService {
 
         const shape = this.activeShape;
         const grid = this.girdArray;
-        const gridShape = this.activeShape.grid;
+        const gridShape = ObjectsHelper.clone(this.activeShape.grid);
         const y = Number(this.activeShape.position.y);
         const x = Number(this.activeShape.position.x);
-        const bottomLine = gridShape[gridShape.length - 1];
+        const bottomLine = ObjectsHelper.clone(gridShape[gridShape.length - 1]);
         let maxX = x;
         const maxY = grid.length - gridShape.length;
         bottomLine.reverse().forEach((val, index) => {
@@ -37,9 +37,24 @@ export class GridService {
             return false;
         }
 
-        for (let ix = x; ix <= shape.maxX-1; ix++) {
-            if (grid[shape.maxY][ix]) {
-                return false;
+        // for (let ix = x; ix <= shape.maxX-1; ix++) {
+        //     if (grid[shape.maxY][ix]) {
+        //         return false;
+        //     }
+        // }
+
+
+        for (let iy = 0; iy < gridShape.length; iy++) {
+            for (let ix = 0; ix < gridShape[iy].length; ix++) {
+                const nx = ix + x;
+                const ny = iy + y + 1;
+                const valueInGridNext = grid[ny] && grid[ny][nx];
+                const valueInShape = gridShape[iy][ix];
+
+
+                if (valueInGridNext && valueInShape) {
+                    return false;
+                }
             }
         }
 
@@ -58,6 +73,8 @@ export class GridService {
         if (!this.activeShape) {
             app.$services.game.addRandomShapeToGrid();
         }
+
+        app.$services.logger.log('shape_form', JSON.stringify(this.activeShape.grid));
 
         if (this.activeShape) {
             const activeShape = this.activeShape;
@@ -83,10 +100,11 @@ export class GridService {
                     activeShape.setPosition(x, y);
                 }
 
+
                 for(const j in this.activeShape.grid[i]) {
                     const nextY = y + Number(i);
                     const nextX = x + Number(j);
-                    grid[nextY][nextX] = activeShape.grid[i][j];
+                    grid[nextY][nextX] = activeShape.grid[i][j] || grid[nextY][nextX];
                 }
             }
 
@@ -146,13 +164,29 @@ export class GridService {
     }
 
     /**
+     * Проверка что игра закончилась
+     * @returns
+     */
+    checkGameOver() {
+        return this.girdArray[0].indexOf(1) !== -1;
+    }
+
+    /**
      * Проверяем заполненность линий
      * @returns
      */
     checkLinesFilled() {
         const lastLine = this.girdArray[this.height-1];
+        let filledLineIndex = -1;
 
-        if (!ArrayHeler.isAllElementsEqualsTo(lastLine, 1)) {
+        for (const index in this.girdArray) {
+            if (ArrayHeler.isAllElementsEqualsTo(this.girdArray[index], 1)) {
+                filledLineIndex = Number(index);
+                break;
+            }
+        }
+
+        if (filledLineIndex === -1) {
             return;
         }
 
@@ -160,7 +194,7 @@ export class GridService {
         app.$services.game.score.value += 1;
         app.$services.game.cycleSpeed.value -= app.$services.game.score.value * 5;
         const newLine = this.createEmptyRow();
-        this.girdArray.splice(this.height-1, 1);
+        this.girdArray.splice(filledLineIndex, 1);
         this.girdArray.unshift(newLine);
         // Рекурсивно проверяем все заполненные линии
         this.checkLinesFilled();

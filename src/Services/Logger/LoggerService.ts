@@ -4,6 +4,7 @@ export class LoggerService {
         limit: false,
         shape: false,
         max: false,
+        shape_form: false,
     }
 
     log(tag, ...rest) {

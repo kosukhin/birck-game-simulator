@@ -3,6 +3,10 @@
         <a @click.prevent="$emit('back')" class="back" href="#">
             {{ $services.lang.t('Back') }} &rarr;
         </a>
+        <div v-if="$services.game.isGameOver.value" class="game-over">
+            <p>Игра закончена</p>
+            <p>Счет: {{ $services.game.score }}</p>
+        </div>
         <GridView :key="counter + updateCounter" :grid="$services.grid.getGrid()" />
     </div>
 </template>
@@ -10,11 +14,16 @@
 <script setup>
 import GridView from "~~/src/Components/Contexts/GridView/GridView.vue";
 import ArrayHelper from '~~/src/Helpers/ArrayHeler';
+import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 
 const app = useNuxtApp();
 app.$services.grid.clearGrid();
 const counter = ref(1);
 const updateCounter = ref(1);
+
+const nextFrame = () => {
+    app.$services.game.nextFrame();
+};
 
 // Основной цикл игры
 app.$services.game.run(() => {
@@ -49,7 +58,7 @@ app.$services.keyboard.registerKeySubscriber(key => {
     const y = Number(position.y) || 0;
 
     if (key === 'w') {
-        const grid = shape.grid;
+        const grid = ObjectsHelper.clone(shape.grid);
         shape.setBitmap(ArrayHelper.rotate90(grid));
     }
 
@@ -70,3 +79,18 @@ app.$services.keyboard.registerKeySubscriber(key => {
     updateCounter.value++;
 });
 </script>
+
+<style>
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    padding: 30px;
+    background: #f00;
+    text-align: center;
+    z-index: 2;
+    font-weight: bold;
+}
+</style>

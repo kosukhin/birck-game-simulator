@@ -14,7 +14,7 @@ export default new class ArrayHelper {
         }
 
         return b;
-      }
+    }
 
     isAllElementsEqualsTo(arr, equalsTo): boolean {
         return arr.reduce((acc, item) => {
