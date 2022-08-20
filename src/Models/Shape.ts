@@ -31,8 +31,16 @@ export class Shape {
         return [this.#x.value, this.#y.value];
     }
 
+    get width(): number {
+        return this.#bitmap.value[0].length;
+    }
+
     set position(position: TShapePosition) {
         [this.#x.value, this.#y.value] = position;
+    }
+
+    moveY(by:number = 1) {
+        this.#y.value += 1;
     }
 
     /**

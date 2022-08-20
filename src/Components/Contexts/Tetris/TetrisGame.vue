@@ -15,6 +15,10 @@
 import GridView from "~~/src/Components/Contexts/GridView/GridView.vue";
 import ArrayHelper from '~~/src/Helpers/ArrayHeler';
 import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
+import { MainWorkflow } from "~~/src/Workflows/Tetris/MainWorkflow";
+
+const game = new MainWorkflow();
+game.run();
 
 const app = useNuxtApp();
 app.$services.grid.clearGrid();

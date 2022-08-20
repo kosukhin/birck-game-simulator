@@ -17,11 +17,20 @@ export class Grid {
         const {
             height=15,
             width=10,
+            bgBitmap = []
         } = params;
         this.#height = ref(height);
         this.#width = ref(width);
-        this.#bgBitmap = ref([]);
+        this.#bgBitmap = ref(bgBitmap);
         this.#shapes = ref([]);
+    }
+
+    get width(): number {
+        return this.#width.value;
+    }
+
+    get height(): number {
+        return this.#height.value;
     }
 
     /**
@@ -48,5 +57,9 @@ export class Grid {
      */
     clearShapes() {
         this.#shapes.value = [];
+    }
+
+    getFirstShape() {
+        return this.#shapes[0];
     }
 }
