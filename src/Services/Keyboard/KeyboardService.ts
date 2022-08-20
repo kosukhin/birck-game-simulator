@@ -8,7 +8,7 @@ export class KeyboardService {
     }
 
     /**
-     * Зарегистрировать нового подписчика
+     * Регистрирует нового подписчика
      * @param subscriber
      */
     registerKeySubscriber(subscriber: TKeyboardSubscriber) {
@@ -16,7 +16,7 @@ export class KeyboardService {
     }
 
     /**
-     * Очистить подписчиков
+     * Очищает подписчиков на события клавиатуры
      */
     clearSubscribers() {
         this.subscribers = [];

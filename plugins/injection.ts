@@ -4,6 +4,7 @@ import { GridService } from "~~/src/Services/Grid/GridService";
 import { KeyboardService } from "~~/src/Services/Keyboard/KeyboardService";
 import { LoggerService } from "~~/src/Services/Logger/LoggerService";
 import { ModelsPoolService } from "~~/src/Services/ModelsPoolService";
+import { TetrisService } from "~~/src/Services/TetrisService";
 
 export default defineNuxtPlugin(() => {
     return {
@@ -15,6 +16,7 @@ export default defineNuxtPlugin(() => {
                 game: new GameService(),
                 logger: new LoggerService(),
                 modelsPool: new ModelsPoolService(),
+                tetris: new TetrisService(),
             }
         }
     }
