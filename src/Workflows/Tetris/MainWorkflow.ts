@@ -35,9 +35,8 @@ export class MainWorkflow {
     #conditions: GameConditionsWorkflow;
 
     constructor() {
-        this.#grid = new Grid({
-            bgBitmap: this.createEmptyGrid(),
-        });
+        this.#grid = new Grid({});
+        this.#grid.setGrid(this.createEmptyGrid());
         this.#conditions = new GameConditionsWorkflow(this.#grid);
         this.#score = ref(0);
         this.#speed = ref(500);
@@ -88,6 +87,8 @@ export class MainWorkflow {
                 for (const index in filledLineIndexes) {
                     this.#grid.removeRowByIndex(Number(index));
                     this.#grid.addRowToTop(this.createEmptyRow());
+                    this.#score.value += 1;
+                    this.#speed.value -= 10;
                 }
             }
         }
