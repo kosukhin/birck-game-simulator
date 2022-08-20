@@ -3,8 +3,8 @@ import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Library/Shape";
 
 export class GridService {
-    public width = 15;
-    private height = 20;
+    public width = 10;
+    private height = 15;
     private girdArray: number[][] = [];
     private activeShape?: Shape;
 
