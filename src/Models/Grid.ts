@@ -31,6 +31,10 @@ export class Grid {
         return this.#bgBitmap;
     }
 
+    setGrid(bitmap: TGrid) {
+        this.#bgBitmap.value = bitmap;
+    }
+
     /**
      * Добавляет фигуру на сетку
      * @param shape
