@@ -39,6 +39,14 @@ export class Shape {
         [this.#x.value, this.#y.value] = position;
     }
 
+    get x() {
+        return this.#x.value;
+    }
+
+    get y() {
+        return this.#y.value;
+    }
+
     moveY(by:number = 1) {
         this.#y.value += 1;
     }

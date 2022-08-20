@@ -25,6 +25,11 @@ export class MainWorkflow {
     #speed: Ref<number>;
 
     /**
+     * Флаг игра закончена
+     */
+    #isGameOver: Ref<boolean>;
+
+    /**
      * Условия игры
      */
     #conditions: GameConditionsWorkflow;
@@ -36,11 +41,18 @@ export class MainWorkflow {
         this.#conditions = new GameConditionsWorkflow(this.#grid);
         this.#score = ref(0);
         this.#speed = ref(500);
+        this.#isGameOver = ref(false);
+    }
+
+    /**
+     * Отдаем сетку на рендеринг из этого процесса
+     */
+    get grid() {
+        return this.#grid;
     }
 
     /**
      * Запускает работы тетриса
-     * @param runner
      */
     run() {
         setTimeout(() => {
@@ -48,6 +60,8 @@ export class MainWorkflow {
 
             if (!this.#conditions.checkGameOver()) {
                 this.run();
+            } else {
+                this.#isGameOver.value = false;
             }
         }, this.#speed.value);
     }
@@ -67,6 +81,15 @@ export class MainWorkflow {
 
         if (!canMove) {
             this.#grid.setGrid(this.#grid.grid.value);
+            this.#conditions.checkLinesFilled();
+            const filledLineIndexes = this.#conditions.checkLinesFilled();
+
+            if (filledLineIndexes.length) {
+                for (const index in filledLineIndexes) {
+                    this.#grid.removeRowByIndex(Number(index));
+                    this.#grid.addRowToTop(this.createEmptyRow());
+                }
+            }
         }
 
         if (shape && canMove) {

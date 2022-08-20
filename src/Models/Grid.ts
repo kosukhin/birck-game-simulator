@@ -40,8 +40,20 @@ export class Grid {
         return this.#bgBitmap;
     }
 
+    get bgBitmap() {
+        return this.#bgBitmap.value;
+    }
+
     setGrid(bitmap: TGrid) {
         this.#bgBitmap.value = bitmap;
+    }
+
+    addRowToTop(row: number[]) {
+        this.#bgBitmap.value.push(row);
+    }
+
+    removeRowByIndex(index: number) {
+        this.#bgBitmap.value.splice(index, 1);
     }
 
     /**
@@ -59,7 +71,7 @@ export class Grid {
         this.#shapes.value = [];
     }
 
-    getFirstShape() {
+    getFirstShape(): Shape | undefined {
         return this.#shapes[0];
     }
 }
