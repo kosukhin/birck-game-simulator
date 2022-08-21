@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import GridView from "~~/src/Components/Contexts/GridView/GridView.vue";
+import GridView from "~~/src/Components/GridView/GridView.vue";
 import { MainWorkflow } from "~~/src/Workflows/Tetris/MainWorkflow";
 import ArrayHeler from "~~/src/Helpers/ArrayHeler";
 

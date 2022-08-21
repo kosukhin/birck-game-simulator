@@ -1,5 +1,8 @@
 import { TKeyboardSubscriber } from "~~/src/Types/KeyboardTypes";
 
+/**
+ * Сервис взаимодействия с клавиатурой
+ */
 export class KeyboardService {
     private subscribers: TKeyboardSubscriber[] = [];
 
@@ -23,7 +26,7 @@ export class KeyboardService {
     }
 
     /**
-     * Глобальный хэндлер обработки нажатий клавиатуры
+     * Регистрирует глобальный хэндлер обработки нажатий клавиатуры
      */
     keyPressHandler() {
         window.addEventListener('keypress', (e) => {
@@ -33,7 +36,7 @@ export class KeyboardService {
     }
 
     /**
-     * Запускаем всех подписчиков
+     * Запускает всех подписчиков
      * @param key
      */
     runSubscribers(key: string) {

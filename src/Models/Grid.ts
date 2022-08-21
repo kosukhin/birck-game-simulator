@@ -81,6 +81,11 @@ export class Grid {
                 for (const j in shape.bitmap[i]) {
                     const nextY = y + Number(i);
                     const nextX = x + Number(j);
+
+                    if (!grid[nextY]) {
+                        continue;
+                    }
+
                     grid[nextY][nextX] = shape.bitmap[i][j] || grid[nextY][nextX];
                 }
             }

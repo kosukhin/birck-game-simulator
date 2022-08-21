@@ -14,9 +14,9 @@
 
 <script setup>
 import { ref } from "#imports";
-import Menu from "@/src/Components/Contexts/Menu/Menu.vue";
-import Settings from "@/src/Components/Contexts/Settings/Settings.vue";
-import TetrisGame from "@/src/Components/Contexts/Tetris/TetrisGame.vue";
+import Menu from "~~/src/Components/Menu/Menu.vue";
+import Settings from "~~/src/Components/Settings/Settings.vue";
+import TetrisGame from "~~/src/Components/Tetris/TetrisGame.vue";
 
 const screen = ref('');
 

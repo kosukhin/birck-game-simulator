@@ -1,11 +1,13 @@
-
+/**
+ * Хелпер для работы над массивами
+ */
 export default new class ArrayHelper {
     /**
      * Поворачивает массив на 90 градусов
      * @param a
      * @returns
      */
-    rotate90(a) {
+    rotate90(a: any[]) {
         const w = a.length;
         const h = a[0].length;
         let b = new Array(h);
@@ -27,7 +29,7 @@ export default new class ArrayHelper {
      * @param equalsTo
      * @returns
      */
-    isAllElementsEqualsTo(arr, equalsTo): boolean {
+    isAllElementsEqualsTo(arr: any[], equalsTo: number): boolean {
         return arr.reduce((acc, item) => {
             return acc && item === equalsTo;
         }, true);

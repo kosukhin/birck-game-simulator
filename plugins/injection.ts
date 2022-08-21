@@ -1,10 +1,7 @@
-import {LanguageService} from "~/src/Services/Language/LanguageService";
-import { GameService } from "~~/src/Services/Game/GameService";
-import { GridService } from "~~/src/Services/Grid/GridService";
-import { KeyboardService } from "~~/src/Services/Keyboard/KeyboardService";
-import { LoggerService } from "~~/src/Services/Logger/LoggerService";
+import {LanguageService} from "~~/src/Services/LanguageService";
+import { KeyboardService } from "~~/src/Services/KeyboardService";
+import { LoggerService } from "~~/src/Services/LoggerService";
 import { ModelsPoolService } from "~~/src/Services/ModelsPoolService";
-import { TetrisService } from "~~/src/Services/TetrisService";
 
 export default defineNuxtPlugin(() => {
     return {

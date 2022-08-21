@@ -1,3 +1,6 @@
+/**
+ * Помощник для работы над объектами
+ */
 export default new class ObjectHelper {
     /**
      * Клонирует объект

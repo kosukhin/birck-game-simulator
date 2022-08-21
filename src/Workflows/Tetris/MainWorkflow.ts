@@ -5,6 +5,7 @@ import Shapes from "~~/src/Data/Shapes";
 import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Models/Shape";
 import LogHelper from "~~/src/Helpers/LogHelper";
+import AppHelper from "~~/src/Helpers/AppHelper";
 
 /**
  * Основной класс хода выполнения игры тетрис
@@ -50,6 +51,9 @@ export class MainWorkflow {
         this.#updateCounter = ref(0);
     }
 
+    /**
+     * Отдает флаг закончена ли игра
+     */
     get isGameOver() {
         return this.#isGameOver;
     }
@@ -85,18 +89,17 @@ export class MainWorkflow {
     /**
      * Запускает работу тетриса
      */
-    run() {
-        setTimeout(() => {
-            this.renderNextFrame();
+    async run() {
+        await AppHelper.wait(this.#speed.value);
+        this.renderNextFrame();
 
-            if (!this.#conditions.checkGameOver()) {
-                this.run();
-            } else {
-                this.#isGameOver.value = true;
-            }
+        if (!this.#conditions.checkGameOver()) {
+            this.run();
+        } else {
+            this.#isGameOver.value = true;
+        }
 
-            this.#updateCounter.value += 1;
-        }, this.#speed.value);
+        this.#updateCounter.value += 1;
     }
 
     /**
