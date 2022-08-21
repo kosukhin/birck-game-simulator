@@ -4,6 +4,7 @@ import { GameConditionsWorkflow } from "~~/src/Workflows/Tetris/GameConditionsWo
 import Shapes from "~~/src/Data/Shapes";
 import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Models/Shape";
+import LogHelper from "~~/src/Helpers/LogHelper";
 
 /**
  * Основной класс хода выполнения игры тетрис
@@ -34,6 +35,11 @@ export class MainWorkflow {
      */
     #conditions: GameConditionsWorkflow;
 
+    /**
+     * Счетчик необходимый для формирования ключа обновления сетки
+     */
+    #updateCounter: Ref<number>;
+
     constructor() {
         this.#grid = new Grid({});
         this.#grid.setGrid(this.createEmptyGrid());
@@ -41,6 +47,11 @@ export class MainWorkflow {
         this.#score = ref(0);
         this.#speed = ref(500);
         this.#isGameOver = ref(false);
+        this.#updateCounter = ref(0);
+    }
+
+    get isGameOver() {
+        return this.#isGameOver;
     }
 
     /**
@@ -48,6 +59,10 @@ export class MainWorkflow {
      */
     get grid() {
         return this.#grid;
+    }
+
+    get updateCounter() {
+        return this.#updateCounter;
     }
 
     /**
@@ -62,6 +77,8 @@ export class MainWorkflow {
             } else {
                 this.#isGameOver.value = false;
             }
+
+            this.#updateCounter.value += 1;
         }, this.#speed.value);
     }
 
@@ -69,6 +86,7 @@ export class MainWorkflow {
      * Рендерит следующий фрейм игры
      */
     renderNextFrame() {
+        LogHelper.log('fulltrace', 'render next frame');
         let shape = this.#grid.getFirstShape();
 
         if (!shape) {
@@ -76,6 +94,7 @@ export class MainWorkflow {
             shape = this.#grid.getFirstShape();
         }
 
+        LogHelper.log('fulltrace', 'has shape?', shape ? 'yes' : 'no');
         const canMove = this.#conditions.canShapeMoveNext();
 
         if (!canMove) {
@@ -96,6 +115,8 @@ export class MainWorkflow {
         if (shape && canMove) {
             shape.moveY();
         }
+
+        LogHelper.log('fulltrace', this.#grid.grid);
     }
 
     /**
@@ -141,5 +162,9 @@ export class MainWorkflow {
         }
 
         return newGrid;
+    }
+
+    updateGrid() {
+        this.#updateCounter.value++;
     }
 }
