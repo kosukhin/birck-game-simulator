@@ -65,6 +65,14 @@ export class MainWorkflow {
         return this.#updateCounter;
     }
 
+    get score() {
+        return this.#score;
+    }
+
+    get speed() {
+        return this.#speed;
+    }
+
     /**
      * Запускает работы тетриса
      */
@@ -100,11 +108,13 @@ export class MainWorkflow {
 
         if (!canMove) {
             this.#grid.setGrid(grid);
-            this.#conditions.checkLinesFilled();
+            this.#grid.clearShapes();
             const filledLineIndexes = this.#conditions.checkLinesFilled();
 
+            LogHelper.log('fulltrace', 'filledLineIndexes', JSON.stringify(filledLineIndexes));
+
             if (filledLineIndexes.length) {
-                for (const index in filledLineIndexes) {
+                for (const index of filledLineIndexes) {
                     this.#grid.removeRowByIndex(Number(index));
                     this.#grid.addRowToTop(this.createEmptyRow());
                     this.#score.value += 1;
@@ -130,7 +140,7 @@ export class MainWorkflow {
         const bitmap = ObjectsHelper.clone(Shapes[index]);
         const shape = new Shape({bitmap});
         const { round } = Math;
-        shape.position = [round(this.#grid.width / 2) - round(shape.width / 2), 0];
+        shape.position = [round(this.#grid.width / 2) - round(shape.width / 2), -1];
         this.#grid.clearShapes();
         this.#grid.addShape(shape);
     }

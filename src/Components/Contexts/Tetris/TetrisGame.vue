@@ -7,6 +7,12 @@
             <p>Игра закончена</p>
             <p>Счет: {{ game.score }}</p>
         </div>
+        <div class="grid-header">
+            Счет:
+            {{ game.score }},
+            Скорость:
+            {{ game.speed }}
+        </div>
         {{ game.updateCounter }}
         <GridView :key="game.updateCounter" :grid="game.grid.render()" />
     </div>
@@ -16,6 +22,7 @@
 import GridView from "~~/src/Components/Contexts/GridView/GridView.vue";
 import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { MainWorkflow } from "~~/src/Workflows/Tetris/MainWorkflow";
+import ArrayHeler from "~~/src/Helpers/ArrayHeler";
 
 const app = useNuxtApp();
 const game = new MainWorkflow();
@@ -26,7 +33,7 @@ app.$services.keyboard.registerKeySubscriber(key => {
     const shape = game.grid.getFirstShape();
 
     if (key === 'w') {
-        shape.bitmap = ObjectsHelper.clone(shape.bitmap);
+        shape.bitmap = ArrayHeler.rotate90(shape.bitmap);
     }
 
     if (key === 's') {

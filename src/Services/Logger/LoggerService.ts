@@ -5,7 +5,7 @@ export class LoggerService {
         shape: false,
         max: false,
         shape_form: false,
-        fulltrace: true,
+        fulltrace: false,
     }
 
     log(tag, ...rest) {
