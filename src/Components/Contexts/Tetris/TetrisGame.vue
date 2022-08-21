@@ -13,14 +13,12 @@
             Скорость:
             {{ game.speed }}
         </div>
-        {{ game.updateCounter }}
-        <GridView :key="game.updateCounter" :grid="game.grid.render()" />
+        <GridView :key="game.updateCounter.value" :grid="game.grid.render()" />
     </div>
 </template>
 
 <script setup>
 import GridView from "~~/src/Components/Contexts/GridView/GridView.vue";
-import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { MainWorkflow } from "~~/src/Workflows/Tetris/MainWorkflow";
 import ArrayHeler from "~~/src/Helpers/ArrayHeler";
 
