@@ -61,7 +61,7 @@ export class Grid {
 
                 // Пересечение границы справа
                 if (shape.maxX > this.width) {
-                    x = this.width - shape.maxX;
+                    x = this.width - shape.width;
                     shape.position = [x, y];
                 }
 

@@ -30,6 +30,10 @@ app.$services.keyboard.clearSubscribers();
 app.$services.keyboard.registerKeySubscriber(key => {
     const shape = game.grid.getFirstShape();
 
+    if (!shape) {
+        return;
+    }
+
     if (key === 'w') {
         shape.bitmap = ArrayHeler.rotate90(shape.bitmap);
     }

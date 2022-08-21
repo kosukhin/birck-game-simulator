@@ -83,7 +83,7 @@ export class MainWorkflow {
             if (!this.#conditions.checkGameOver()) {
                 this.run();
             } else {
-                this.#isGameOver.value = false;
+                this.#isGameOver.value = true;
             }
 
             this.#updateCounter.value += 1;
