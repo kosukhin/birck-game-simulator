@@ -1,4 +1,3 @@
-import { Ref } from "nuxt/dist/app/compat/capi";
 import { TGrid, TShapePosition } from "~~/src/Types/GridTypes";
 
 /**
@@ -7,9 +6,9 @@ import { TGrid, TShapePosition } from "~~/src/Types/GridTypes";
  */
 export class Shape {
     #id = Shape.getNewShapeId();
-    #bitmap: Ref<TGrid>;
-    #x: Ref<number>;
-    #y: Ref<number>;
+    #bitmap: TGrid;
+    #x: number;
+    #y: number;
     static #shapeIdCounter = 0;
 
     constructor(params) {
@@ -18,61 +17,61 @@ export class Shape {
             y=0,
             bitmap=[]
         } = params;
-        this.#bitmap = ref(bitmap);
-        this.#x = ref(x);
-        this.#y = ref(y);
+        this.#bitmap = bitmap;
+        this.#x = x;
+        this.#y = y;
     }
 
     get bitmap(): TGrid {
-        return this.#bitmap.value;
+        return this.#bitmap;
     }
 
     set bitmap(bitmap) {
-        this.#bitmap.value = bitmap;
+        this.#bitmap = bitmap;
     }
 
     get position(): TShapePosition {
-        return [this.#x.value, this.#y.value];
+        return [this.#x, this.#y];
     }
 
     get width(): number {
-        return this.#bitmap.value[0].length;
+        return this.#bitmap[0].length;
     }
 
     set position(position: TShapePosition) {
-        [this.#x.value, this.#y.value] = position;
+        [this.#x, this.#y] = position;
     }
 
     get x() {
-        return this.#x.value;
+        return this.#x;
     }
 
     set x(x) {
-        this.#x.value = x;
+        this.#x = x;
     }
 
     get y() {
-        return this.#y.value;
+        return this.#y;
     }
 
     set y(y) {
-        this.#y.value = y;
+        this.#y = y;
     }
 
     get maxX(): number {
-        const xAdd = Number(this.#bitmap.value[0].length);
+        const xAdd = Number(this.#bitmap[0].length);
 
         return this.x + xAdd;
     }
 
     get maxY(): number {
-        const yAdd = Number(this.#bitmap.value.length);
+        const yAdd = Number(this.#bitmap.length);
 
         return this.y + yAdd;
     }
 
     moveY(by:number = 1) {
-        this.#y.value += 1;
+        this.#y += 1;
     }
 
     /**

@@ -67,7 +67,7 @@ export class GameConditionsWorkflow {
      * @returns
      */
     checkGameOver(): boolean {
-        return this.#grid.grid[0].indexOf(1) !== -1;
+        return this.#grid.bgBitmap[0].indexOf(1) !== -1;
     }
 
     /**

@@ -1,4 +1,3 @@
-import { Ref } from "nuxt/dist/app/compat/capi";
 import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Models/Shape";
 import { TGrid } from "~~/src/Types/GridTypes";
@@ -9,41 +8,54 @@ import { TGrid } from "~~/src/Types/GridTypes";
  * манипуляции над пикселями
  */
 export class Grid {
-    #width: Ref<number>; // Ширина сетки
-    #height: Ref<number>; // Высота сетки
-    #bgBitmap: Ref<TGrid>;    // Бэкграунд сетки
-    #shapes: Ref<Shape[]>;   // Активные фигуры на сетке
+    #width: number; // Ширина сетки
+    #height: number; // Высота сетки
+    #bgBitmap: TGrid;    // Бэкграунд сетки
+    #shapes: Shape[];   // Активные фигуры на сетке
 
     constructor(params) {
         const {
-            height=15,
-            width=10,
+            height = 15,
+            width = 10,
             bgBitmap = []
         } = params;
-        this.#height = ref(height);
-        this.#width = ref(width);
-        this.#bgBitmap = ref(bgBitmap);
-        this.#shapes = ref([]);
+        this.#height = height;
+        this.#width = width;
+        this.#bgBitmap = bgBitmap;
+        this.#shapes = [];
     }
 
+    /**
+     * Возвращает ширину сетки
+     */
     get width(): number {
-        return this.#width.value;
+        return this.#width;
     }
 
+    /**
+     * Возвращает высоту сетки
+     */
     get height(): number {
-        return this.#height.value;
+        return this.#height;
+    }
+
+    /**
+     * Вовращает фон сетки, без активных фигур
+     */
+    get bgBitmap() {
+        return this.#bgBitmap;
     }
 
     /**
      * Рендерит сетку
      */
-    get grid() {
-        const grid = ObjectsHelper.clone(this.#bgBitmap.value);
+    render() {
+        const grid = ObjectsHelper.clone(this.#bgBitmap);
         const shape = this.getFirstShape();
 
         if (shape) {
             // Копируем фигуру на грид
-            for(const i in shape.bitmap) {
+            for (const i in shape.bitmap) {
                 let x = Number(shape.x);
                 let y = Number(shape.y);
 
@@ -59,7 +71,7 @@ export class Grid {
                     shape.position = [x, y];
                 }
 
-                for(const j in shape.bitmap[i]) {
+                for (const j in shape.bitmap[i]) {
                     const nextY = y + Number(i);
                     const nextX = x + Number(j);
                     grid[nextY][nextX] = shape.bitmap[i][j] || grid[nextY][nextX];
@@ -70,20 +82,28 @@ export class Grid {
         return grid;
     }
 
-    get bgBitmap() {
-        return this.#bgBitmap.value;
-    }
-
+    /**
+     * Устанавливает фон сетки
+     * @param bitmap
+     */
     setGrid(bitmap: TGrid) {
-        this.#bgBitmap.value = bitmap;
+        this.#bgBitmap = bitmap;
     }
 
+    /**
+     * Добавляет наверх сетки новую строку
+     * @param row
+     */
     addRowToTop(row: number[]) {
-        this.#bgBitmap.value.push(row);
+        this.#bgBitmap.unshift(row);
     }
 
+    /**
+     * Удаляет строку по индексу
+     * @param index
+     */
     removeRowByIndex(index: number) {
-        this.#bgBitmap.value.splice(index, 1);
+        this.#bgBitmap.splice(index, 1);
     }
 
     /**
@@ -91,16 +111,20 @@ export class Grid {
      * @param shape
      */
     addShape(shape: Shape) {
-        this.#shapes.value = [...this.#shapes.value, shape];
+        this.#shapes = [...this.#shapes, shape];
     }
 
     /**
      * Очищает все фигуры с сетки
      */
     clearShapes() {
-        this.#shapes.value = [];
+        this.#shapes = [];
     }
 
+    /**
+     * Берет первую фигуру из всех на сетке
+     * @returns
+     */
     getFirstShape(): Shape | undefined {
         return this.#shapes[0];
     }

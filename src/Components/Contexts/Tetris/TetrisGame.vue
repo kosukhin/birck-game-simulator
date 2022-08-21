@@ -3,12 +3,12 @@
         <a @click.prevent="$emit('back')" class="back" href="#">
             {{ $services.lang.t('Back') }} &rarr;
         </a>
-        {{ game.updateCounter }}
         <div v-if="game.isGameOver.value" class="game-over">
             <p>Игра закончена</p>
             <p>Счет: {{ game.score }}</p>
         </div>
-        <GridView :key="game.updateCounter" :grid="game.grid.grid" />
+        {{ game.updateCounter }}
+        <GridView :key="game.updateCounter" :grid="game.grid.render()" />
     </div>
 </template>
 

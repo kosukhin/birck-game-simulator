@@ -87,6 +87,7 @@ export class MainWorkflow {
      */
     renderNextFrame() {
         LogHelper.log('fulltrace', 'render next frame');
+        const grid = this.#grid.render();
         let shape = this.#grid.getFirstShape();
 
         if (!shape) {
@@ -98,7 +99,7 @@ export class MainWorkflow {
         const canMove = this.#conditions.canShapeMoveNext();
 
         if (!canMove) {
-            this.#grid.setGrid(this.#grid.grid.value);
+            this.#grid.setGrid(grid);
             this.#conditions.checkLinesFilled();
             const filledLineIndexes = this.#conditions.checkLinesFilled();
 
@@ -116,7 +117,7 @@ export class MainWorkflow {
             shape.moveY();
         }
 
-        LogHelper.log('fulltrace', this.#grid.grid);
+        LogHelper.log('fulltrace', grid);
     }
 
     /**
