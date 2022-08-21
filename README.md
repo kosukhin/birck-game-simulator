@@ -10,4 +10,6 @@
 [Документация](./docs/README.md)
 
 ## Тетрис
-![image](https://user-images.githubusercontent.com/109918884/185751550-340b8bfd-ea7e-4c93-921d-e58b3cf7dd5f.png)
+
+https://user-images.githubusercontent.com/109918884/185798568-eba22412-1a1c-46c0-983f-70142560819b.mp4
+
