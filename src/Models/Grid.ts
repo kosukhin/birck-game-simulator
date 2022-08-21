@@ -1,4 +1,5 @@
 import { Ref } from "nuxt/dist/app/compat/capi";
+import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Models/Shape";
 import { TGrid } from "~~/src/Types/GridTypes";
 
@@ -37,7 +38,36 @@ export class Grid {
      * Рендерит сетку
      */
     get grid() {
-        return this.#bgBitmap;
+        const grid = ObjectsHelper.clone(this.#bgBitmap.value);
+        const shape = this.getFirstShape();
+
+        if (shape) {
+            // Копируем фигуру на грид
+            for(const i in shape.bitmap) {
+                let x = Number(shape.x);
+                let y = Number(shape.y);
+
+                // Пересечение границы справа
+                if (shape.maxX > this.width) {
+                    x = this.width - shape.maxX;
+                    shape.position = [x, y];
+                }
+
+                // Пересечение границы слева
+                if (shape.x < 0) {
+                    x = 0;
+                    shape.position = [x, y];
+                }
+
+                for(const j in shape.bitmap[i]) {
+                    const nextY = y + Number(i);
+                    const nextX = x + Number(j);
+                    grid[nextY][nextX] = shape.bitmap[i][j] || grid[nextY][nextX];
+                }
+            }
+        }
+
+        return grid;
     }
 
     get bgBitmap() {

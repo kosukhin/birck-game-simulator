@@ -59,6 +59,18 @@ export class Shape {
         this.#y.value = y;
     }
 
+    get maxX(): number {
+        const xAdd = Number(this.#bitmap.value[0].length);
+
+        return this.x + xAdd;
+    }
+
+    get maxY(): number {
+        const yAdd = Number(this.#bitmap.value.length);
+
+        return this.y + yAdd;
+    }
+
     moveY(by:number = 1) {
         this.#y.value += 1;
     }
