@@ -2,6 +2,12 @@ import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Models/Shape";
 import { TGrid } from "~~/src/Types/GridTypes";
 
+interface IGridParams {
+    height?: number;
+    width?: number;
+    bgBitmap?: TGrid;
+}
+
 /**
  * Представление сетки, позволяет выводить
  * на экран результаты игры, позволяет выполнять
@@ -10,10 +16,10 @@ import { TGrid } from "~~/src/Types/GridTypes";
 export class Grid {
     #width: number; // Ширина сетки
     #height: number; // Высота сетки
-    #bgBitmap: TGrid;    // Бэкграунд сетки
-    #shapes: Shape[];   // Активные фигуры на сетке
+    #bgBitmap: TGrid; // Бэкграунд сетки
+    #shapes: Shape[]; // Активные фигуры на сетке
 
-    constructor(params) {
+    constructor(params: IGridParams) {
         const {
             height = 15,
             width = 10,
@@ -57,7 +63,7 @@ export class Grid {
             // Копируем фигуру на грид
             for (const i in shape.bitmap) {
                 let x = Number(shape.x);
-                let y = Number(shape.y);
+                const y = Number(shape.y);
 
                 // Пересечение границы справа
                 if (shape.maxX > this.width) {
@@ -71,6 +77,7 @@ export class Grid {
                     shape.position = [x, y];
                 }
 
+                // Переносим пиксели фигуры на сетку
                 for (const j in shape.bitmap[i]) {
                     const nextY = y + Number(i);
                     const nextX = x + Number(j);

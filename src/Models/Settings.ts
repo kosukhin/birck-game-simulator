@@ -1,5 +1,10 @@
 import { Ref } from "nuxt/dist/app/compat/capi";
 
+interface ISettings {
+    height?: number;
+    width?: number;
+}
+
 /**
  * Настройки для игр.
  * Параметры здесь не должны синхронизоваться с другими сущностями.
@@ -9,7 +14,7 @@ export class Settings {
     #gridWidth: Ref<number>;    // Ширина сетки
     #gridHeight: Ref<number>;   // Высота сетки
 
-    constructor(params) {
+    constructor(params: ISettings) {
         const {
             height=15,
             width=10

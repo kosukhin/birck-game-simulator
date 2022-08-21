@@ -11,12 +11,9 @@ export default defineNuxtPlugin(() => {
         provide: {
             services: {
                 lang: new LanguageService(),
-                grid: new GridService(),
                 keyboard: new KeyboardService(),
-                game: new GameService(),
                 logger: new LoggerService(),
                 modelsPool: new ModelsPoolService(),
-                tetris: new TetrisService(),
             }
         }
     }

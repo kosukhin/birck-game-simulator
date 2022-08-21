@@ -61,20 +61,29 @@ export class MainWorkflow {
         return this.#grid;
     }
 
+    /**
+     * Отдает счетчик обновления интерфейса
+     */
     get updateCounter() {
         return this.#updateCounter;
     }
 
+    /**
+     * Отдает счет игры
+     */
     get score() {
         return this.#score;
     }
 
+    /**
+     * Отдает скорость игры
+     */
     get speed() {
         return this.#speed;
     }
 
     /**
-     * Запускает работы тетриса
+     * Запускает работу тетриса
      */
     run() {
         setTimeout(() => {
@@ -138,7 +147,7 @@ export class MainWorkflow {
         const app = useNuxtApp();
         const index = Math.round(Math.random() * (Shapes.length - 1));
         const bitmap = ObjectsHelper.clone(Shapes[index]);
-        const shape = new Shape({bitmap});
+        const shape = new Shape({ bitmap });
         const { round } = Math;
         shape.position = [round(this.#grid.width / 2) - round(shape.width / 2), -1];
         this.#grid.clearShapes();
@@ -173,9 +182,5 @@ export class MainWorkflow {
         }
 
         return newGrid;
-    }
-
-    updateGrid() {
-        this.#updateCounter.value++;
     }
 }
