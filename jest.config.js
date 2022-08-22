@@ -17,8 +17,5 @@ module.exports = {
     },
     transformIgnorePatterns: [
         "node_modules/(?!(nuxt3|unenv))",
-    ],
-    setupFiles: [
-        "./test-utils/global-test-utils-config.ts"
     ]
 };

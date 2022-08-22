@@ -6,6 +6,7 @@ import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Models/Shape";
 import LogHelper from "~~/src/Helpers/LogHelper";
 import AppHelper from "~~/src/Helpers/AppHelper";
+import { ref } from "vue";
 
 /**
  * Основной класс хода выполнения игры тетрис
@@ -61,7 +62,7 @@ export class MainWorkflow {
     /**
      * Отдаем сетку на рендеринг из этого процесса
      */
-    get grid() {
+    get grid(): Grid {
         return this.#grid;
     }
 
