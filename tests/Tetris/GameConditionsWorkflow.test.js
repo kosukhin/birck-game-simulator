@@ -1,16 +1,16 @@
 import { Shape } from "~~/src/Models/Shape";
-import { GameConditionsWorkflow } from "~~/src/Workflows/Tetris/GameConditionsWorkflow";
-import { MainWorkflow } from "~~/src/Workflows/Tetris/MainWorkflow";
+import { WFGameConditions } from "~~/src/Workflows/Tetris/WFGameConditions";
+import { WFMain } from "~~/src/Workflows/Tetris/WFMain";
 
 const gameConditionsFactory = () => {
-    const game = new MainWorkflow();
+    const game = new WFMain();
     game.grid.addShape(new Shape({
         bitmap: [
             [1, 1],
             [1, 1]
         ]
     }));
-    return [new GameConditionsWorkflow(game.grid), game];
+    return [new WFGameConditions(game.grid), game];
 }
 
 test('check can shape move next', () => {

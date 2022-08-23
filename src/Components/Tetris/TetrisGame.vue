@@ -19,13 +19,13 @@
 
 <script setup lang="ts">
 import GridView from "~~/src/Components/GridView/GridView.vue";
-import { MainWorkflow } from "~~/src/Workflows/Tetris/MainWorkflow";
+import { WFMain } from "~~/src/Workflows/Tetris/WFMain";
 import HService from "~~/src/Helpers/HService";
 import { KeyboardService } from "~~/src/Services/KeyboardService";
 import HArray from "~~/src/Helpers/HArray";
 
 const keyboard = HService.get<KeyboardService>('keyboard');
-const game = new MainWorkflow();
+const game = new WFMain();
 game.run();
 
 keyboard.clearSubscribers();

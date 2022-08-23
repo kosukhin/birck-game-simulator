@@ -6,7 +6,7 @@ import { Grid } from "~~/src/Models/Grid";
  * Процесс отвечающий за выполнение основных
  * условий игры.
  */
-export class GameConditionsWorkflow {
+export class WFGameConditions {
     #grid: Grid;
 
     constructor(grid: Grid) {
