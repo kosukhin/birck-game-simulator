@@ -1,5 +1,5 @@
 import HObjects from "~~/src/Helpers/HObjects";
-import { Shape } from "~~/src/Models/Shape";
+import { MShape } from "~~/src/Models/MShape";
 import { TGrid } from "~~/src/Types/GridTypes";
 
 interface IGridParams {
@@ -13,11 +13,11 @@ interface IGridParams {
  * на экран результаты игры, позволяет выполнять
  * манипуляции над пикселями
  */
-export class Grid {
+export class MGrid {
     #width: number; // Ширина сетки
     #height: number; // Высота сетки
     #bgBitmap: TGrid; // Бэкграунд сетки
-    #shapes: Shape[]; // Активные фигуры на сетке
+    #shapes: MShape[]; // Активные фигуры на сетке
 
     constructor(params: IGridParams) {
         const {
@@ -122,7 +122,7 @@ export class Grid {
      * Добавляет фигуру на сетку
      * @param shape
      */
-    addShape(shape: Shape) {
+    addShape(shape: MShape) {
         this.#shapes = [...this.#shapes, shape];
     }
 
@@ -137,7 +137,7 @@ export class Grid {
      * Берет первую фигуру из всех на сетке
      * @returns
      */
-    getFirstShape(): Shape | undefined {
+    getFirstShape(): MShape | undefined {
         return this.#shapes[0];
     }
 }

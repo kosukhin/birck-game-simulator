@@ -1,15 +1,15 @@
 import HArray from "~~/src/Helpers/HArray";
 import HObjects from "~~/src/Helpers/HObjects";
-import { Grid } from "~~/src/Models/Grid";
+import { MGrid } from "~~/src/Models/MGrid";
 
 /**
  * Процесс отвечающий за выполнение основных
  * условий игры.
  */
 export class WFGameConditions {
-    #grid: Grid;
+    #grid: MGrid;
 
-    constructor(grid: Grid) {
+    constructor(grid: MGrid) {
         this.#grid = grid;
     }
 

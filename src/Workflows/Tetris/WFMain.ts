@@ -1,8 +1,8 @@
 import { Ref } from "nuxt/dist/app/compat/capi";
-import { Grid } from "~~/src/Models/Grid";
+import { MGrid } from "~~/src/Models/MGrid";
 import { WFGameConditions } from "~~/src/Workflows/Tetris/WFGameConditions";
 import Shapes from "~~/src/Data/Shapes";
-import { Shape } from "~~/src/Models/Shape";
+import { MShape } from "~~/src/Models/MShape";
 import { ref } from "vue";
 import HApp from "~~/src/Helpers/HApp";
 import HLog from "~~/src/Helpers/HLog";
@@ -15,7 +15,7 @@ export class WFMain {
     /**
      * Основная сетка тетриса
      */
-    #grid: Grid;
+    #grid: MGrid;
 
     /**
      * Счет игры
@@ -43,7 +43,7 @@ export class WFMain {
     #updateCounter: Ref<number>;
 
     constructor() {
-        this.#grid = new Grid({});
+        this.#grid = new MGrid({});
         this.#grid.setGrid(this.createEmptyGrid());
         this.#conditions = new WFGameConditions(this.#grid);
         this.#score = ref(0);
@@ -62,7 +62,7 @@ export class WFMain {
     /**
      * Отдаем сетку на рендеринг из этого процесса
      */
-    get grid(): Grid {
+    get grid(): MGrid {
         return this.#grid;
     }
 
@@ -151,7 +151,7 @@ export class WFMain {
         const app = useNuxtApp();
         const index = Math.round(Math.random() * (Shapes.length - 1));
         const bitmap = HObjects.clone(Shapes[index]);
-        const shape = new Shape({ bitmap });
+        const shape = new MShape({ bitmap });
         const { round } = Math;
         shape.position = [round(this.#grid.width / 2) - round(shape.width / 2), -1];
         this.#grid.clearShapes();

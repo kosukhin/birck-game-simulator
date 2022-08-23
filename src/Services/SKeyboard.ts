@@ -3,7 +3,7 @@ import { TKeyboardSubscriber } from "~~/src/Types/KeyboardTypes";
 /**
  * Сервис взаимодействия с клавиатурой
  */
-export class KeyboardService {
+export class SKeyboard {
     private subscribers: TKeyboardSubscriber[] = [];
 
     constructor() {

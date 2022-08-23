@@ -4,13 +4,13 @@
             {{ $services.lang.t('Back') }} &rarr;
         </a>
         <div v-if="game.isGameOver.value" class="game-over">
-            <p>Игра закончена</p>
-            <p>Счет: {{ game.score }}</p>
+            <p>{{ $services.lang.t('Game over') }}</p>
+            <p>{{ $services.lang.t('Score') }}: {{ game.score }}</p>
         </div>
         <div class="grid-header">
-            Счет:
+            {{ $services.lang.t('Score') }}:
             {{ game.score }},
-            Скорость:
+            {{ $services.lang.t('Speed') }}:
             {{ game.speed }}
         </div>
         <GridView :key="game.updateCounter.value" :grid="game.grid.render()" />
@@ -21,10 +21,10 @@
 import GridView from "~~/src/Components/GridView/GridView.vue";
 import { WFMain } from "~~/src/Workflows/Tetris/WFMain";
 import HService from "~~/src/Helpers/HService";
-import { KeyboardService } from "~~/src/Services/KeyboardService";
+import { SKeyboard } from "~~/src/Services/SKeyboard";
 import HArray from "~~/src/Helpers/HArray";
 
-const keyboard = HService.get<KeyboardService>('keyboard');
+const keyboard = HService.get<SKeyboard>('keyboard');
 const game = new WFMain();
 game.run();
 

@@ -1,12 +1,12 @@
-import {Settings} from '~~/src/Models/Settings';
+import {MSettings} from '~~/src/Models/MSettings';
 
 /**
  * Сервис для хранения глобальных моделей. например
  * таких как Settings
  */
-export class ModelsPoolService {
+export class SModelsPool {
     /**
      * Настройки системы
      */
-    public settings = new Settings({height: 15, width: 10});
+    public settings = new MSettings({height: 15, width: 10});
 }

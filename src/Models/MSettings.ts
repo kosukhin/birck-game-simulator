@@ -10,7 +10,7 @@ interface ISettings {
  * Параметры здесь не должны синхронизоваться с другими сущностями.
  * синхронизация происходит только после применения этих настроек
  */
-export class Settings {
+export class MSettings {
     #gridWidth: Ref<number>;    // Ширина сетки
     #gridHeight: Ref<number>;   // Высота сетки
 

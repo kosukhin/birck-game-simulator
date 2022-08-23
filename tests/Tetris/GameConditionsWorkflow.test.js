@@ -1,10 +1,10 @@
-import { Shape } from "~~/src/Models/Shape";
+import { MShape } from "~~/src/Models/MShape";
 import { WFGameConditions } from "~~/src/Workflows/Tetris/WFGameConditions";
 import { WFMain } from "~~/src/Workflows/Tetris/WFMain";
 
 const gameConditionsFactory = () => {
     const game = new WFMain();
-    game.grid.addShape(new Shape({
+    game.grid.addShape(new MShape({
         bitmap: [
             [1, 1],
             [1, 1]

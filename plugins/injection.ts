@@ -1,16 +1,16 @@
-import {LanguageService} from "~~/src/Services/LanguageService";
-import { KeyboardService } from "~~/src/Services/KeyboardService";
-import { LoggerService } from "~~/src/Services/LoggerService";
-import { ModelsPoolService } from "~~/src/Services/ModelsPoolService";
+import { SLanguage } from "~~/src/Services/SLanguage";
+import { SKeyboard } from "~~/src/Services/SKeyboard";
+import { SLogger } from "~~/src/Services/SLogger";
+import { SModelsPool } from "~~/src/Services/SModelsPool";
 
 export default defineNuxtPlugin(() => {
     return {
         provide: {
             services: {
-                lang: new LanguageService(),
-                keyboard: new KeyboardService(),
-                logger: new LoggerService(),
-                modelsPool: new ModelsPoolService(),
+                lang: new SLanguage(),
+                keyboard: new SKeyboard(),
+                logger: new SLogger(),
+                modelsPool: new SModelsPool(),
             }
         }
     }

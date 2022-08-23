@@ -10,8 +10,8 @@ interface IShapeParams {
  * Представление фигуры, позволяет хранить
  * пиксельные формы, которые могут быть частью Grid
  */
-export class Shape {
-    #id = Shape.getNewShapeId(); // Уникальный id фигуры
+export class MShape {
+    #id = MShape.getNewShapeId(); // Уникальный id фигуры
     #bitmap: TGrid; // Изображение фигуры пиксельное
     #x: number; // Позиция фигуры по x
     #y: number; // Позиция фигуры по y
@@ -122,8 +122,8 @@ export class Shape {
      * @returns void
      */
     static getNewShapeId() {
-        Shape.#shapeIdCounter = Shape.#shapeIdCounter + 1;
+        MShape.#shapeIdCounter = MShape.#shapeIdCounter + 1;
 
-        return Shape.#shapeIdCounter;
+        return MShape.#shapeIdCounter;
     }
 }

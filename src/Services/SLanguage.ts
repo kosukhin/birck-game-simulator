@@ -3,7 +3,7 @@ import Translations from "~/src/Data/Translations";
 /**
  * Сервис для работы с переводами
  */
-export class LanguageService {
+export class SLanguage {
     /**
      * Переводит строку
      * @param key
