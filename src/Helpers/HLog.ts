@@ -3,7 +3,7 @@
  * где нету доступа к app и не хочется ради логирования
  * вызывать useNuxtApp
  */
-export default new class LogHelper {
+export default new class HLog {
     /**
      * Добавляет сообщение в логгер
      * @param tag

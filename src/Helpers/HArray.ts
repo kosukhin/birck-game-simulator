@@ -1,7 +1,7 @@
 /**
  * Хелпер для работы над массивами
  */
-export default new class ArrayHelper {
+export default new class HArray {
     /**
      * Поворачивает массив на 90 градусов
      * @param a

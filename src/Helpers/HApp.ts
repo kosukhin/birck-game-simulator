@@ -1,7 +1,7 @@
 /**
  * Вспомогательные функции для приложения
  */
-export default new class AppHelper {
+export default new class HApp {
     /**
      * Таймаут в формате промиса
      * @param ms

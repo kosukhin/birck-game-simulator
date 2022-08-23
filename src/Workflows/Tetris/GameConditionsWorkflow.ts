@@ -1,5 +1,5 @@
-import ArrayHeler from "~~/src/Helpers/ArrayHeler";
-import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
+import HArray from "~~/src/Helpers/HArray";
+import HObjects from "~~/src/Helpers/HObjects";
 import { Grid } from "~~/src/Models/Grid";
 
 /**
@@ -29,7 +29,7 @@ export class GameConditionsWorkflow {
         const gridShape = shape.bitmap;
         const y = Number(shape.y);
         const x = Number(shape.x);
-        const bottomLine = ObjectsHelper.clone(gridShape[gridShape.length - 1]);
+        const bottomLine = HObjects.clone(gridShape[gridShape.length - 1]);
         let maxX = x;
         const maxY = grid.length - gridShape.length;
         bottomLine.reverse().forEach((val: number, index: number) => {
@@ -79,7 +79,7 @@ export class GameConditionsWorkflow {
         const filledLineIndexes = [];
 
         for (const index in grid) {
-            if (ArrayHeler.isAllElementsEqualsTo(grid[index], 1)) {
+            if (HArray.isAllElementsEqualsTo(grid[index], 1)) {
                 filledLineIndexes.push(Number(index));
             }
         }

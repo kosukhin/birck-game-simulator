@@ -2,11 +2,11 @@ import { Ref } from "nuxt/dist/app/compat/capi";
 import { Grid } from "~~/src/Models/Grid";
 import { GameConditionsWorkflow } from "~~/src/Workflows/Tetris/GameConditionsWorkflow";
 import Shapes from "~~/src/Data/Shapes";
-import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
 import { Shape } from "~~/src/Models/Shape";
-import LogHelper from "~~/src/Helpers/LogHelper";
-import AppHelper from "~~/src/Helpers/AppHelper";
 import { ref } from "vue";
+import HApp from "~~/src/Helpers/HApp";
+import HLog from "~~/src/Helpers/HLog";
+import HObjects from "~~/src/Helpers/HObjects";
 
 /**
  * Основной класс хода выполнения игры тетрис
@@ -91,7 +91,7 @@ export class MainWorkflow {
      * Запускает работу тетриса
      */
     async run() {
-        await AppHelper.wait(this.#speed.value);
+        await HApp.wait(this.#speed.value);
         this.renderNextFrame();
 
         if (!this.#conditions.checkGameOver()) {
@@ -107,7 +107,7 @@ export class MainWorkflow {
      * Рендерит следующий фрейм игры
      */
     renderNextFrame() {
-        LogHelper.log('fulltrace', 'render next frame');
+        HLog.log('fulltrace', 'render next frame');
         const grid = this.#grid.render();
         let shape = this.#grid.getFirstShape();
 
@@ -116,7 +116,7 @@ export class MainWorkflow {
             shape = this.#grid.getFirstShape();
         }
 
-        LogHelper.log('fulltrace', 'has shape?', shape ? 'yes' : 'no');
+        HLog.log('fulltrace', 'has shape?', shape ? 'yes' : 'no');
         const canMove = this.#conditions.canShapeMoveNext();
 
         if (!canMove) {
@@ -124,7 +124,7 @@ export class MainWorkflow {
             this.#grid.clearShapes();
             const filledLineIndexes = this.#conditions.checkLinesFilled();
 
-            LogHelper.log('fulltrace', 'filledLineIndexes', JSON.stringify(filledLineIndexes));
+            HLog.log('fulltrace', 'filledLineIndexes', JSON.stringify(filledLineIndexes));
 
             if (filledLineIndexes.length) {
                 for (const index of filledLineIndexes) {
@@ -140,7 +140,7 @@ export class MainWorkflow {
             shape.moveY();
         }
 
-        LogHelper.log('fulltrace', grid);
+        HLog.log('fulltrace', grid);
     }
 
     /**
@@ -150,7 +150,7 @@ export class MainWorkflow {
     addRandomShapeToGrid() {
         const app = useNuxtApp();
         const index = Math.round(Math.random() * (Shapes.length - 1));
-        const bitmap = ObjectsHelper.clone(Shapes[index]);
+        const bitmap = HObjects.clone(Shapes[index]);
         const shape = new Shape({ bitmap });
         const { round } = Math;
         shape.position = [round(this.#grid.width / 2) - round(shape.width / 2), -1];

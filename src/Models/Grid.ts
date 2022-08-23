@@ -1,4 +1,4 @@
-import ObjectsHelper from "~~/src/Helpers/ObjectsHelper";
+import HObjects from "~~/src/Helpers/HObjects";
 import { Shape } from "~~/src/Models/Shape";
 import { TGrid } from "~~/src/Types/GridTypes";
 
@@ -56,7 +56,7 @@ export class Grid {
      * Рендерит сетку
      */
     render() {
-        const grid = ObjectsHelper.clone(this.#bgBitmap);
+        const grid = HObjects.clone(this.#bgBitmap);
         const shape = this.getFirstShape();
 
         if (shape) {

@@ -17,17 +17,19 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import GridView from "~~/src/Components/GridView/GridView.vue";
 import { MainWorkflow } from "~~/src/Workflows/Tetris/MainWorkflow";
-import ArrayHeler from "~~/src/Helpers/ArrayHeler";
+import HService from "~~/src/Helpers/HService";
+import { KeyboardService } from "~~/src/Services/KeyboardService";
+import HArray from "~~/src/Helpers/HArray";
 
-const app = useNuxtApp();
+const keyboard = HService.get<KeyboardService>('keyboard');
 const game = new MainWorkflow();
 game.run();
 
-app.$services.keyboard.clearSubscribers();
-app.$services.keyboard.registerKeySubscriber(key => {
+keyboard.clearSubscribers();
+keyboard.registerKeySubscriber(key => {
     const shape = game.grid.getFirstShape();
 
     if (!shape) {
@@ -35,7 +37,7 @@ app.$services.keyboard.registerKeySubscriber(key => {
     }
 
     if (key === 'w') {
-        shape.bitmap = ArrayHeler.rotate90(shape.bitmap);
+        shape.bitmap = HArray.rotate90(shape.bitmap);
     }
 
     if (key === 's') {

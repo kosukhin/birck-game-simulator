@@ -1,7 +1,7 @@
 /**
  * Помощник для работы над объектами
  */
-export default new class ObjectHelper {
+export default new class HObjects {
     /**
      * Клонирует объект
      * @param object
