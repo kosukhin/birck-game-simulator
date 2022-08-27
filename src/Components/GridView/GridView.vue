@@ -48,24 +48,24 @@ defineProps({
 }
 </style>
 
-<style>
+<style lang="scss">
 .row .pixel {
     margin-right: 1px;
 }
 
 .row .pixel:first-child {
-    border-left: solid 1px #000200;
+    border-left: solid 1px $c_pixel;
 }
 
 .row .pixel:last-child {
-    border-right: solid 1px #000200;
+    border-right: solid 1px $c_pixel;
 }
 
 .row:last-child .pixel {
-    border-bottom: solid 1px #000200;
+    border-bottom: solid 1px $c_pixel;
 }
 
 .row:first-child .pixel {
-    border-top: solid 1px #000200;
+    border-top: solid 1px $c_pixel;
 }
 </style>

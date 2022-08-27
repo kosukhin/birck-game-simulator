@@ -54,7 +54,7 @@ keyboard.registerKeySubscriber(key => {
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
 .game-over {
     position: absolute;
     top: 50%;
@@ -62,7 +62,7 @@ keyboard.registerKeySubscriber(key => {
     transform: translate(-50%, -50%);
     font-size: 20px;
     padding: 30px;
-    background: #f00;
+    background: $c_red;
     text-align: center;
     z-index: 2;
     font-weight: bold;
