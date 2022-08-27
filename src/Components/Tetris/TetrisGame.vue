@@ -23,7 +23,7 @@ import HService from '~~/src/Helpers/HService'
 import { SKeyboard } from '~~/src/Services/SKeyboard'
 import HArray from '~~/src/Helpers/HArray'
 
-const keyboard = HService.get<SKeyboard>('keyboard')
+const keyboard = HService.get<SKeyboard>('keyboard');
 const game = new WFMain()
 game.run()
 
