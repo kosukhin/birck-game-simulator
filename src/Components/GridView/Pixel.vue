@@ -11,7 +11,7 @@ defineProps({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .pixel {
     width: 10px;
     height: 10px;
@@ -19,7 +19,7 @@ defineProps({
 }
 
 .filled {
-    border: solid 1px #000200;
+    border: solid 1px $c_pixel;
     position: relative;
 }
 
@@ -31,6 +31,6 @@ defineProps({
     left: 2px;
     width: 6px;
     height: 6px;
-    background: #000200;
+    background: $c_pixel;
 }
 </style>
