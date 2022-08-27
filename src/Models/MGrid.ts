@@ -1,11 +1,11 @@
-import HObjects from "~~/src/Helpers/HObjects";
-import { MShape } from "~~/src/Models/MShape";
-import { TGrid } from "~~/src/Types/GridTypes";
+import HObjects from '~~/src/Helpers/HObjects'
+import { MShape } from '~~/src/Models/MShape'
+import { TGrid } from '~~/src/Types/GridTypes'
 
 interface IGridParams {
-    height?: number;
-    width?: number;
-    bgBitmap?: TGrid;
+    height?: number
+    width?: number
+    bgBitmap?: TGrid
 }
 
 /**
@@ -14,84 +14,81 @@ interface IGridParams {
  * манипуляции над пикселями
  */
 export class MGrid {
-    #width: number; // Ширина сетки
-    #height: number; // Высота сетки
-    #bgBitmap: TGrid; // Бэкграунд сетки
-    #shapes: MShape[]; // Активные фигуры на сетке
+    #width: number // Ширина сетки
+    #height: number // Высота сетки
+    #bgBitmap: TGrid // Бэкграунд сетки
+    #shapes: MShape[] // Активные фигуры на сетке
 
     constructor(params: IGridParams) {
-        const {
-            height = 15,
-            width = 10,
-            bgBitmap = []
-        } = params;
-        this.#height = height;
-        this.#width = width;
-        this.#bgBitmap = bgBitmap;
-        this.#shapes = [];
+        const { height = 15, width = 10, bgBitmap = [] } = params
+        this.#height = height
+        this.#width = width
+        this.#bgBitmap = bgBitmap
+        this.#shapes = []
     }
 
     /**
      * Возвращает ширину сетки
      */
     get width(): number {
-        return this.#width;
+        return this.#width
     }
 
     /**
      * Возвращает высоту сетки
      */
     get height(): number {
-        return this.#height;
+        return this.#height
     }
 
     /**
      * Вовращает фон сетки, без активных фигур
      */
     get bgBitmap() {
-        return this.#bgBitmap;
+        return this.#bgBitmap
     }
 
     /**
      * Рендерит сетку
      */
     render() {
-        const grid = HObjects.clone(this.#bgBitmap);
-        const shape = this.getFirstShape();
+        const grid = HObjects.clone(this.#bgBitmap)
+        const shape = this.getFirstShape()
 
         if (shape) {
             // Копируем фигуру на грид
             for (const i in shape.bitmap) {
-                let x = Number(shape.x);
-                const y = Number(shape.y);
+                let x = Number(shape.x)
+                const y = Number(shape.y)
 
                 // Пересечение границы справа
                 if (shape.maxX > this.width) {
-                    x = this.width - shape.width;
-                    shape.position = [x, y];
+                    x = this.width - shape.width
+                    shape.position = [x, y]
                 }
 
                 // Пересечение границы слева
                 if (shape.x < 0) {
-                    x = 0;
-                    shape.position = [x, y];
+                    x = 0
+                    shape.position = [x, y]
                 }
 
                 // Переносим пиксели фигуры на сетку
                 for (const j in shape.bitmap[i]) {
-                    const nextY = y + Number(i);
-                    const nextX = x + Number(j);
+                    const nextY = y + Number(i)
+                    const nextX = x + Number(j)
 
                     if (!grid[nextY]) {
-                        continue;
+                        continue
                     }
 
-                    grid[nextY][nextX] = shape.bitmap[i][j] || grid[nextY][nextX];
+                    grid[nextY][nextX] =
+                        shape.bitmap[i][j] || grid[nextY][nextX]
                 }
             }
         }
 
-        return grid;
+        return grid
     }
 
     /**
@@ -99,7 +96,7 @@ export class MGrid {
      * @param bitmap
      */
     setGrid(bitmap: TGrid) {
-        this.#bgBitmap = bitmap;
+        this.#bgBitmap = bitmap
     }
 
     /**
@@ -107,7 +104,7 @@ export class MGrid {
      * @param row
      */
     addRowToTop(row: number[]) {
-        this.#bgBitmap.unshift(row);
+        this.#bgBitmap.unshift(row)
     }
 
     /**
@@ -115,7 +112,7 @@ export class MGrid {
      * @param index
      */
     removeRowByIndex(index: number) {
-        this.#bgBitmap.splice(index, 1);
+        this.#bgBitmap.splice(index, 1)
     }
 
     /**
@@ -123,14 +120,14 @@ export class MGrid {
      * @param shape
      */
     addShape(shape: MShape) {
-        this.#shapes = [...this.#shapes, shape];
+        this.#shapes = [...this.#shapes, shape]
     }
 
     /**
      * Очищает все фигуры с сетки
      */
     clearShapes() {
-        this.#shapes = [];
+        this.#shapes = []
     }
 
     /**
@@ -138,6 +135,6 @@ export class MGrid {
      * @returns
      */
     getFirstShape(): MShape | undefined {
-        return this.#shapes[0];
+        return this.#shapes[0]
     }
 }

@@ -2,21 +2,21 @@
     <div class="grid-view-wrapper">
         <div class="grid-view">
             <div v-for="column in grid" class="row">
-                <Pixel :filled="pixel" v-for="pixel in column" />
+                <Pixel v-for="pixel in column" :filled="pixel" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import Pixel from "~~/src/Components/GridView/Pixel.vue";
+import Pixel from '~~/src/Components/GridView/Pixel.vue'
 
 defineProps({
     grid: {
         type: Array,
         default: () => [[]],
     },
-});
+})
 </script>
 
 <style scoped>

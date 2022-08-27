@@ -3,14 +3,14 @@
  * где нету доступа к app и не хочется ради логирования
  * вызывать useNuxtApp
  */
-export default new class HLog {
+export default new (class HLog {
     /**
      * Добавляет сообщение в логгер
      * @param tag
      * @param messages
      */
     log(tag: string, ...messages: string[]) {
-        const app = useNuxtApp();
-        app.$services.logger.log(tag, ...messages);
+        const app = useNuxtApp()
+        app.$services.logger.log(tag, ...messages)
     }
-}
+})()

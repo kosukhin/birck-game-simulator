@@ -1,6 +1,6 @@
 <template>
     <div class="game screen">
-        <a @click.prevent="$emit('back')" class="back" href="#">
+        <a class="back" href="#" @click.prevent="$emit('back')">
             {{ $services.lang.t('Back') }} &rarr;
         </a>
         <div v-if="game.isGameOver.value" class="game-over">
@@ -8,8 +8,7 @@
             <p>{{ $services.lang.t('Score') }}: {{ game.score }}</p>
         </div>
         <div class="grid-header">
-            {{ $services.lang.t('Score') }}:
-            {{ game.score }},
+            {{ $services.lang.t('Score') }}: {{ game.score }},
             {{ $services.lang.t('Speed') }}:
             {{ game.speed }}
         </div>
@@ -18,40 +17,40 @@
 </template>
 
 <script setup lang="ts">
-import GridView from "~~/src/Components/GridView/GridView.vue";
-import { WFMain } from "~~/src/Workflows/Tetris/WFMain";
-import HService from "~~/src/Helpers/HService";
-import { SKeyboard } from "~~/src/Services/SKeyboard";
-import HArray from "~~/src/Helpers/HArray";
+import GridView from '~~/src/Components/GridView/GridView.vue'
+import { WFMain } from '~~/src/Workflows/Tetris/WFMain'
+import HService from '~~/src/Helpers/HService'
+import { SKeyboard } from '~~/src/Services/SKeyboard'
+import HArray from '~~/src/Helpers/HArray'
 
-const keyboard = HService.get<SKeyboard>('keyboard');
-const game = new WFMain();
-game.run();
+const keyboard = HService.get<SKeyboard>('keyboard')
+const game = new WFMain()
+game.run()
 
-keyboard.clearSubscribers();
-keyboard.registerKeySubscriber(key => {
-    const shape = game.grid.getFirstShape();
+keyboard.clearSubscribers()
+keyboard.registerKeySubscriber((key) => {
+    const shape = game.grid.getFirstShape()
 
     if (!shape) {
-        return;
+        return
     }
 
     if (key === 'w') {
-        shape.bitmap = HArray.rotate90(shape.bitmap);
+        shape.bitmap = HArray.rotate90(shape.bitmap)
     }
 
     if (key === 's') {
-        shape.y = shape.y + 1;
+        shape.y = shape.y + 1
     }
 
     if (key === 'a') {
-        shape.x = shape.x - 1;
+        shape.x = shape.x - 1
     }
 
     if (key === 'd') {
-        shape.x = shape.x + 1;
+        shape.x = shape.x + 1
     }
-});
+})
 </script>
 
 <style>

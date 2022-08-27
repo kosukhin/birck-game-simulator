@@ -1,13 +1,13 @@
-import { TKeyboardSubscriber } from "~~/src/Types/KeyboardTypes";
+import { TKeyboardSubscriber } from '~~/src/Types/KeyboardTypes'
 
 /**
  * Сервис взаимодействия с клавиатурой
  */
 export class SKeyboard {
-    private subscribers: TKeyboardSubscriber[] = [];
+    private subscribers: TKeyboardSubscriber[] = []
 
     constructor() {
-        process.client && this.keyPressHandler();
+        process.client && this.keyPressHandler()
     }
 
     /**
@@ -15,14 +15,14 @@ export class SKeyboard {
      * @param subscriber
      */
     registerKeySubscriber(subscriber: TKeyboardSubscriber) {
-        this.subscribers.push(subscriber);
+        this.subscribers.push(subscriber)
     }
 
     /**
      * Очищает подписчиков на события клавиатуры
      */
     clearSubscribers() {
-        this.subscribers = [];
+        this.subscribers = []
     }
 
     /**
@@ -30,9 +30,9 @@ export class SKeyboard {
      */
     keyPressHandler() {
         window.addEventListener('keypress', (e) => {
-            const {key} = e;
-            this.runSubscribers(key);
-        });
+            const { key } = e
+            this.runSubscribers(key)
+        })
     }
 
     /**
@@ -40,8 +40,8 @@ export class SKeyboard {
      * @param key
      */
     runSubscribers(key: string) {
-        this.subscribers.forEach(subscriber => {
-            subscriber.call(this, key);
-        });
+        this.subscribers.forEach((subscriber) => {
+            subscriber.call(this, key)
+        })
     }
 }

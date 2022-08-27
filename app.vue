@@ -1,11 +1,11 @@
 <template>
-  <div>
-      <Tetris />
-  </div>
+    <div>
+        <Tetris />
+    </div>
 </template>
 
 <script lang="ts" setup>
-import Tetris from "~/src/Components/Tetris/Tetris.vue";
+import Tetris from '~/src/Components/Tetris/Tetris.vue'
 </script>
 
 <style>

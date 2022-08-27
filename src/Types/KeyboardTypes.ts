@@ -1,2 +1,1 @@
-
-export type TKeyboardSubscriber = (key: string) => void;
+export type TKeyboardSubscriber = (key: string) => void

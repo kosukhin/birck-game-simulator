@@ -1,2 +1,1 @@
-
-export type TGameRunner = () => void;
+export type TGameRunner = () => void

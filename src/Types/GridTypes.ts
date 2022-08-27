@@ -1,4 +1,3 @@
+export type TGrid = number[][]
 
-export type TGrid = number[][];
-
-export type TShapePosition = [number, number];
+export type TShapePosition = [number, number]

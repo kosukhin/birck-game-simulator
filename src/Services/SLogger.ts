@@ -22,9 +22,9 @@ export class SLogger {
      */
     log(tag: string, ...rest: string[]) {
         if (!this.config[tag]) {
-            return;
+            return
         }
 
-        console.log(`[${tag}]`, ...rest);
+        console.log(`[${tag}]`, ...rest)
     }
 }

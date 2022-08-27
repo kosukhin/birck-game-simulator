@@ -5,18 +5,29 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "lint": "eslint --ext \".ts,.js,.vue\" --ignore-path .eslintignore .",
+    "lintfix": "eslint --fix --ext \".ts,.js,.vue\" --ignore-path .eslintignore ."
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
+    "@nuxtjs/eslint-config-typescript": "^10.0.0",
+    "@nuxtjs/eslint-module": "^3.1.0",
     "@types/jest": "^28.1.7",
     "@vue/test-utils": "^2.0.0-rc.18",
     "@vue/vue3-jest": "^28.1.0",
     "babel-jest": "^28.1.3",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-nuxt": "^3.2.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.1",
     "jest": "^28.1.3",
     "jest-environment-jsdom": "^28.1.3",
     "jest-transform-stub": "^2.0.0",
     "nuxt": "3.0.0-rc.8",
+    "sass": "^1.54.5",
+    "sass-loader": "^13.0.2",
     "ts-jest": "^28.0.8",
     "typescript": "^4.7.4"
   }

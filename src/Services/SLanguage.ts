@@ -1,4 +1,4 @@
-import Translations from "~/src/Data/Translations";
+import Translations from '~/src/Data/Translations'
 
 /**
  * Сервис для работы с переводами
@@ -10,6 +10,6 @@ export class SLanguage {
      * @returns
      */
     t(key: string) {
-        return Translations[key] ?? key;
+        return Translations[key] ?? key
     }
 }
