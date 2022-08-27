@@ -29,7 +29,7 @@ const back = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .tetris {
         position: fixed;
         top: 50%;
@@ -37,7 +37,7 @@ const back = () => {
         transform: translate(-50%, -50%);
         width: 300px;
         height: 400px;
-        border: solid 1px #333;
-        background: #fff;
+        border: solid 1px $c_black;
+        background: $c_white;
     }
 </style>
