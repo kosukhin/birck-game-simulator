@@ -34,6 +34,6 @@
     "typescript": "^4.7.4"
   },
   "lint-staged": {
-    "*.{ts,js,vue}": "npm lint"
+    "*.{ts,js,vue}": "npm run lint"
   }
 }
