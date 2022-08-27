@@ -20,7 +20,7 @@ export default new (class HArray {
             }
         }
 
-        return []
+        return b
     }
 
     /**

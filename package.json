@@ -36,6 +36,6 @@
   },
   "lint-staged": {
     "*.{ts,js,vue}": "npm run lint",
-    "*.{ts,js}": "npm run test"
+    "*.{ts,js}": "jest ./tests/"
   }
 }
