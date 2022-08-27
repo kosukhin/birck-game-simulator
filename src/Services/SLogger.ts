@@ -25,6 +25,7 @@ export class SLogger {
             return
         }
 
-        console.log(`[${tag}]`, ...rest)
+        const { log } = console
+        log(`[${tag}]`, ...rest)
     }
 }

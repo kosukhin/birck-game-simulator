@@ -152,7 +152,6 @@ export class WFMain {
      * фигуру, в центр сетки
      */
     addRandomShapeToGrid() {
-        const app = useNuxtApp()
         const index = Math.round(Math.random() * (Shapes.length - 1))
         const bitmap = HObjects.clone(Shapes[index])
         const shape = new MShape({ bitmap })

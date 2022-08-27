@@ -110,7 +110,7 @@ export class MShape {
      * @param by
      */
     moveY(by: number = 1) {
-        this.#y += 1
+        this.#y += by
     }
 
     /**

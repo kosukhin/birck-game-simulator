@@ -1,8 +1,16 @@
 <template>
     <div class="grid-view-wrapper">
         <div class="grid-view">
-            <div v-for="column in grid" class="row">
-                <Pixel v-for="pixel in column" :filled="pixel" />
+            <div
+                v-for="(column, columnIndex) in grid"
+                :key="`column_${columnIndex}`"
+                class="row"
+            >
+                <Pixel
+                    v-for="(pixel, pixelIndex) in column"
+                    :key="`pixel_${pixelIndex}`"
+                    :filled="pixel"
+                />
             </div>
         </div>
     </div>
