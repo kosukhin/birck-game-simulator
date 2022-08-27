@@ -9,7 +9,7 @@ export default new (class HArray {
      */
     rotate90(a: any[]) {
         const w = a.length
-        const h = a[1].length
+        const h = a[0].length
         const b = new Array(h)
 
         for (let y = 0; y < h; y++) {
@@ -20,7 +20,7 @@ export default new (class HArray {
             }
         }
 
-        return b
+        return []
     }
 
     /**
