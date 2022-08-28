@@ -7,9 +7,7 @@ export class HObjects {
      * @param object
      * @returns
      */
-    clone(object: any) {
+    static clone(object: any) {
         return JSON.parse(JSON.stringify(object))
     }
 }
-
-export default new HObjects()

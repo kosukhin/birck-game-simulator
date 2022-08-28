@@ -7,7 +7,7 @@ export class HApp {
      * @param ms
      * @returns
      */
-    wait(ms: number): Promise<void> {
+    static wait(ms: number): Promise<void> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve()
@@ -15,5 +15,3 @@ export class HApp {
         })
     }
 }
-
-export default new HApp()

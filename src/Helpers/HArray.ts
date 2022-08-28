@@ -7,7 +7,7 @@ export class HArray {
      * @param a
      * @returns
      */
-    rotate90(a: any[]) {
+    static rotate90(a: any[]) {
         const w = a.length
         const h = a[0].length
         const b = new Array(h)
@@ -29,11 +29,9 @@ export class HArray {
      * @param equalsTo
      * @returns
      */
-    isAllElementsEqualsTo(arr: any[], equalsTo: number): boolean {
+    static isAllElementsEqualsTo(arr: any[], equalsTo: number): boolean {
         return arr.reduce((acc, item) => {
             return acc && item === equalsTo
         }, true)
     }
 }
-
-export default new HArray()

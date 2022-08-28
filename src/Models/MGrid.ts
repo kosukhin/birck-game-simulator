@@ -1,4 +1,4 @@
-import HObjects from '~~/src/Helpers/HObjects'
+import { HObjects } from '~~/src/Helpers/HObjects'
 import { MShape } from '~~/src/Models/MShape'
 import { TGrid } from '~~/src/Types/GridTypes'
 

@@ -1,5 +1,5 @@
-import HArray from '~~/src/Helpers/HArray'
-import HObjects from '~~/src/Helpers/HObjects'
+import { HArray } from '~~/src/Helpers/HArray'
+import { HObjects } from '~~/src/Helpers/HObjects'
 import { MGrid } from '~~/src/Models/MGrid'
 
 /**

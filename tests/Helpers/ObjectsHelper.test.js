@@ -1,4 +1,4 @@
-import HObjects from '~~/src/Helpers/HObjects'
+import { HObjects } from '~~/src/Helpers/HObjects'
 
 test('objects clone test', () => {
     const obj1 = { name: 'john' }

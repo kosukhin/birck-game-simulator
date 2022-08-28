@@ -4,9 +4,9 @@ import { MGrid } from '~~/src/Models/MGrid'
 import { WFGameConditions } from '~~/src/Workflows/Tetris/WFGameConditions'
 import Shapes from '~~/src/Data/Shapes'
 import { MShape } from '~~/src/Models/MShape'
-import HApp from '~~/src/Helpers/HApp'
-import HLog from '~~/src/Helpers/HLog'
-import HObjects from '~~/src/Helpers/HObjects'
+import { HApp } from '~~/src/Helpers/HApp'
+import { HLog } from '~~/src/Helpers/HLog'
+import { HObjects } from '~~/src/Helpers/HObjects'
 
 /**
  * Основной класс хода выполнения игры тетрис

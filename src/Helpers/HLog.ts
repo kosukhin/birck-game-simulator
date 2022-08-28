@@ -1,4 +1,4 @@
-import HService from '~~/src/Helpers/HService'
+import { HService } from '~~/src/Helpers/HService'
 import { SLogger } from '~~/src/Services/SLogger'
 
 /**
@@ -12,9 +12,7 @@ export class HLog {
      * @param tag
      * @param messages
      */
-    log(tag: string, ...messages: string[]) {
+    static log(tag: string, ...messages: string[]) {
         HService.get<SLogger>('logger').log(tag, ...messages)
     }
 }
-
-export default new HLog()
