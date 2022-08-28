@@ -1,10 +1,10 @@
 <template>
     <div class="menu screen">
-        <a class="menu_item" href="#" @click.prevent="$emit('open', 'start')">
+        <a class="menu-item" href="#" @click.prevent="$emit('open', 'start')">
             {{ $services.lang.t('Start game') }}
         </a>
         <a
-            class="menu_item"
+            class="menu-item"
             href="#"
             @click.prevent="$emit('open', 'settings')"
         >
@@ -14,7 +14,7 @@
 </template>
 
 <style scoped>
-.menu_item {
+.menu-item {
     cursor: pointer;
 }
 </style>

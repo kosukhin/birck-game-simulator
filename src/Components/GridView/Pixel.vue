@@ -23,7 +23,7 @@ defineProps({
     position: relative;
 }
 
-.filled::before {
+.filled:before {
     content: '';
     display: block;
     position: absolute;

@@ -2,7 +2,7 @@
 
 - [x] Сделать Entities
 - [x] Добавить поддержку SCSS
-- Добавить stylelint
+- [x] Добавить stylelint
 - [x] Добавить jslint
 - [x] Добавить husky
 - Добавить JSDoc

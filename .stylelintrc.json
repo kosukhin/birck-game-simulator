@@ -1,0 +1,45 @@
+{
+    "processors": ["@mapbox/stylelint-processor-arbitrary-tags"],
+    "extends": "stylelint-config-standard-scss",
+    "rules": {
+        "indentation": 4,
+        "string-quotes": "single",
+        "no-duplicate-selectors": true,
+        "selector-combinator-space-after": "always",
+        "selector-attribute-quotes": "always",
+        "selector-attribute-operator-space-before": "never",
+        "selector-attribute-operator-space-after": "never",
+        "selector-attribute-brackets-space-inside": "never",
+        "declaration-block-trailing-semicolon": "always",
+        "declaration-colon-space-before": "never",
+        "declaration-colon-space-after": "always",
+        "function-url-quotes": "always",
+        "font-family-name-quotes": "always-where-recommended",
+        "comment-whitespace-inside": "always",
+        "rule-empty-line-before": "always",
+        "selector-pseudo-element-colon-notation": "single",
+        "selector-pseudo-class-parentheses-space-inside": "never",
+        "media-feature-range-operator-space-before": "always",
+        "media-feature-range-operator-space-after": "always",
+        "media-feature-parentheses-space-inside": "never",
+        "media-feature-colon-space-before": "never",
+        "media-feature-colon-space-after": "never",
+        "at-rule-empty-line-before": null,
+        "no-empty-first-line": null,
+        "no-empty-source": null,
+        "selector-pseudo-element-no-unknown": [
+            true,
+            {
+                "ignorePseudoElements": ["v-deep"]
+            }
+        ],
+        "selector-list-comma-newline-after": "always-multi-line",
+        "selector-class-pattern": "^[a-z]([a-z0-9-]+)?(__([a-z0-9]+-?)+)?(--([a-z0-9]+-?)+){0,2}$|^Mui.*$",
+        "alpha-value-notation": null,
+        "color-function-notation": null,
+        "max-empty-lines": 2,
+        "color-hex-length": null,
+        "value-keyword-case": null,
+        "property-no-vendor-prefix": null
+    }
+}
