@@ -37,18 +37,22 @@ keyboard.registerKeySubscriber((key) => {
 
     if (key === 'w') {
         shape.bitmap = HArray.rotate90(shape.bitmap)
+        game.rerenderGrid()
     }
 
     if (key === 's') {
         shape.y = shape.y + 1
+        game.rerenderGrid()
     }
 
     if (key === 'a') {
         shape.x = shape.x - 1
+        game.rerenderGrid()
     }
 
     if (key === 'd') {
         shape.x = shape.x + 1
+        game.rerenderGrid()
     }
 })
 </script>

@@ -100,6 +100,13 @@ export class WFMain {
             this.#isGameOver.value = true
         }
 
+        this.rerenderGrid()
+    }
+
+    /**
+     * Перерисовывает сетку
+     */
+    rerenderGrid() {
         this.#updateCounter.value += 1
     }
 
