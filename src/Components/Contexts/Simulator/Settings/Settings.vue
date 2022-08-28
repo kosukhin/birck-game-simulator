@@ -1,6 +1,6 @@
 <template>
     <div class="settings screen">
-        <a class="back" href="#" @click.prevent="$emit('back')">Назад &rarr;</a>
+        <nuxt-link class="back" to="/simulator/">Назад &rarr;</nuxt-link>
         {{ $services.lang.t('Settings') }}
     </div>
 </template>
