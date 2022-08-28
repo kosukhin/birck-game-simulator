@@ -7,6 +7,7 @@
     "preview": "nuxt preview",
     "test": "jest --passWithNoTests",
     "prepare": "husky install",
+    "generatedoc": "./node_modules/.bin/typedoc src/**/*.ts --out jsdocs",
     "lint": "eslint --ext \".ts,.js,.vue\" --ignore-path .eslintignore .",
     "lintfix": "eslint --fix --ext \".ts,.js,.vue\" --ignore-path .eslintignore .",
     "stylelint": "stylelint '**/*.{vue,scss}' --ignore-pattern 'node_modules/*' --ignore-pattern '.nuxt/*' --ignore-pattern 'dist/*'"
@@ -38,6 +39,7 @@
     "stylelint-config-standard-scss": "^5.0.0",
     "stylelint-processor-html": "^1.0.0",
     "ts-jest": "^28.0.8",
+    "typedoc": "^0.23.11",
     "typescript": "^4.7.4"
   },
   "lint-staged": {

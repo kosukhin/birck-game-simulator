@@ -1,0 +1,24 @@
+{
+    "plugins": [
+        "flow",
+        "typescript",
+        "jsdoc-plugin-typescript"
+    ],
+    "typescript": {
+        "moduleRoot": "src"
+    },
+    "recurseDepth": 10,
+    "source": {
+      "includePattern": ".+\\.(js|ts)?$",
+      "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "sourceType": "module",
+    "tags": {
+      "allowUnknownTags": true,
+      "dictionaries": ["jsdoc", "closure"]
+    },
+    "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false
+    }
+  }
