@@ -9,8 +9,8 @@ import { SLogger } from '~~/src/Services/SLogger'
 export class HLog {
     /**
      * Добавляет сообщение в логгер
-     * @param tag
-     * @param messages
+     * @param tag тэг сообщения, нужен чтобы отключать\включать сообщения
+     * @param messages набор сообщений
      */
     static log(tag: string, ...messages: string[]) {
         HService.get<SLogger>('logger').log(tag, ...messages)

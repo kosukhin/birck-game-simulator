@@ -3,8 +3,9 @@
  */
 export class HArray {
     /**
-     * Поворачивает массив на 90 градусов
-     * @param a
+     * Поворачивает массив на 90 градусов,
+     * возвращает новый массив, не мутирует массив из параметров
+     * @param a исходный массив
      * @returns
      */
     static rotate90(a: any[]) {
@@ -25,8 +26,9 @@ export class HArray {
 
     /**
      * Проверяет что все элементы массива равны значению
-     * @param arr
-     * @param equalsTo
+     * из параметра equalsTo
+     * @param arr проверяемый массив
+     * @param equalsTo значение которому должны быть равны элементы
      * @returns
      */
     static isAllElementsEqualsTo(arr: any[], equalsTo: number): boolean {

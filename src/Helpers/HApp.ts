@@ -4,7 +4,7 @@
 export class HApp {
     /**
      * Таймаут в формате промиса
-     * @param ms
+     * @param ms время задержки в мс
      * @returns
      */
     static wait(ms: number): Promise<void> {
