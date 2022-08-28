@@ -6,7 +6,7 @@ import { SLogger } from '~~/src/Services/SLogger'
  * где нету доступа к app и не хочется ради логирования
  * вызывать useNuxtApp
  */
-export default new (class HLog {
+export class HLog {
     /**
      * Добавляет сообщение в логгер
      * @param tag
@@ -15,4 +15,6 @@ export default new (class HLog {
     log(tag: string, ...messages: string[]) {
         HService.get<SLogger>('logger').log(tag, ...messages)
     }
-})()
+}
+
+export default new HLog()

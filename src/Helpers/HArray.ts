@@ -1,7 +1,7 @@
 /**
  * Хелпер для работы над массивами
  */
-export default new (class HArray {
+export class HArray {
     /**
      * Поворачивает массив на 90 градусов
      * @param a
@@ -34,4 +34,6 @@ export default new (class HArray {
             return acc && item === equalsTo
         }, true)
     }
-})()
+}
+
+export default new HArray()

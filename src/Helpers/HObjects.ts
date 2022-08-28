@@ -1,7 +1,7 @@
 /**
  * Помощник для работы над объектами
  */
-export default new (class HObjects {
+export class HObjects {
     /**
      * Клонирует объект
      * @param object
@@ -10,4 +10,6 @@ export default new (class HObjects {
     clone(object: any) {
         return JSON.parse(JSON.stringify(object))
     }
-})()
+}
+
+export default new HObjects()

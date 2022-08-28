@@ -1,7 +1,7 @@
 /**
  * Вспомогательные функции для приложения
  */
-export default new (class HApp {
+export class HApp {
     /**
      * Таймаут в формате промиса
      * @param ms
@@ -14,4 +14,6 @@ export default new (class HApp {
             }, ms)
         })
     }
-})()
+}
+
+export default new HApp()
