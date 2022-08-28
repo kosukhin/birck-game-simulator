@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import GridView from '~~/src/Components/GridView/GridView.vue'
+import GridView from '~~/src/Components/Common/GridView/GridView.vue'
 import { WFMain } from '~~/src/Workflows/Tetris/WFMain'
 import { HService } from '~~/src/Helpers/HService'
 import { SKeyboard } from '~~/src/Services/SKeyboard'

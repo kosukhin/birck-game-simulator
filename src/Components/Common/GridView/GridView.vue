@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import Pixel from '~~/src/Components/GridView/Pixel.vue'
+import Pixel from '~~/src/Components/Common/GridView/Pixel.vue'
 
 defineProps({
     grid: {
