@@ -18,17 +18,17 @@
 
 <script setup lang="ts">
 import GridView from '~~/src/Components/Common/GridView/GridView.vue'
-import { WFMain } from '~~/src/Workflows/Tetris/WFMain'
-import { HService } from '~~/src/Helpers/HService'
+import { WfMain } from '~~/src/Workflows/Tetris/WfMain'
+import { useService } from '~~/src/Helpers/HService'
 import { SKeyboard } from '~~/src/Services/SKeyboard'
 import { HArray } from '~~/src/Helpers/HArray'
 
-const keyboard = HService.get<SKeyboard>('keyboard')
-const game = new WFMain()
+const keyboard = useService<SKeyboard>('keyboard')
+const game = new WfMain()
 game.run()
 
 keyboard.clearSubscribers()
-keyboard.registerKeySubscriber((key) => {
+keyboard.registerSubscriber((key) => {
     const shape = game.grid.getFirstShape()
 
     if (!shape) {

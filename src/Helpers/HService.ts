@@ -14,3 +14,12 @@ export class HService {
         return app.$services[name]
     }
 }
+
+/**
+ * Получение сервиса в функциональном стиле
+ * @param name
+ * @returns
+ */
+export function useService<T>(name: string): T {
+    return HService.get<T>(name)
+}

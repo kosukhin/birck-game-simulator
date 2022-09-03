@@ -6,7 +6,7 @@ import { MGrid } from '~~/src/Models/MGrid'
  * Процесс отвечающий за выполнение основных
  * условий игры.
  */
-export class WFGameConditions {
+export class WfGameConditions {
     #grid: MGrid
 
     constructor(grid: MGrid) {

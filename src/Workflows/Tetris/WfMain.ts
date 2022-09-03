@@ -1,7 +1,7 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
 import { ref } from 'vue'
 import { MGrid } from '~~/src/Models/MGrid'
-import { WFGameConditions } from '~~/src/Workflows/Tetris/WFGameConditions'
+import { WfGameConditions } from '~~/src/Workflows/Tetris/WfGameConditions'
 import Shapes from '~~/src/Data/Shapes'
 import { MShape } from '~~/src/Models/MShape'
 import { HApp } from '~~/src/Helpers/HApp'
@@ -11,7 +11,7 @@ import { HObjects } from '~~/src/Helpers/HObjects'
 /**
  * Основной класс хода выполнения игры тетрис
  */
-export class WFMain {
+export class WfMain {
     /**
      * Основная сетка тетриса
      */
@@ -35,7 +35,7 @@ export class WFMain {
     /**
      * Условия игры
      */
-    #conditions: WFGameConditions
+    #conditions: WfGameConditions
 
     /**
      * Счетчик необходимый для формирования ключа обновления сетки
@@ -45,7 +45,7 @@ export class WFMain {
     constructor() {
         this.#grid = new MGrid({})
         this.#grid.setGrid(this.createEmptyGrid())
-        this.#conditions = new WFGameConditions(this.#grid)
+        this.#conditions = new WfGameConditions(this.#grid)
         this.#score = ref(0)
         this.#speed = ref(500)
         this.#isGameOver = ref(false)
