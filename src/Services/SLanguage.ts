@@ -1,4 +1,4 @@
-import Translations from '~/src/Data/Translations'
+import Translations from '~~/src/Data/Translations'
 
 /**
  * Сервис для работы с переводами

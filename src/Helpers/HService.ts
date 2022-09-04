@@ -1,3 +1,5 @@
+import services from '~~/src/Injections/Services'
+
 /**
  * Хэлпер для получения серисов
  */
@@ -9,9 +11,7 @@ export class HService {
      * @returns инстанс сервиса
      */
     static get<T>(name: string): T {
-        const app = useNuxtApp()
-
-        return app.$services[name]
+        return services[name]
     }
 }
 

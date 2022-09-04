@@ -1,4 +1,5 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
+import { ref } from 'vue'
 
 interface ISettings {
     height?: number
