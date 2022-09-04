@@ -1,8 +1,12 @@
 <template>
     <div class="simulator">
-        <nuxt-link to="/">Главная</nuxt-link>
-        <nuxt-link to="/simulator/tetris/">Тетрис</nuxt-link>
-        <nuxt-link to="/simulator/settings/">Настройки</nuxt-link>
+        <nuxt-link to="/">{{ $services.lang.t('Home') }}</nuxt-link>
+        <nuxt-link to="/simulator/tetris/">{{
+            $services.lang.t('Tetris')
+        }}</nuxt-link>
+        <nuxt-link to="/simulator/snake/">{{
+            $services.lang.t('Snake')
+        }}</nuxt-link>
     </div>
 </template>
 

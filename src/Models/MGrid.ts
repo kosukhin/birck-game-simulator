@@ -137,4 +137,21 @@ export class MGrid {
     getFirstShape(): MShape | undefined {
         return this.#shapes[0]
     }
+
+    /**
+     * Создает пустую сетку
+     */
+    createEmptyGrid() {
+        const newGrid = []
+
+        for (let i = 0; i < this.height; i++) {
+            newGrid[i] || (newGrid[i] = [])
+
+            for (let j = 0; j < this.width; j++) {
+                newGrid[i][j] = 0
+            }
+        }
+
+        this.#bgBitmap = newGrid
+    }
 }

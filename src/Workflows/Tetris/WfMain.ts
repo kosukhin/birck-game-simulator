@@ -44,7 +44,7 @@ export class WfMain {
 
     constructor() {
         this.#grid = new MGrid({})
-        this.#grid.setGrid(this.createEmptyGrid())
+        this.createEmptyGrid()
         this.#conditions = new WfGameConditions(this.#grid)
         this.#score = ref(0)
         this.#speed = ref(500)
@@ -188,16 +188,6 @@ export class WfMain {
      * Создает пустую сетку
      */
     createEmptyGrid() {
-        const newGrid = []
-
-        for (let i = 0; i < this.#grid.height; i++) {
-            newGrid[i] || (newGrid[i] = [])
-
-            for (let j = 0; j < this.#grid.width; j++) {
-                newGrid[i][j] = 0
-            }
-        }
-
-        return newGrid
+        this.#grid.createEmptyGrid()
     }
 }

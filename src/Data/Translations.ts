@@ -6,4 +6,7 @@ export default {
     'Game over': 'Игра закончена',
     Score: 'Счет',
     Speed: 'Скорость',
+    Home: 'Главная',
+    Tetris: 'Тетрис',
+    Snake: 'Змейка',
 }
