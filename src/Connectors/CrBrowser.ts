@@ -11,4 +11,13 @@ export class CrBrowser {
     on(element: any, event: string, callback: (e) => void) {
         element.addEventListener(event, callback)
     }
+
+    /**
+     * Вывод в консоль
+     * @param values
+     */
+    consoleLog(...values: any[]) {
+        const { log } = console
+        log(...values)
+    }
 }

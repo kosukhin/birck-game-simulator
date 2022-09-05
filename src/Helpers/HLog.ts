@@ -12,7 +12,18 @@ export class HLog {
      * @param tag тэг сообщения, нужен чтобы отключать\включать сообщения
      * @param messages набор сообщений
      */
-    static log(tag: string, ...messages: string[]) {
+    static log(tag: string, ...messages: any[]) {
         HService.get<SLogger>('logger').log(tag, ...messages)
+    }
+}
+
+/**
+ * Частично примененная функция для логирования по тэгу
+ * @param tag
+ * @returns
+ */
+export function useLog(tag): (...messages: any[]) => void {
+    return (...messages: any[]) => {
+        HLog.log(tag, ...messages)
     }
 }

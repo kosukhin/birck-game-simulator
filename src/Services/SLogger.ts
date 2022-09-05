@@ -12,6 +12,7 @@ export class SLogger {
         max: false,
         shape_form: false,
         fulltrace: false,
+        snake: true,
     }
 
     /**
@@ -20,7 +21,7 @@ export class SLogger {
      * @param rest
      * @returns
      */
-    log(tag: string, ...rest: string[]) {
+    log(tag: string, ...rest: any[]) {
         if (!this.config[tag]) {
             return
         }
