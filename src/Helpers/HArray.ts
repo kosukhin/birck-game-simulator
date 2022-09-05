@@ -36,4 +36,24 @@ export class HArray {
             return acc && item === equalsTo
         }, true)
     }
+
+    /**
+     * Создает двумерный массив заданной ширины и высоты
+     * @param width
+     * @param height
+     * @returns
+     */
+    static createTwoDemGrid(width: number, height: number) {
+        const newGrid = []
+
+        for (let i = 0; i < height; i++) {
+            newGrid[i] || (newGrid[i] = [])
+
+            for (let j = 0; j < width; j++) {
+                newGrid[i][j] = 0
+            }
+        }
+
+        return newGrid
+    }
 }

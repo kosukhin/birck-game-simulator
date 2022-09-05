@@ -1,3 +1,4 @@
+import { HArray } from '~~/src/Helpers/HArray'
 import { HObjects } from '~~/src/Helpers/HObjects'
 import { MShape } from '~~/src/Models/MShape'
 import { TGrid } from '~~/src/Types/GridTypes'
@@ -69,6 +70,14 @@ export class MGrid {
                 if (shape.x < 0) {
                     x = 0
                     shape.position = [x, y]
+                }
+
+                if (shape.y <= 0) {
+                    shape.y = 0
+                }
+
+                if (shape.maxY > this.#height) {
+                    shape.y = this.#height - 1
                 }
 
                 // Переносим пиксели фигуры на сетку
@@ -144,16 +153,6 @@ export class MGrid {
      * Создает пустую сетку
      */
     createEmptyGrid() {
-        const newGrid = []
-
-        for (let i = 0; i < this.height; i++) {
-            newGrid[i] || (newGrid[i] = [])
-
-            for (let j = 0; j < this.width; j++) {
-                newGrid[i][j] = 0
-            }
-        }
-
-        this.#bgBitmap = newGrid
+        this.#bgBitmap = HArray.createTwoDemGrid(this.#width, this.#height)
     }
 }
