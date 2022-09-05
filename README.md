@@ -13,3 +13,9 @@
 
 https://user-images.githubusercontent.com/109918884/185798568-eba22412-1a1c-46c0-983f-70142560819b.mp4
 
+---
+
+## Змейка
+
+https://user-images.githubusercontent.com/109918884/188473276-4c42e80c-eec9-4121-a86d-b6dda526bceb.mp4
+
