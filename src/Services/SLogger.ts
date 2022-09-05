@@ -13,6 +13,7 @@ export class SLogger {
         shape_form: false,
         fulltrace: false,
         snake: true,
+        keyboard: true,
     }
 
     /**

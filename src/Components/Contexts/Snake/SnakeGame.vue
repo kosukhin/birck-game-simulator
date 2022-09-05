@@ -10,17 +10,24 @@
 <script setup lang="ts">
 import GridView from '~~/src/Components/Common/GridView/GridView.vue'
 import { useService } from '~~/src/Helpers/HService'
-import { SKeyboard } from '~~/src/Services/SKeyboard'
-import { WfMain } from '~~/src/Workflows/Snake/WfMain'
-import { useLog } from '~~/src/Helpers/HLog'
+import { KeyCode, SKeyboard } from '~~/src/Services/SKeyboard'
+import { MoveDirection, WfMain } from '~~/src/Workflows/Snake/WfMain'
 
-const snakeLog = useLog('snake')
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfMain()
 game.run()
 
 keyboard.clearSubscribers()
-keyboard.registerSubscriber((key) => {
-    snakeLog(key)
+keyboard.registerSubscriber((key: KeyCode) => {
+    const keysToMoveMap = {
+        [KeyCode.W]: MoveDirection.up,
+        [KeyCode.S]: MoveDirection.down,
+        [KeyCode.A]: MoveDirection.left,
+        [KeyCode.D]: MoveDirection.right,
+    }
+
+    if (keysToMoveMap[key] !== undefined) {
+        game.moveSnake(keysToMoveMap[key])
+    }
 })
 </script>

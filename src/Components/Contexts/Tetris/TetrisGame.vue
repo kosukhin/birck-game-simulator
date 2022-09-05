@@ -20,7 +20,7 @@
 import GridView from '~~/src/Components/Common/GridView/GridView.vue'
 import { WfMain } from '~~/src/Workflows/Tetris/WfMain'
 import { useService } from '~~/src/Helpers/HService'
-import { SKeyboard } from '~~/src/Services/SKeyboard'
+import { KeyCode, SKeyboard } from '~~/src/Services/SKeyboard'
 import { HArray } from '~~/src/Helpers/HArray'
 
 const keyboard = useService<SKeyboard>('keyboard')
@@ -28,29 +28,29 @@ const game = new WfMain()
 game.run()
 
 keyboard.clearSubscribers()
-keyboard.registerSubscriber((key) => {
+keyboard.registerSubscriber((key: KeyCode) => {
     const shape = game.grid.getFirstShape()
 
     if (!shape) {
         return
     }
 
-    if (key === 'w') {
+    if (key === KeyCode.W) {
         shape.bitmap = HArray.rotate90(shape.bitmap)
         game.rerenderGrid()
     }
 
-    if (key === 's') {
+    if (key === KeyCode.S) {
         shape.y = shape.y + 1
         game.rerenderGrid()
     }
 
-    if (key === 'a') {
+    if (key === KeyCode.A) {
         shape.x = shape.x - 1
         game.rerenderGrid()
     }
 
-    if (key === 'd') {
+    if (key === KeyCode.D) {
         shape.x = shape.x + 1
         game.rerenderGrid()
     }

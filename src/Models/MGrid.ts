@@ -53,9 +53,7 @@ export class MGrid {
      */
     render() {
         const grid = HObjects.clone(this.#bgBitmap)
-        const shape = this.getFirstShape()
-
-        if (shape) {
+        const copyShapeToGrid = (shape) => {
             // Копируем фигуру на грид
             for (const i in shape.bitmap) {
                 let x = Number(shape.x)
@@ -86,6 +84,10 @@ export class MGrid {
                         shape.bitmap[i][j] || grid[nextY][nextX]
                 }
             }
+        }
+
+        for (const shape of this.#shapes) {
+            copyShapeToGrid(shape)
         }
 
         return grid
