@@ -20,4 +20,15 @@ export class CrBrowser {
         const { log } = console
         log(...values)
     }
+
+    /**
+     * Запросить следующий фрейм анимации, это
+     * нужно чтобы на забивать очередь задач
+     * @param callback
+     */
+    requestAnimationFrame(callback: () => void) {
+        if (process.client && window) {
+            window.requestAnimationFrame(callback)
+        }
+    }
 }

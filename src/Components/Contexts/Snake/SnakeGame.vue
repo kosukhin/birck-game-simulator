@@ -30,4 +30,8 @@ keyboard.registerSubscriber((key: KeyCode) => {
         game.moveSnake(keysToMoveMap[key])
     }
 })
+
+onUnmounted(() => {
+    game.gameIsOver()
+})
 </script>

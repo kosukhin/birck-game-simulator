@@ -1,4 +1,5 @@
 import { HArray } from '~~/src/Helpers/HArray'
+import { HLog } from '~~/src/Helpers/HLog'
 import { HObjects } from '~~/src/Helpers/HObjects'
 import { MShape } from '~~/src/Models/MShape'
 import { TGrid } from '~~/src/Types/GridTypes'
@@ -132,6 +133,19 @@ export class MGrid {
      */
     addShape(shape: MShape) {
         this.#shapes = [...this.#shapes, shape]
+    }
+
+    /**
+     * Удаляет фигуру по id
+     * @param id
+     */
+    removeShapeById(id) {
+        const index = this.#shapes.findIndex((shape) => shape.id === id)
+        HLog.log('snake', id, index, this.#shapes)
+
+        if (index !== -1) {
+            this.#shapes.splice(index, 1)
+        }
     }
 
     /**

@@ -4,8 +4,10 @@ import { HArray } from '~~/src/Helpers/HArray'
 import { HLog } from '~~/src/Helpers/HLog'
 import { HMath } from '~~/src/Helpers/HMath'
 import { HObjects } from '~~/src/Helpers/HObjects'
+import { useService } from '~~/src/Helpers/HService'
 import { MGrid } from '~~/src/Models/MGrid'
 import { MShape } from '~~/src/Models/MShape'
+import { SConnectors } from '~~/src/Services/SConnectors'
 
 export enum MoveDirection {
     up,
@@ -53,12 +55,16 @@ class Snake {
         this.points = [new SnakePoint(1, 0), new SnakePoint(0, 0)]
         this.width = grid.width
         this.height = grid.height
+        this.updateShape()
     }
 
     /**
      * Двигает змейку вперед
      */
     moveForward() {
+        // Коориднаты каждой предыдущей точки хвоста копируем в следующую
+        let prevPointPosition = [this.leadPoint.x, this.leadPoint.y]
+
         switch (this.direction) {
             case MoveDirection.down:
                 this.leadPoint.setPosition(
@@ -86,13 +92,18 @@ class Snake {
                 break
         }
 
-        // Коориднаты каждой предыдущей точки хвоста копируем в следующую
-        let prevPoint = this.leadPoint
         this.points.forEach((point) => {
-            point.setPosition(prevPoint.x, prevPoint.y)
-            prevPoint = point
+            const position = [point.x, point.y]
+            point.setPosition(prevPointPosition[0], prevPointPosition[1])
+            prevPointPosition = position
         })
 
+        this.updateShape()
+    }
+
+    addPointToEnd() {
+        const lastPoint = this.points[this.points.length - 1]
+        this.points.push(new SnakePoint(lastPoint.x, lastPoint.y))
         this.updateShape()
     }
 
@@ -125,6 +136,8 @@ class Snake {
 export class WfMain {
     #grid: MGrid
     snake: Snake
+    target: MShape
+    isGameOver = false
 
     /**
      * Счетчик необходимый для формирования ключа обновления сетки
@@ -145,6 +158,36 @@ export class WfMain {
     run() {
         this.addTargetDot()
         this.drawSnake()
+        this.nextFrame()
+    }
+
+    nextFrame() {
+        useService<SConnectors>('connectors').browser.requestAnimationFrame(
+            () => {
+                setTimeout(() => {
+                    this.snake.moveForward()
+
+                    /**
+                     * Если змейка достигла точки
+                     */
+                    if (
+                        this.snake.leadPoint.x === this.target.x &&
+                        this.snake.leadPoint.y === this.target.y
+                    ) {
+                        this.snake.addPointToEnd()
+                        this.addTargetDot()
+                        this.snake.moveForward()
+                    }
+
+                    this.#updateCounter.value++
+                    !this.isGameOver && this.nextFrame()
+                }, 400)
+            }
+        )
+    }
+
+    gameIsOver() {
+        this.isGameOver = true
     }
 
     /**
@@ -153,9 +196,6 @@ export class WfMain {
      */
     moveSnake(direction: MoveDirection) {
         this.snake.changeDirection(direction)
-        this.snake.moveForward()
-
-        this.#updateCounter.value++
     }
 
     /**
@@ -168,12 +208,13 @@ export class WfMain {
      * змейке
      */
     addTargetDot() {
-        const dot = new MShape({ bitmap: [[1]] })
+        this.#grid.removeShapeById('target')
+        this.target = new MShape({ id: 'target', bitmap: [[1]] })
         const x = HMath.random(3, this.#grid.width - 1)
         const y = HMath.random(1, this.#grid.height - 1)
-        dot.position = [x, y]
-        this.#grid.addShape(dot)
-        HLog.log('snake', dot.position)
+        this.target.position = [x, y]
+        this.#grid.addShape(this.target)
+        HLog.log('snake', this.target.position)
     }
 
     /**

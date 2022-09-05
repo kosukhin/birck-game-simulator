@@ -4,6 +4,7 @@ interface IShapeParams {
     x?: number
     y?: number
     bitmap?: TGrid
+    id?: any
 }
 
 /**
@@ -11,7 +12,7 @@ interface IShapeParams {
  * пиксельные формы, которые могут быть частью Grid
  */
 export class MShape {
-    #id = MShape.getNewShapeId() // Уникальный id фигуры
+    #id: any = MShape.getNewShapeId() // Уникальный id фигуры
     #bitmap: TGrid // Изображение фигуры пиксельное
     #x: number // Позиция фигуры по x
     #y: number // Позиция фигуры по y
@@ -22,6 +23,10 @@ export class MShape {
         this.#bitmap = bitmap
         this.#x = x
         this.#y = y
+
+        if (params.id) {
+            this.#id = params.id
+        }
     }
 
     /**
@@ -103,6 +108,10 @@ export class MShape {
         const yAdd = Number(this.#bitmap.length)
 
         return this.y + yAdd
+    }
+
+    get id() {
+        return this.#id
     }
 
     /**
