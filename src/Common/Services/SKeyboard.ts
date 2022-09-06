@@ -13,6 +13,7 @@ export enum KeyCode {
     A = 'KeyA',
     S = 'KeyS',
     D = 'KeyD',
+    SPC = 'Space',
 }
 
 /**

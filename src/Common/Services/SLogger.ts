@@ -15,6 +15,7 @@ export class SLogger {
         snake: false,
         keyboard: false,
         game_resolving: false,
+        tanks: true,
     }
 
     /**

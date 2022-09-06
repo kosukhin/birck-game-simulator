@@ -8,23 +8,7 @@ import { useService } from '~~/src/Common/Helpers/HService'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
-
-export enum MoveDirection {
-    up,
-    down,
-    right,
-    left,
-}
-
-/**
- * Противоположные направления движения
- */
-const ReverseDirections = {
-    [MoveDirection.up]: MoveDirection.down,
-    [MoveDirection.down]: MoveDirection.up,
-    [MoveDirection.right]: MoveDirection.left,
-    [MoveDirection.left]: MoveDirection.right,
-}
+import { MoveDirection, ReverseDirections } from '~~/src/Common/Types/GameTypes'
 
 /**
  * Одна точка теля змейки

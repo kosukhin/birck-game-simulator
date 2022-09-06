@@ -1,3 +1,5 @@
+import { HArray } from '~~/src/Common/Helpers/HArray'
+import { MoveDirection } from '~~/src/Common/Types/GameTypes'
 import { TGrid, TShapePosition } from '~~/src/Common/Types/GridTypes'
 
 interface IShapeParams {
@@ -17,6 +19,7 @@ export class MShape {
     #x: number // Позиция фигуры по x
     #y: number // Позиция фигуры по y
     static #shapeIdCounter = 0 // Статический счетчик всех id фигур
+    #rotate: MoveDirection = MoveDirection.up
 
     constructor(params: IShapeParams) {
         const { x = 0, y = 0, bitmap = [] } = params
@@ -33,7 +36,23 @@ export class MShape {
      * Возвращает сетку фигуры
      */
     get bitmap(): TGrid {
-        return this.#bitmap
+        let bitmap = this.#bitmap
+
+        // Если у фигуры нестандартный поворот, то поворачиваем битмап
+        if (this.#rotate !== MoveDirection.up) {
+            this.#rotate === MoveDirection.right &&
+                (bitmap = HArray.rotate90(this.#bitmap))
+            this.#rotate === MoveDirection.down &&
+                (bitmap = HArray.rotate180(this.#bitmap))
+            this.#rotate === MoveDirection.left &&
+                (bitmap = HArray.rotate270(this.#bitmap))
+        }
+
+        return bitmap
+    }
+
+    setRotation(direction: MoveDirection) {
+        this.#rotate = direction
     }
 
     /**
@@ -120,6 +139,14 @@ export class MShape {
      */
     moveY(by: number = 1) {
         this.#y += by
+    }
+
+    /**
+     * Передвигает фигуру на x переданный через by
+     * @param by
+     */
+    moveX(by: number = 1) {
+        this.#x += by
     }
 
     /**

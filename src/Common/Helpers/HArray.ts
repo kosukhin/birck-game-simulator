@@ -27,6 +27,24 @@ export class HArray {
     }
 
     /**
+     * Поворачиваем на 180 градусов
+     * @param a
+     * @returns
+     */
+    static rotate180(a: any[]) {
+        return HArray.rotate90(HArray.rotate90(a))
+    }
+
+    /**
+     * Поворачиваем на 270 градусов
+     * @param a
+     * @returns
+     */
+    static rotate270(a: any[]) {
+        return HArray.rotate180(HArray.rotate90(a))
+    }
+
+    /**
      * Проверяет что все элементы массива равны значению
      * из параметра equalsTo
      * @param arr проверяемый массив
