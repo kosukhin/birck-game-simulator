@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import Simulator from '~~/src/Components/Contexts/Simulator/Simulator.vue'
+import Simulator from '~~/src/Common/Components/Simulator/Simulator.vue'
 </script>

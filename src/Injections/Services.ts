@@ -1,9 +1,10 @@
-import { SConnectors } from '~~/src/Services/SConnectors'
-import { SHooks } from '~~/src/Services/SHooks'
-import { SKeyboard } from '~~/src/Services/SKeyboard'
-import { SLanguage } from '~~/src/Services/SLanguage'
-import { SLogger } from '~~/src/Services/SLogger'
-import { SModelsPool } from '~~/src/Services/SModelsPool'
+import { SConnectors } from '~~/src/Common/Services/SConnectors'
+import { SHooks } from '~~/src/Common/Services/SHooks'
+import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
+import { SLanguage } from '~~/src/Common/Services/SLanguage'
+import { SLogger } from '~~/src/Common/Services/SLogger'
+import { SSnake } from '~~/src/Snake/Services/SSnake'
+import { STetris } from '~~/src/Tetris/Services/STetris'
 
 const hooks = new SHooks()
 const services = {
@@ -11,8 +12,9 @@ const services = {
     lang: new SLanguage(),
     keyboard: new SKeyboard(),
     logger: new SLogger(),
-    modelsPool: new SModelsPool(),
     connectors: new SConnectors(),
+    snake: new SSnake(),
+    tetris: new STetris(),
 }
 
 // Если у сервиса есть метод afterInit вызываем этот метод

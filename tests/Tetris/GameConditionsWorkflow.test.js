@@ -1,9 +1,9 @@
-import { MShape } from '~~/src/Models/MShape'
-import { WfGameConditions } from '~~/src/Workflows/Tetris/WfGameConditions'
-import { WfMain } from '~~/src/Workflows/Tetris/WfMain'
+import { MShape } from '~~/src/Common/Models/MShape'
+import { WfTetrisConditions } from '~~/src/Tetris/Workflows/WfTetrisConditions'
+import { WfTetris } from '~~/src/Tetris/Workflows/WfTetris'
 
 const gameConditionsFactory = () => {
-    const game = new WfMain()
+    const game = new WfTetris()
     game.grid.addShape(
         new MShape({
             bitmap: [
@@ -12,7 +12,7 @@ const gameConditionsFactory = () => {
             ],
         })
     )
-    return [new WfGameConditions(game.grid), game]
+    return [new WfTetrisConditions(game.grid), game]
 }
 
 test('check can shape move next', () => {
