@@ -12,7 +12,7 @@ export class SLogger {
         max: false,
         shape_form: false,
         fulltrace: false,
-        snake: true,
+        snake: false,
         keyboard: false,
     }
 
