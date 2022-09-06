@@ -256,6 +256,10 @@ export class WfMain {
         !this.isGameOver.value && this.nextFrame()
     }
 
+    gameIsOver() {
+        this.isGameOver.value = true
+    }
+
     /**
      * Изменить направление движения змейки
      * @param direction

@@ -7,6 +7,8 @@ import { MShape } from '~~/src/Models/MShape'
 import { HApp } from '~~/src/Helpers/HApp'
 import { HLog } from '~~/src/Helpers/HLog'
 import { HObjects } from '~~/src/Helpers/HObjects'
+import { useService } from '~~/src/Helpers/HService'
+import { SConnectors } from '~~/src/Services/SConnectors'
 
 /**
  * Основной класс хода выполнения игры тетрис
@@ -91,6 +93,9 @@ export class WfMain {
      * Запускает работу тетриса
      */
     async run() {
+        await useService<SConnectors>(
+            'connectors'
+        ).browser.requestAnimationFrame()
         await HApp.wait(this.#speed.value)
         this.renderNextFrame()
 
