@@ -1,3 +1,5 @@
+import { HObjects } from '~~/src/Helpers/HObjects'
+
 /**
  * Хелпер для работы над массивами
  */
@@ -55,5 +57,21 @@ export class HArray {
         }
 
         return newGrid
+    }
+
+    /**
+     * Перемешивает массив в рандомном порядке,
+     * входной массив не изменяет, возвращает новый
+     * @param array
+     */
+    static shuffleArray(array: any[]) {
+        const result = HObjects.clone(array)
+
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+            ;[result[i], result[j]] = [result[j], result[i]]
+        }
+
+        return result
     }
 }

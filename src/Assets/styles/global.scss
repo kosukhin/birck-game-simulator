@@ -46,3 +46,16 @@ body {
     font-size: 12px;
     z-index: 1;
 }
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    padding: 30px;
+    background: $c_red;
+    text-align: center;
+    z-index: 2;
+    font-weight: bold;
+}

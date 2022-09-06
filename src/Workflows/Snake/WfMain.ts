@@ -2,7 +2,6 @@ import { Ref } from 'nuxt/dist/app/compat/capi'
 import { ref } from 'vue'
 import { HArray } from '~~/src/Helpers/HArray'
 import { HLog } from '~~/src/Helpers/HLog'
-import { HMath } from '~~/src/Helpers/HMath'
 import { HObjects } from '~~/src/Helpers/HObjects'
 import { useService } from '~~/src/Helpers/HService'
 import { MGrid } from '~~/src/Models/MGrid'
@@ -14,6 +13,16 @@ export enum MoveDirection {
     down,
     right,
     left,
+}
+
+/**
+ * Противоположные направления движения
+ */
+const ReverseDirections = {
+    [MoveDirection.up]: MoveDirection.down,
+    [MoveDirection.down]: MoveDirection.up,
+    [MoveDirection.right]: MoveDirection.left,
+    [MoveDirection.left]: MoveDirection.right,
 }
 
 /**
@@ -115,7 +124,9 @@ class Snake {
         const points = [this.leadPoint, ...this.points]
 
         points.forEach((point) => {
-            bitmap[point.y][point.x] = 1
+            if (bitmap?.[point.y]?.[point.x] !== undefined) {
+                bitmap[point.y][point.x] = 1
+            }
         })
 
         this.shape.bitmap = bitmap
@@ -126,7 +137,50 @@ class Snake {
      * @param direction
      */
     changeDirection(direction: MoveDirection) {
+        // Если пользователь нажал противоположное направление - игнорируем
+        if (this.isReverseDirection(direction)) {
+            return
+        }
+
         this.direction = direction
+    }
+
+    /**
+     * Определяет является ли направление противоположным
+     * @param direction
+     */
+    isReverseDirection(direction: MoveDirection) {
+        const reverseDirection = ReverseDirections[this.direction]
+
+        return reverseDirection === direction
+    }
+
+    /**
+     * Змейка вышла за границы
+     */
+    isSnakeOutOfBounds() {
+        const lessThanX = this.leadPoint.x < 0
+        const lessThanY = this.leadPoint.y < 0
+        const moreThanX = this.leadPoint.x > this.width - 1
+        const moreThanY = this.leadPoint.y > this.height - 1
+
+        return lessThanX || lessThanY || moreThanX || moreThanY
+    }
+
+    /**
+     * Змейка съела сама себя, если координата
+     * лидирующей точки совпала с хотябы одной точкой хвоста
+     */
+    isSnakeAteItSelf() {
+        let isAte = false
+
+        this.points.forEach((point) => {
+            if (point.x === this.leadPoint.x && point.y === this.leadPoint.y) {
+                isAte = true
+            }
+        })
+
+        return isAte
     }
 }
 
@@ -137,7 +191,9 @@ export class WfMain {
     #grid: MGrid
     snake: Snake
     target: MShape
-    isGameOver = false
+    isGameOver: Ref<boolean>
+    score: Ref<number>
+    speed: Ref<number>
 
     /**
      * Счетчик необходимый для формирования ключа обновления сетки
@@ -153,6 +209,9 @@ export class WfMain {
         this.#updateCounter = ref(0)
         this.snake = new Snake(this.#grid)
         this.#grid.addShape(this.snake.shape)
+        this.isGameOver = ref(false)
+        this.speed = ref(400)
+        this.score = ref(0)
     }
 
     run() {
@@ -176,18 +235,32 @@ export class WfMain {
                     ) {
                         this.snake.addPointToEnd()
                         this.addTargetDot()
-                        this.snake.moveForward()
+                        this.score.value++
+                        this.speed.value -= 10
                     }
 
                     this.#updateCounter.value++
-                    !this.isGameOver && this.nextFrame()
-                }, 400)
+
+                    // Если змейка вышла за границы - конец игры
+                    if (this.snake.isSnakeOutOfBounds()) {
+                        this.isGameOver.value = true
+                        return
+                    }
+
+                    // Змейка сама себя съела
+                    if (this.snake.isSnakeAteItSelf()) {
+                        this.isGameOver.value = true
+                        return
+                    }
+
+                    !this.isGameOver.value && this.nextFrame()
+                }, this.speed.value)
             }
         )
     }
 
     gameIsOver() {
-        this.isGameOver = true
+        this.isGameOver.value = true
     }
 
     /**
@@ -210,11 +283,30 @@ export class WfMain {
     addTargetDot() {
         this.#grid.removeShapeById('target')
         this.target = new MShape({ id: 'target', bitmap: [[1]] })
-        const x = HMath.random(3, this.#grid.width - 1)
-        const y = HMath.random(1, this.#grid.height - 1)
+        const { x, y } = this.findRandomEmptyCoordinate()
         this.target.position = [x, y]
         this.#grid.addShape(this.target)
         HLog.log('snake', this.target.position)
+    }
+
+    /**
+     * Найти рандомные координаты в которых нету заполненной точки
+     */
+    findRandomEmptyCoordinate(): { x: number; y: number } {
+        const gridBitmap = this.#grid.render()
+        const emptyCoordinates = []
+
+        gridBitmap.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                if (!cell) {
+                    emptyCoordinates.push({ x, y })
+                }
+            })
+        })
+
+        return emptyCoordinates.length
+            ? HArray.shuffleArray(emptyCoordinates)[0]
+            : { x: 0, y: 0 }
     }
 
     /**
