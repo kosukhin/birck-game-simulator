@@ -1,5 +1,6 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
 import { ref } from 'vue'
+import { HApp } from '~~/src/Helpers/HApp'
 import { HArray } from '~~/src/Helpers/HArray'
 import { HLog } from '~~/src/Helpers/HLog'
 import { HObjects } from '~~/src/Helpers/HObjects'
@@ -220,47 +221,39 @@ export class WfMain {
         this.nextFrame()
     }
 
-    nextFrame() {
-        useService<SConnectors>('connectors').browser.requestAnimationFrame(
-            () => {
-                setTimeout(() => {
-                    this.snake.moveForward()
+    async nextFrame() {
+        await useService<SConnectors>(
+            'connectors'
+        ).browser.requestAnimationFrame()
+        await HApp.wait(this.speed.value)
+        this.snake.moveForward()
 
-                    /**
-                     * Если змейка достигла точки
-                     */
-                    if (
-                        this.snake.leadPoint.x === this.target.x &&
-                        this.snake.leadPoint.y === this.target.y
-                    ) {
-                        this.snake.addPointToEnd()
-                        this.addTargetDot()
-                        this.score.value++
-                        this.speed.value -= 10
-                    }
+        // Если змейка достигла точки
+        if (
+            this.snake.leadPoint.x === this.target.x &&
+            this.snake.leadPoint.y === this.target.y
+        ) {
+            this.snake.addPointToEnd()
+            this.addTargetDot()
+            this.score.value++
+            this.speed.value -= 10
+        }
 
-                    this.#updateCounter.value++
+        this.#updateCounter.value++
 
-                    // Если змейка вышла за границы - конец игры
-                    if (this.snake.isSnakeOutOfBounds()) {
-                        this.isGameOver.value = true
-                        return
-                    }
+        // Если змейка вышла за границы - конец игры
+        if (this.snake.isSnakeOutOfBounds()) {
+            this.isGameOver.value = true
+            return
+        }
 
-                    // Змейка сама себя съела
-                    if (this.snake.isSnakeAteItSelf()) {
-                        this.isGameOver.value = true
-                        return
-                    }
+        // Змейка сама себя съела
+        if (this.snake.isSnakeAteItSelf()) {
+            this.isGameOver.value = true
+            return
+        }
 
-                    !this.isGameOver.value && this.nextFrame()
-                }, this.speed.value)
-            }
-        )
-    }
-
-    gameIsOver() {
-        this.isGameOver.value = true
+        !this.isGameOver.value && this.nextFrame()
     }
 
     /**

@@ -24,11 +24,16 @@ export class CrBrowser {
     /**
      * Запросить следующий фрейм анимации, это
      * нужно чтобы на забивать очередь задач
-     * @param callback
      */
-    requestAnimationFrame(callback: () => void) {
-        if (process.client && window) {
-            window.requestAnimationFrame(callback)
-        }
+    requestAnimationFrame(): Promise<void> {
+        return new Promise((resolve) => {
+            if (process.client && window) {
+                window.requestAnimationFrame(() => {
+                    resolve()
+                })
+            } else {
+                resolve()
+            }
+        })
     }
 }
