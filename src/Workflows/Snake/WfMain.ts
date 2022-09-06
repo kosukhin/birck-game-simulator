@@ -53,6 +53,7 @@ class Snake {
     // Хвост змейки
     points: SnakePoint[] = []
     direction: MoveDirection = MoveDirection.right
+    newDirection: MoveDirection = MoveDirection.right
     shape: MShape
     width: number
     height: number
@@ -138,12 +139,16 @@ class Snake {
      * @param direction
      */
     changeDirection(direction: MoveDirection) {
+        this.newDirection = direction
+    }
+
+    applyNewDirection() {
         // Если пользователь нажал противоположное направление - игнорируем
-        if (this.isReverseDirection(direction)) {
+        if (this.isReverseDirection(this.newDirection)) {
             return
         }
 
-        this.direction = direction
+        this.direction = this.newDirection
     }
 
     /**
@@ -218,14 +223,15 @@ export class WfMain {
     run() {
         this.addTargetDot()
         this.drawSnake()
-        this.nextFrame()
+        this.renderNextFrame()
     }
 
-    async nextFrame() {
+    async renderNextFrame() {
         await useService<SConnectors>(
             'connectors'
         ).browser.requestAnimationFrame()
         await HApp.wait(this.speed.value)
+        this.snake.applyNewDirection()
         this.snake.moveForward()
 
         // Если змейка достигла точки
@@ -253,7 +259,7 @@ export class WfMain {
             return
         }
 
-        !this.isGameOver.value && this.nextFrame()
+        !this.isGameOver.value && this.renderNextFrame()
     }
 
     gameIsOver() {
