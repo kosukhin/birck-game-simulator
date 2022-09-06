@@ -9,4 +9,5 @@ export default {
     Home: 'Главная',
     Tetris: 'Тетрис',
     Snake: 'Змейка',
+    Tanks: 'Танки',
 }

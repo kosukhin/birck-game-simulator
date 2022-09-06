@@ -1,6 +1,6 @@
 <template>
     <div class="tetris">
-        <component :is="gamesList[action]" />
+        <component :is="gamesList[action] ?? gamesList.nogame" />
     </div>
 </template>
 
@@ -8,8 +8,11 @@
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import { HLog } from '~~/src/Common/Helpers/HLog'
+import NoGame from '~~/src/Common/Components/Simulator/NoGame.vue'
 
-const gamesList = {}
+const gamesList = {
+    nogame: NoGame,
+}
 // Заполняем список игр через хук
 useService<SHooks>('hooks').gamesResolving.runSubscribers(gamesList)
 HLog.log('game_resolving', gamesList)

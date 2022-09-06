@@ -7,6 +7,9 @@
         <nuxt-link to="/simulator/snake/">{{
             $services.lang.t('Snake')
         }}</nuxt-link>
+        <nuxt-link to="/simulator/tanks/">{{
+            $services.lang.t('Tanks')
+        }}</nuxt-link>
     </div>
 </template>
 

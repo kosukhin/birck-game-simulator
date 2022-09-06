@@ -14,7 +14,7 @@ export class SLogger {
         fulltrace: false,
         snake: false,
         keyboard: false,
-        game_resolving: true,
+        game_resolving: false,
     }
 
     /**
