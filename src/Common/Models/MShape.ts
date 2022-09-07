@@ -55,6 +55,10 @@ export class MShape {
         this.#rotate = direction
     }
 
+    getRotation() {
+        return this.#rotate
+    }
+
     /**
      * Устанавливает сетку фигуры
      */

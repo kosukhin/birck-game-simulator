@@ -169,4 +169,18 @@ export class MGrid {
     createEmptyGrid() {
         this.#bgBitmap = HArray.createTwoDemGrid(this.#width, this.#height)
     }
+
+    /**
+     * Проверяем что фигура вышла за пределы
+     * @param shape
+     * @returns
+     */
+    isShapeOutOfBounds(shape: MShape): boolean {
+        const lessThanX = shape.x < 0
+        const lessThanY = shape.y < 0
+        const moreThanX = shape.x > this.width - 1
+        const moreThanY = shape.y > this.height - 1
+
+        return lessThanX || lessThanY || moreThanX || moreThanY
+    }
 }

@@ -24,5 +24,9 @@ keyboard.registerSubscriber((key: KeyCode) => {
     if (КeysToMoveMap[key] !== undefined) {
         game.moveTank(КeysToMoveMap[key])
     }
+
+    if (key === KeyCode.SPC) {
+        game.shoot()
+    }
 })
 </script>

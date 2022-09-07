@@ -46,5 +46,8 @@
     "*.{ts,js,vue}": "npm run lint",
     "*.{ts,js}": "jest ./tests/",
     "*.{vue,scss}": "stylelint '**/*.{vue,scss}'"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }
