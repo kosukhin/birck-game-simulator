@@ -1,12 +1,11 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
-import debounce from 'lodash.debounce'
-import uniqueId from 'lodash/uniqueId.js'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { MoveDirection } from '~~/src/Common/Types/GameTypes'
 import { HLog } from '~~/src/Common/Helpers/HLog'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
+import { HApp } from '~~/src/Common/Helpers/HApp'
 
 /**
  * Моделька танка
@@ -69,7 +68,7 @@ export class WfTanks {
      */
     moveTank(direction: MoveDirection) {
         this.moveDebounceHandler && this.moveDebounceHandler.cancel()
-        this.moveDebounceHandler = debounce(async () => {
+        this.moveDebounceHandler = HApp.debounce(async () => {
             HLog.log('tanks', direction)
             this.tank.setRotation(direction)
 
@@ -119,7 +118,7 @@ export class WfTanks {
      */
     shoot() {
         const direction = this.tank.getRotation()
-        const shootId = uniqueId()
+        const shootId = HApp.uniqueId()
         const shoot = new MShape({
             id: shootId,
             x: this.tank.midX,
