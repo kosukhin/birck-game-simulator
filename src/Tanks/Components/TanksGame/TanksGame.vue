@@ -5,6 +5,10 @@
         </nuxt-link>
         <div v-if="game.isGameOver.value" class="game-over">
             <p>{{ $services.lang.t('Game over') }}</p>
+            <p>{{ $services.lang.t('Score') }}: {{ game.score }}</p>
+        </div>
+        <div class="grid-header">
+            {{ $services.lang.t('Score') }}: {{ game.score }}
         </div>
         <GridView :key="game.updateCounter.value" :grid="game.grid.render()" />
     </div>
@@ -20,6 +24,7 @@ import { КeysToMoveMap } from '~~/src/Common/Types/GameTypes'
 
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfTanks()
+game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: KeyCode) => {
@@ -31,5 +36,9 @@ keyboard.registerSubscriber((key: KeyCode) => {
     if (key === KeyCode.SPC) {
         game.shoot()
     }
+})
+
+onUnmounted(() => {
+    game.stop()
 })
 </script>

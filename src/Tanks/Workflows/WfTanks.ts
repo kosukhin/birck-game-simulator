@@ -5,7 +5,9 @@ import { MoveDirection } from '~~/src/Common/Types/GameTypes'
 import { HLog } from '~~/src/Common/Helpers/HLog'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
-import { HApp } from '~~/src/Common/Helpers/HApp'
+import { Bot } from '~~/src/Tanks/Library/Bot'
+import { Shoot } from '~~/src/Tanks/Library/Shoot'
+import { HMath } from '~~/src/Common/Helpers/HMath'
 
 /**
  * Моделька танка
@@ -15,7 +17,6 @@ const TANK_SHAPE = [
     [1, 1, 1],
     [1, 0, 1],
 ]
-const TANK_SPEED = 200
 const SHOOT_SPEED = 50
 
 /**
@@ -27,14 +28,19 @@ export class WfTanks {
     tank: MShape
     bots: MShape[] = []
     isGameOver: Ref<boolean>
+    score: Ref<number>
+    lastShoot: Shoot
+    lastBot: Bot
 
+    frameRenderTimePointer: any = null
     moveDebounceHandler: any = null
 
     constructor() {
         this.grid = new MGrid({
-            height: 30,
-            width: 30,
+            height: 20,
+            width: 20,
         })
+        this.score = ref(0)
         this.grid.createEmptyGrid()
         this.updateCounter = ref(0)
         this.isGameOver = ref(false)
@@ -45,33 +51,61 @@ export class WfTanks {
         })
 
         const maxHeight = this.grid.maxY - this.tank.height + 1
-        this.bots.push(
-            new MShape({
-                bitmap: TANK_SHAPE,
-                x: this.grid.maxX,
-                y: 0,
-                direction: MoveDirection.down,
-            })
-        )
-        this.bots.push(
-            new MShape({ bitmap: TANK_SHAPE, x: this.grid.maxX, y: maxHeight })
-        )
-        this.bots.push(new MShape({ bitmap: TANK_SHAPE, x: 0, y: maxHeight }))
+        this.lastBot = new Bot({
+            game: this,
+            grid: this.grid,
+            enemy: this.tank,
+            position: [this.grid.maxX, maxHeight],
+            direction: MoveDirection.up,
+        })
 
         this.grid.addShape(this.tank)
-        this.bots.forEach((bot) => this.grid.addShape(bot))
+    }
+
+    run() {
+        this.frameRenderTimePointer = setInterval(async () => {
+            // Если нету врагов, добавляем еще бота
+            if (this.grid.shapesCount <= 1) {
+                const maxHeight = this.grid.maxY - this.tank.height + 1
+                this.lastBot = new Bot({
+                    game: this,
+                    grid: this.grid,
+                    enemy: this.tank,
+                    position: [this.grid.maxX, maxHeight],
+                    direction: MoveDirection.up,
+                })
+
+                if (this.score.value >= 10) {
+                    this.lastBot = new Bot({
+                        game: this,
+                        grid: this.grid,
+                        enemy: this.tank,
+                        position: [HMath.round(this.grid.maxX / 2), maxHeight],
+                        direction: MoveDirection.up,
+                    })
+                }
+            }
+
+            this.checkGameOver()
+            await useService<SConnectors>(
+                'connectors'
+            ).browser.requestAnimationFrame()
+            this.updateCounter.value++
+        }, SHOOT_SPEED)
+    }
+
+    stop() {
+        clearInterval(this.frameRenderTimePointer)
     }
 
     /**
      * Обеспечивает передвижение танка
      * @param direction
      */
-    moveTank(direction: MoveDirection) {
-        this.moveDebounceHandler && this.moveDebounceHandler.cancel()
-        this.moveDebounceHandler = HApp.debounce(async () => {
-            HLog.log('tanks', direction)
-            this.tank.setRotation(direction)
+    async moveTank(direction: MoveDirection) {
+        HLog.log('tanks', direction)
 
+        if (this.tank.getRotation() === direction) {
             switch (direction) {
                 case MoveDirection.up:
                     this.tank.moveY(-1)
@@ -86,13 +120,13 @@ export class WfTanks {
                     this.tank.moveX(-1)
                     break
             }
+        }
 
-            await useService<SConnectors>(
-                'connectors'
-            ).browser.requestAnimationFrame()
-            this.updateCounter.value++
-        }, TANK_SPEED)
-        this.moveDebounceHandler()
+        this.tank.setRotation(direction)
+        await useService<SConnectors>(
+            'connectors'
+        ).browser.requestAnimationFrame()
+        this.updateCounter.value++
     }
 
     /**
@@ -100,75 +134,30 @@ export class WfTanks {
      */
     checkGameOver() {
         let isTankAlive = false
-        let enimiesCount = 0
 
         this.grid.getShapes().forEach((shape) => {
             if (shape === this.tank) {
                 isTankAlive = true
-            } else {
-                enimiesCount++
             }
         })
 
-        this.isGameOver.value = enimiesCount === 0 || !isTankAlive
+        this.isGameOver.value = !isTankAlive
+
+        if (this.isGameOver.value) {
+            this.stop()
+        }
     }
 
     /**
      * Стреляет танк
      */
     shoot() {
-        const direction = this.tank.getRotation()
-        const shootId = HApp.uniqueId()
-        const shoot = new MShape({
-            id: shootId,
-            x: this.tank.midX,
-            y: this.tank.midY,
-            bitmap: [[1]],
+        this.lastShoot = new Shoot({
+            game: this,
+            direction: this.tank.getRotation(),
+            fromShape: this.tank,
+            grid: this.grid,
+            position: [this.tank.midX, this.tank.midY],
         })
-        this.grid.addShape(shoot)
-        HLog.log('tanks', shoot.position)
-
-        const shootRenderHandler = setInterval(async () => {
-            switch (direction) {
-                case MoveDirection.up:
-                    shoot.moveY(-1)
-                    break
-                case MoveDirection.down:
-                    shoot.moveY(1)
-                    break
-                case MoveDirection.right:
-                    shoot.moveX(1)
-                    break
-                case MoveDirection.left:
-                    shoot.moveX(-1)
-                    break
-            }
-
-            if (this.grid.isShapeOutOfBounds(shoot)) {
-                this.grid.removeShapeById(shootId)
-                clearInterval(shootRenderHandler)
-            }
-
-            const intersectedShape =
-                this.grid.isShapeIntersectedWithOtherShape(shoot)
-
-            if (
-                intersectedShape &&
-                intersectedShape !== this.tank &&
-                intersectedShape !== shoot
-            ) {
-                HLog.log('tanks', 'intesected with', intersectedShape)
-                this.grid.removeShapeById(shootId)
-                this.grid.removeShape(intersectedShape)
-                clearInterval(shootRenderHandler)
-            }
-
-            this.checkGameOver()
-
-            await useService<SConnectors>(
-                'connectors'
-            ).browser.requestAnimationFrame()
-            this.updateCounter.value++
-        }, SHOOT_SPEED)
     }
 }

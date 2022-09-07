@@ -29,6 +29,10 @@ export class MGrid {
         this.#shapes = []
     }
 
+    get shapesCount(): number {
+        return this.#shapes.length
+    }
+
     /**
      * Возвращает ширину сетки
      */
@@ -158,6 +162,15 @@ export class MGrid {
         if (index !== -1) {
             this.#shapes.splice(index, 1)
         }
+    }
+
+    /**
+     * Проверяет что на сетке есть фигуры
+     * @param shape
+     * @returns
+     */
+    hasShape(shape: MShape) {
+        return this.#shapes.includes(shape)
     }
 
     /**
