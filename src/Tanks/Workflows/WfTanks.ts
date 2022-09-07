@@ -27,6 +27,7 @@ export class WfTanks {
     updateCounter: Ref<number>
     tank: MShape
     bots: MShape[] = []
+    isGameOver: Ref<boolean>
 
     moveDebounceHandler: any = null
 
@@ -37,12 +38,26 @@ export class WfTanks {
         })
         this.grid.createEmptyGrid()
         this.updateCounter = ref(0)
-        this.tank = new MShape({ id: 'tank', bitmap: TANK_SHAPE })
+        this.isGameOver = ref(false)
+        this.tank = new MShape({
+            id: 'tank',
+            bitmap: TANK_SHAPE,
+            direction: MoveDirection.down,
+        })
 
-        // @FIXME заюзать здесь генератор
-        for (let i = 0; i < 4; i++) {
-            this.bots.push(new MShape({ bitmap: TANK_SHAPE }))
-        }
+        const maxHeight = this.grid.maxY - this.tank.height + 1
+        this.bots.push(
+            new MShape({
+                bitmap: TANK_SHAPE,
+                x: this.grid.maxX,
+                y: 0,
+                direction: MoveDirection.down,
+            })
+        )
+        this.bots.push(
+            new MShape({ bitmap: TANK_SHAPE, x: this.grid.maxX, y: maxHeight })
+        )
+        this.bots.push(new MShape({ bitmap: TANK_SHAPE, x: 0, y: maxHeight }))
 
         this.grid.addShape(this.tank)
         this.bots.forEach((bot) => this.grid.addShape(bot))
@@ -82,6 +97,24 @@ export class WfTanks {
     }
 
     /**
+     * Проверяет что игра закончена
+     */
+    checkGameOver() {
+        let isTankAlive = false
+        let enimiesCount = 0
+
+        this.grid.getShapes().forEach((shape) => {
+            if (shape === this.tank) {
+                isTankAlive = true
+            } else {
+                enimiesCount++
+            }
+        })
+
+        this.isGameOver.value = enimiesCount === 0 || !isTankAlive
+    }
+
+    /**
      * Стреляет танк
      */
     shoot() {
@@ -89,11 +122,12 @@ export class WfTanks {
         const shootId = uniqueId()
         const shoot = new MShape({
             id: shootId,
-            x: this.tank.x,
-            y: this.tank.y,
+            x: this.tank.midX,
+            y: this.tank.midY,
             bitmap: [[1]],
         })
         this.grid.addShape(shoot)
+        HLog.log('tanks', shoot.position)
 
         const shootRenderHandler = setInterval(async () => {
             switch (direction) {
@@ -115,6 +149,22 @@ export class WfTanks {
                 this.grid.removeShapeById(shootId)
                 clearInterval(shootRenderHandler)
             }
+
+            const intersectedShape =
+                this.grid.isShapeIntersectedWithOtherShape(shoot)
+
+            if (
+                intersectedShape &&
+                intersectedShape !== this.tank &&
+                intersectedShape !== shoot
+            ) {
+                HLog.log('tanks', 'intesected with', intersectedShape)
+                this.grid.removeShapeById(shootId)
+                this.grid.removeShape(intersectedShape)
+                clearInterval(shootRenderHandler)
+            }
+
+            this.checkGameOver()
 
             await useService<SConnectors>(
                 'connectors'

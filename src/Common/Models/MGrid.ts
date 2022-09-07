@@ -149,6 +149,18 @@ export class MGrid {
     }
 
     /**
+     * Удаление фигуры из массива
+     * @param shape
+     */
+    removeShape(shape: MShape) {
+        const index = this.#shapes.indexOf(shape)
+
+        if (index !== -1) {
+            this.#shapes.splice(index, 1)
+        }
+    }
+
+    /**
      * Очищает все фигуры с сетки
      */
     clearShapes() {
@@ -161,6 +173,14 @@ export class MGrid {
      */
     getFirstShape(): MShape | undefined {
         return this.#shapes[0]
+    }
+
+    /**
+     * Возвращает все фигуры сетки
+     * @returns
+     */
+    getShapes(): MShape[] {
+        return this.#shapes
     }
 
     /**
@@ -182,5 +202,37 @@ export class MGrid {
         const moreThanY = shape.y > this.height - 1
 
         return lessThanX || lessThanY || moreThanX || moreThanY
+    }
+
+    /**
+     * Проверяет пересечение переданной фигуры с какой-нибудь одной
+     * фигурой уже существующей на сетке, если пересечение найдено, то будет
+     * возвращена фигура с которой случилось пересечение, в противном случае undefined
+     * @param shape
+     */
+    isShapeIntersectedWithOtherShape(shape: MShape): MShape | undefined {
+        let intersected: MShape | undefined
+
+        for (const currentShape of this.#shapes) {
+            const isIntersectedByX =
+                currentShape.x <= shape.x && shape.x <= currentShape.maxX
+            const isIntersectedByY =
+                currentShape.y <= shape.y && shape.y <= currentShape.maxY
+
+            if (isIntersectedByX && isIntersectedByY) {
+                intersected = currentShape
+                break
+            }
+        }
+
+        return intersected
+    }
+
+    get maxX() {
+        return this.width - 1
+    }
+
+    get maxY() {
+        return this.height - 1
     }
 }

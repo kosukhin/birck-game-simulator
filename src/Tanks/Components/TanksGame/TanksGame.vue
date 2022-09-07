@@ -3,6 +3,9 @@
         <nuxt-link class="back" to="/simulator/">
             {{ $services.lang.t('Back') }} &rarr;
         </nuxt-link>
+        <div v-if="game.isGameOver.value" class="game-over">
+            <p>{{ $services.lang.t('Game over') }}</p>
+        </div>
         <GridView :key="game.updateCounter.value" :grid="game.grid.render()" />
     </div>
 </template>

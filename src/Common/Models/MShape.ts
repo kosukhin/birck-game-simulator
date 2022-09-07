@@ -1,4 +1,5 @@
 import { HArray } from '~~/src/Common/Helpers/HArray'
+import { HMath } from '~~/src/Common/Helpers/HMath'
 import { MoveDirection } from '~~/src/Common/Types/GameTypes'
 import { TGrid, TShapePosition } from '~~/src/Common/Types/GridTypes'
 
@@ -7,6 +8,7 @@ interface IShapeParams {
     y?: number
     bitmap?: TGrid
     id?: any
+    direction?: MoveDirection
 }
 
 /**
@@ -29,6 +31,10 @@ export class MShape {
 
         if (params.id) {
             this.#id = params.id
+        }
+
+        if (params.direction) {
+            this.#rotate = params.direction
         }
     }
 
@@ -119,7 +125,7 @@ export class MShape {
      * Возвращает максимальный X сетки
      */
     get maxX(): number {
-        const xAdd = Number(this.#bitmap[0].length)
+        const xAdd = this.width - 1
 
         return this.x + xAdd
     }
@@ -128,13 +134,25 @@ export class MShape {
      * Возвращает максимальный Y
      */
     get maxY(): number {
-        const yAdd = Number(this.#bitmap.length)
+        const yAdd = this.height - 1
 
         return this.y + yAdd
     }
 
+    get midX(): number {
+        return this.x + HMath.roundMin((this.width - 1) / 2)
+    }
+
+    get midY(): number {
+        return this.y + HMath.roundMin((this.height - 1) / 2)
+    }
+
     get id() {
         return this.#id
+    }
+
+    get height() {
+        return this.#bitmap.length
     }
 
     /**
