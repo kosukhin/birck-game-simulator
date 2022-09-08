@@ -17,6 +17,7 @@ export class SLogger {
         game_resolving: false,
         tanks: false,
         bot: false,
+        canvas: false,
     }
 
     /**

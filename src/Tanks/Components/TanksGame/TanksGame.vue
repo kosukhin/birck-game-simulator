@@ -10,17 +10,17 @@
         <div class="grid-header">
             {{ $services.lang.t('Score') }}: {{ game.score }}
         </div>
-        <GridView :key="game.updateCounter.value" :grid="game.grid.render()" />
+        <CanvasView :grid="game.grid" :fps="20" />
     </div>
 </template>
 
 <script setup lang="ts">
-import GridView from '~~/src/Common/Components/GridView/GridView.vue'
 import { HLog } from '~~/src/Common/Helpers/HLog'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { KeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
 import { КeysToMoveMap } from '~~/src/Common/Types/GameTypes'
+import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfTanks()

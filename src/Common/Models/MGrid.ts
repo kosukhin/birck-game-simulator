@@ -66,7 +66,7 @@ export class MGrid {
                 const y = Number(shape.y)
 
                 // Пересечение границы справа
-                if (shape.maxX > this.width) {
+                if (shape.maxX > this.width - 1) {
                     x = this.width - shape.width
                     shape.position = [x, y]
                 }
@@ -81,8 +81,8 @@ export class MGrid {
                     shape.y = 0
                 }
 
-                if (shape.maxY > this.#height) {
-                    shape.y = this.#height - 1
+                if (shape.maxY >= this.#height - 1) {
+                    shape.y = this.#height - shape.height
                 }
 
                 // Переносим пиксели фигуры на сетку

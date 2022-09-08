@@ -12,16 +12,16 @@
             {{ $services.lang.t('Speed') }}:
             {{ game.speed }}
         </div>
-        <GridView :key="game.updateCounter.value" :grid="game.grid.render()" />
+        <CanvasView :grid="game.grid" :fps="10" />
     </div>
 </template>
 
 <script setup lang="ts">
-import GridView from '~~/src/Common/Components/GridView/GridView.vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { KeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { КeysToMoveMap } from '~~/src/Common/Types/GameTypes'
+import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfSnake()
