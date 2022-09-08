@@ -13,6 +13,7 @@
             {{ game.speed }}
         </div>
         <CanvasView :grid="game.grid" :fps="10" />
+        <KeyboardHint />
     </div>
 </template>
 
@@ -22,6 +23,7 @@ import { useService } from '~~/src/Common/Helpers/HService'
 import { KeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { HArray } from '~~/src/Common/Helpers/HArray'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
+import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfTetris()

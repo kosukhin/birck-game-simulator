@@ -23,7 +23,21 @@ export class HMath {
         return Math.round(num)
     }
 
+    /**
+     * Округляет в меньшую сторону
+     * @param num
+     * @returns
+     */
     static roundMin(num: number): number {
         return Math.floor(num)
+    }
+
+    /**
+     * Модуль числа
+     * @param num
+     * @returns
+     */
+    static abs(num: number) {
+        return Math.abs(num)
     }
 }

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { HApp } from '~~/src/Common/Helpers/HApp'
 import { HArray } from '~~/src/Common/Helpers/HArray'
 import { HLog } from '~~/src/Common/Helpers/HLog'
+import { HMath } from '~~/src/Common/Helpers/HMath'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
@@ -73,8 +74,8 @@ export class WfSnake {
                     this.#snake.leadPoint.x === this.#target.x &&
                     this.#snake.leadPoint.y === this.#target.y
                 ) {
-                    this.#snake.addPointToEnd()
                     this.addTargetDot()
+                    this.#snake.addPointToEnd()
                     this.#score.value++
                     this.#speed.value -= 10
                 }
@@ -108,11 +109,6 @@ export class WfSnake {
      * @param direction
      */
     moveSnake(direction: MoveDirection) {
-        if (this.#snake.direction === direction) {
-            this.#snake.moveForward()
-            return
-        }
-
         this.#snake.changeDirection(direction)
     }
 
@@ -121,9 +117,9 @@ export class WfSnake {
      * змейке
      */
     addTargetDot() {
+        const { x, y } = this.findRandomEmptyCoordinate()
         this.#grid.removeShapeById('target')
         this.#target = new MShape({ id: 'target', bitmap: [[1]] })
-        const { x, y } = this.findRandomEmptyCoordinate()
         this.#target.setPosition([x, y])
         this.#grid.addShape(this.#target)
         HLog.log('snake', this.#target.position)
@@ -135,10 +131,14 @@ export class WfSnake {
     findRandomEmptyCoordinate(): { x: number; y: number } {
         const gridBitmap = this.#grid.render()
         const emptyCoordinates = []
+        const minOffset = 2
 
         gridBitmap.forEach((row, y) => {
             row.forEach((cell, x) => {
-                if (!cell) {
+                const xOffset = HMath.abs(this.#snake.leadPoint.x - Number(x))
+                const yOffset = HMath.abs(this.#snake.leadPoint.y - Number(y))
+
+                if (!cell && xOffset > minOffset && yOffset > minOffset) {
                     emptyCoordinates.push({ x, y })
                 }
             })

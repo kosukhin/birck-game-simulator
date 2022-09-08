@@ -44,4 +44,29 @@ export class SKeyboard extends Observable<TKeyboardSubscriber> {
             }
         )
     }
+
+    /**
+     * Симулирует нажатия клавиши
+     * @param keyCode
+     */
+    triggerKeyPress(keyCode: string) {
+        window.dispatchEvent(
+            new KeyboardEvent('keypress', {
+                altKey: false,
+                bubbles: true,
+                cancelable: true,
+                charCode: 0,
+                code: keyCode,
+                composed: true,
+                ctrlKey: false,
+                detail: 0,
+                isComposing: false,
+                key: keyCode,
+                location: 0,
+                metaKey: false,
+                repeat: false,
+                shiftKey: false,
+            })
+        )
+    }
 }

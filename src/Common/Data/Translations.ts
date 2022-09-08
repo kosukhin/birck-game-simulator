@@ -12,4 +12,6 @@ export default {
     Tanks: 'Танки',
     'Failed to load the game': 'Не удалось загрузить игру',
     'выберите другую, пожалуйста': 'choose another one, please',
+    Controls: 'Управление',
+    Fire: 'Выстрел',
 }
