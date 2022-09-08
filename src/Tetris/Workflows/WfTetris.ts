@@ -113,10 +113,10 @@ export class WfTetris {
         const bitmap = HObjects.clone(Shapes[index])
         const shape = new MShape({ bitmap })
         const { round } = Math
-        shape.position = [
+        shape.setPosition([
             round(this.#grid.width / 2) - round(shape.width / 2),
             -1,
-        ]
+        ])
         this.#grid.clearShapes()
         this.#grid.addShape(shape)
     }

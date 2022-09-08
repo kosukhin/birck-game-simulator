@@ -91,6 +91,15 @@ export class WfTanks {
                             direction: MoveDirection.up,
                         })
                     }
+
+                    if (this.#score.value >= 20) {
+                        this.#lastBot = new Bot({
+                            grid: this.#grid,
+                            enemy: this.#tank,
+                            position: [0, this.calculateMaxHeight()],
+                            direction: MoveDirection.up,
+                        })
+                    }
                 }
 
                 this.checkGameOver()
@@ -104,11 +113,11 @@ export class WfTanks {
      * @param direction
      */
     moveTank(direction: MoveDirection) {
-        if (this.#tank.getRotation() === direction) {
+        if (this.#tank.direction === direction) {
             this.#shapeMover.move(this.#tank, direction)
         }
 
-        this.#tank.setRotation(direction)
+        this.#tank.setDirection(direction)
     }
 
     /**
@@ -125,7 +134,7 @@ export class WfTanks {
      */
     shoot() {
         const shoot = new Shoot({
-            direction: this.#tank.getRotation(),
+            direction: this.#tank.direction,
             fromShape: this.#tank,
             grid: this.#grid,
             position: [this.#tank.midX, this.#tank.midY],

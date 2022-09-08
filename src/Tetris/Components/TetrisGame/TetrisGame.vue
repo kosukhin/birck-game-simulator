@@ -36,7 +36,7 @@ keyboard.registerSubscriber((key: KeyCode) => {
     }
 
     if (key === KeyCode.W) {
-        shape.bitmap = HArray.rotate90(shape.bitmap)
+        shape.setBitmap(HArray.rotate90(shape.bitmap))
     }
 
     if (key === KeyCode.S) {

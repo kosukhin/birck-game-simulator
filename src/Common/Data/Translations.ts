@@ -10,4 +10,6 @@ export default {
     Tetris: 'Тетрис',
     Snake: 'Змейка',
     Tanks: 'Танки',
+    'Failed to load the game': 'Не удалось загрузить игру',
+    'выберите другую, пожалуйста': 'choose another one, please',
 }

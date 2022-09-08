@@ -15,10 +15,14 @@ interface IGridParams {
  * манипуляции над пикселями
  */
 export class MGrid {
-    #width: number // Ширина сетки
-    #height: number // Высота сетки
-    #bgBitmap: TGrid // Бэкграунд сетки
-    #shapes: MShape[] // Активные фигуры на сетке
+    /** Ширина сетки */
+    #width: number
+    /** Высота сетки */
+    #height: number
+    /** Бэкграунд сетки */
+    #bgBitmap: TGrid
+    /** Активные фигуры на сетке */
+    #shapes: MShape[]
 
     constructor(params: IGridParams) {
         const { height = 15, width = 10, bgBitmap = [] } = params
@@ -32,25 +36,24 @@ export class MGrid {
         return this.#shapes.length
     }
 
-    /**
-     * Возвращает ширину сетки
-     */
     get width(): number {
         return this.#width
     }
 
-    /**
-     * Возвращает высоту сетки
-     */
     get height(): number {
         return this.#height
     }
 
-    /**
-     * Вовращает фон сетки, без активных фигур
-     */
     get bgBitmap() {
         return this.#bgBitmap
+    }
+
+    get maxX() {
+        return this.width - 1
+    }
+
+    get maxY() {
+        return this.height - 1
     }
 
     /**
@@ -67,21 +70,21 @@ export class MGrid {
                 // Пересечение границы справа
                 if (shape.maxX > this.width - 1) {
                     x = this.width - shape.width
-                    shape.position = [x, y]
+                    shape.setPosition([x, y])
                 }
 
                 // Пересечение границы слева
                 if (shape.x < 0) {
                     x = 0
-                    shape.position = [x, y]
+                    shape.setPosition([x, y])
                 }
 
                 if (shape.y <= 0) {
-                    shape.y = 0
+                    shape.setY(0)
                 }
 
                 if (shape.maxY >= this.#height - 1) {
-                    shape.y = this.#height - shape.height
+                    shape.setY(this.#height - shape.height)
                 }
 
                 // Переносим пиксели фигуры на сетку
@@ -237,13 +240,5 @@ export class MGrid {
         }
 
         return intersected
-    }
-
-    get maxX() {
-        return this.width - 1
-    }
-
-    get maxY() {
-        return this.height - 1
     }
 }

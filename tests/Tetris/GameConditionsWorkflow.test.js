@@ -21,7 +21,7 @@ test('check can shape move next', () => {
     expect(gameConditions.canShapeMoveNext()).toBe(true)
 
     // Не можем двигаться мы в конце
-    shape.y = 13
+    shape.setY(13)
     expect(gameConditions.canShapeMoveNext()).toBe(false)
 })
 

@@ -16,12 +16,18 @@ interface IShapeParams {
  * пиксельные формы, которые могут быть частью Grid
  */
 export class MShape {
-    #id: any = MShape.getNewShapeId() // Уникальный id фигуры
-    #bitmap: TGrid // Изображение фигуры пиксельное
-    #x: number // Позиция фигуры по x
-    #y: number // Позиция фигуры по y
-    static #shapeIdCounter = 0 // Статический счетчик всех id фигур
-    #rotate: MoveDirection = MoveDirection.up
+    /** Уникальный id фигуры */
+    #id: any = MShape.getNewShapeId()
+    /** Изображение фигуры пиксельное */
+    #bitmap: TGrid
+    /** Позиция фигуры по x */
+    #x: number
+    /** Позиция фигуры по y */
+    #y: number
+    /** Статический счетчик всех id фигур */
+    static #shapeIdCounter = 0
+    /** Направление фигуры, полезно для установки вращения */
+    #direction: MoveDirection = MoveDirection.up
 
     constructor(params: IShapeParams) {
         const { x = 0, y = 0, bitmap = [] } = params
@@ -34,105 +40,52 @@ export class MShape {
         }
 
         if (params.direction) {
-            this.#rotate = params.direction
+            this.#direction = params.direction
         }
     }
 
-    /**
-     * Возвращает сетку фигуры
-     */
     get bitmap(): TGrid {
         let bitmap = this.#bitmap
 
         // Если у фигуры нестандартный поворот, то поворачиваем битмап
-        if (this.#rotate !== MoveDirection.up) {
-            this.#rotate === MoveDirection.right &&
+        if (this.#direction !== MoveDirection.up) {
+            this.#direction === MoveDirection.right &&
                 (bitmap = HArray.rotate90(this.#bitmap))
-            this.#rotate === MoveDirection.down &&
+            this.#direction === MoveDirection.down &&
                 (bitmap = HArray.rotate180(this.#bitmap))
-            this.#rotate === MoveDirection.left &&
+            this.#direction === MoveDirection.left &&
                 (bitmap = HArray.rotate270(this.#bitmap))
         }
 
         return bitmap
     }
 
-    setRotation(direction: MoveDirection) {
-        this.#rotate = direction
+    get direction() {
+        return this.#direction
     }
 
-    getRotation() {
-        return this.#rotate
-    }
-
-    /**
-     * Устанавливает сетку фигуры
-     */
-    set bitmap(bitmap) {
-        this.#bitmap = bitmap
-    }
-
-    /**
-     * Возвращает массив [x, y]
-     */
     get position(): TShapePosition {
         return [this.#x, this.#y]
     }
 
-    /**
-     * Возвращает ширину сетки фигуры
-     */
     get width(): number {
         return this.#bitmap[0].length
     }
 
-    /**
-     * Устанавливает пзицию через массив [x, y]
-     */
-    set position(position: TShapePosition) {
-        ;[this.#x, this.#y] = position
-    }
-
-    /**
-     * Возвращает позицию x
-     */
     get x() {
         return this.#x
     }
 
-    /**
-     * Устанавливает позицию x
-     */
-    set x(x) {
-        this.#x = x
-    }
-
-    /**
-     * Возвращает позицию y
-     */
     get y() {
         return this.#y
     }
 
-    /**
-     * Устанавливает позицию y
-     */
-    set y(y) {
-        this.#y = y
-    }
-
-    /**
-     * Возвращает максимальный X сетки
-     */
     get maxX(): number {
         const xAdd = this.width - 1
 
         return this.x + xAdd
     }
 
-    /**
-     * Возвращает максимальный Y
-     */
     get maxY(): number {
         const yAdd = this.height - 1
 
@@ -153,6 +106,35 @@ export class MShape {
 
     get height() {
         return this.#bitmap.length
+    }
+
+    /**
+     * Устанавливает направление поворота фигуры
+     * @param direction
+     */
+    setDirection(direction: MoveDirection) {
+        this.#direction = direction
+    }
+
+    /**
+     * Устанавливает сетку фигуры
+     */
+    setBitmap(bitmap) {
+        this.#bitmap = bitmap
+    }
+
+    /**
+     * Устанавливает пзицию через массив [x, y]
+     */
+    setPosition(position: TShapePosition) {
+        ;[this.#x, this.#y] = position
+    }
+
+    /**
+     * Устанавливает позицию y
+     */
+    setY(y: number) {
+        this.#y = y
     }
 
     /**

@@ -107,7 +107,7 @@ export class Snake {
             }
         })
 
-        this.#shape.bitmap = bitmap
+        this.#shape.setBitmap(bitmap)
     }
 
     /**

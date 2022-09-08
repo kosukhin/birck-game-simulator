@@ -77,7 +77,7 @@ export class Bot {
                     shootDirection = MoveDirection.right
                 }
 
-                this.#tank.setRotation(shootDirection)
+                this.#tank.setDirection(shootDirection)
                 this.shoot()
             } else {
                 // 3 если не находится то определяем минимальную дистанцию чтобы встать на одну линию и делаем шаг в эту сторону
@@ -88,14 +88,14 @@ export class Bot {
 
                 if (Math.abs(yDistance) < Math.abs(xDistance)) {
                     const step = yDistance < 0 ? 1 : -1
-                    this.#tank.setRotation(
+                    this.#tank.setDirection(
                         yDistance < 0 ? MoveDirection.down : MoveDirection.up
                     )
                     // Двигаемся по y
                     this.#tank.moveY(step)
                 } else {
                     const step = xDistance < 0 ? 1 : -1
-                    this.#tank.setRotation(
+                    this.#tank.setDirection(
                         xDistance < 0 ? MoveDirection.right : MoveDirection.left
                     )
                     // Двигаемся по x
@@ -110,7 +110,7 @@ export class Bot {
      */
     shoot() {
         this.#lastShoot = new Shoot({
-            direction: this.#tank.getRotation(),
+            direction: this.#tank.direction,
             fromShape: this.#tank,
             grid: this.#grid,
             position: [this.#tank.midX, this.#tank.midY],

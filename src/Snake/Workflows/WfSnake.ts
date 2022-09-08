@@ -124,7 +124,7 @@ export class WfSnake {
         this.#grid.removeShapeById('target')
         this.#target = new MShape({ id: 'target', bitmap: [[1]] })
         const { x, y } = this.findRandomEmptyCoordinate()
-        this.#target.position = [x, y]
+        this.#target.setPosition([x, y])
         this.#grid.addShape(this.#target)
         HLog.log('snake', this.#target.position)
     }
