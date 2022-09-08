@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { HLog } from '~~/src/Common/Helpers/HLog'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { KeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
@@ -28,7 +27,6 @@ game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: KeyCode) => {
-    HLog.log('tanks', key)
     if (КeysToMoveMap[key] !== undefined) {
         game.moveTank(КeysToMoveMap[key])
     }

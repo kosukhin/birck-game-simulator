@@ -1,126 +1,119 @@
-import { HLog } from '~~/src/Common/Helpers/HLog'
 import { HMath } from '~~/src/Common/Helpers/HMath'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { MoveDirection } from '~~/src/Common/Types/GameTypes'
 import { Shapes } from '~~/src/Tanks/Data/Shapes'
 import { Shoot } from '~~/src/Tanks/Library/Shoot'
-import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
 
 interface IBotParams {
-    game: WfTanks
     grid: MGrid
     enemy: MShape
     position: [number, number]
     direction: MoveDirection
 }
+
 /**
  * Представление бота
  */
 export class Bot {
-    game: WfTanks
-    grid: MGrid
-    enemy: MShape
-    tank: MShape
-    runTimeInterval: any
-    lastShoot: Shoot
+    #grid: MGrid
+    #enemy: MShape
+    #tank: MShape
+    #runTimeInterval: any
+    #lastShoot: Shoot
 
     constructor(params: IBotParams) {
-        this.game = params.game
-        this.grid = params.grid
-        this.enemy = params.enemy
-        this.tank = new MShape({
+        this.#grid = params.grid
+        this.#enemy = params.enemy
+        this.#tank = new MShape({
             bitmap: Shapes.tank,
             x: params.position[0],
             y: params.position[1],
             direction: params.direction,
         })
-        this.grid.addShape(this.tank)
+        this.#grid.addShape(this.#tank)
         this.run()
     }
 
+    /**
+     * Запускает логику работы бота
+     */
     run() {
-        this.runTimeInterval = setInterval(() => {
+        this.#runTimeInterval = setInterval(() => {
             // Убиваем цикл если нету врага либо нету танка этого бота
             if (
-                !this.grid.hasShape(this.tank) ||
-                !this.grid.hasShape(this.enemy)
+                !this.#grid.hasShape(this.#tank) ||
+                !this.#grid.hasShape(this.#enemy)
             ) {
-                clearInterval(this.runTimeInterval)
+                clearInterval(this.#runTimeInterval)
                 return
             }
 
-            // 1 Определить находится ли враг на одной линии со мной
+            // 1 Определить находится ли враг на одной линии с танком бота
             const isSameX =
-                this.enemy.x <= this.tank.midX &&
-                this.tank.midX <= this.enemy.maxX
+                this.#enemy.x <= this.#tank.midX &&
+                this.#tank.midX <= this.#enemy.maxX
             const isSameY =
-                this.enemy.y <= this.tank.midY &&
-                this.tank.midY <= this.enemy.maxY
+                this.#enemy.y <= this.#tank.midY &&
+                this.#tank.midY <= this.#enemy.maxY
 
             if (isSameX || isSameY) {
-                HLog.log('bot', 'on same line')
                 // 2. если находится, то определить направление стрельбы и сделать шаг в это направление, затем выстрел
                 let shootDirection = MoveDirection.up
 
-                if (isSameX && this.tank.midX <= this.enemy.midX) {
+                if (isSameX && this.#tank.midX <= this.#enemy.midX) {
                     shootDirection = MoveDirection.down
                 }
 
-                if (isSameX && this.tank.midX >= this.enemy.midX) {
+                if (isSameX && this.#tank.midX >= this.#enemy.midX) {
                     shootDirection = MoveDirection.up
                 }
 
-                if (isSameY && this.tank.midY >= this.enemy.midY) {
+                if (isSameY && this.#tank.midY >= this.#enemy.midY) {
                     shootDirection = MoveDirection.left
                 }
 
-                if (isSameY && this.tank.midY <= this.enemy.midY) {
+                if (isSameY && this.#tank.midY <= this.#enemy.midY) {
                     shootDirection = MoveDirection.right
                 }
 
-                this.tank.setRotation(shootDirection)
+                this.#tank.setRotation(shootDirection)
                 this.shoot()
             } else {
                 // 3 если не находится то определяем минимальную дистанцию чтобы встать на одну линию и делаем шаг в эту сторону
                 const xDistance =
-                    this.tank.midX - this.enemy.midX + HMath.random(0, 4)
+                    this.#tank.midX - this.#enemy.midX + HMath.random(0, 4)
                 const yDistance =
-                    this.tank.midY - this.enemy.midY + HMath.random(0, 4)
-
-                HLog.log('bot', 'mooving')
+                    this.#tank.midY - this.#enemy.midY + HMath.random(0, 4)
 
                 if (Math.abs(yDistance) < Math.abs(xDistance)) {
                     const step = yDistance < 0 ? 1 : -1
-                    HLog.log('bot', 'by Y', step)
-                    this.tank.setRotation(
+                    this.#tank.setRotation(
                         yDistance < 0 ? MoveDirection.down : MoveDirection.up
                     )
                     // Двигаемся по y
-                    this.tank.moveY(step)
+                    this.#tank.moveY(step)
                 } else {
                     const step = xDistance < 0 ? 1 : -1
-                    this.tank.setRotation(
+                    this.#tank.setRotation(
                         xDistance < 0 ? MoveDirection.right : MoveDirection.left
                     )
-                    HLog.log('bot', 'by X', step)
                     // Двигаемся по x
-                    this.tank.moveX(step)
+                    this.#tank.moveX(step)
                 }
             }
         }, 200)
     }
 
     /**
-     * Выстрел
+     * Выстрел бота
      */
     shoot() {
-        this.lastShoot = new Shoot({
-            game: this.game,
-            direction: this.tank.getRotation(),
-            fromShape: this.tank,
-            grid: this.grid,
-            position: [this.tank.midX, this.tank.midY],
+        this.#lastShoot = new Shoot({
+            direction: this.#tank.getRotation(),
+            fromShape: this.#tank,
+            grid: this.#grid,
+            position: [this.#tank.midX, this.#tank.midY],
         })
     }
 }

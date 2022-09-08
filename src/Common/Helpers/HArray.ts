@@ -82,7 +82,7 @@ export class HArray {
      * входной массив не изменяет, возвращает новый
      * @param array
      */
-    static shuffleArray(array: any[]) {
+    static shuffle(array: any[]) {
         const result = HObjects.clone(array)
 
         for (let i = result.length - 1; i > 0; i--) {
@@ -91,5 +91,19 @@ export class HArray {
         }
 
         return result
+    }
+
+    /**
+     * Создает пустую строку-массив шириной width
+     * @param width
+     */
+    static createEmptyRow(width: number) {
+        const newRow = []
+
+        for (let i = 0; i < width; i++) {
+            newRow[i] = 0
+        }
+
+        return newRow
     }
 }

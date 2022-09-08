@@ -10,24 +10,36 @@ import { SnakePoint } from '~~/src/Snake/Library/SnakePoint'
  */
 export class Snake {
     // Первая точка змейки
-    leadPoint: SnakePoint
+    #leadPoint: SnakePoint
     // Хвост змейки
-    points: SnakePoint[] = []
-    direction: MoveDirection = MoveDirection.right
-    newDirection: MoveDirection = MoveDirection.right
-    shape: MShape
-    width: number
-    height: number
+    #points: SnakePoint[] = []
+    #direction: MoveDirection = MoveDirection.right
+    #newDirection: MoveDirection = MoveDirection.right
+    #shape: MShape
+    #width: number
+    #height: number
 
     constructor(grid: MGrid) {
-        this.shape = new MShape({
+        this.#shape = new MShape({
             bitmap: HObjects.clone(grid.bgBitmap),
         })
-        this.leadPoint = new SnakePoint(2, 0)
-        this.points = [new SnakePoint(1, 0), new SnakePoint(0, 0)]
-        this.width = grid.width
-        this.height = grid.height
+        this.#leadPoint = new SnakePoint(2, 0)
+        this.#points = [new SnakePoint(1, 0), new SnakePoint(0, 0)]
+        this.#width = grid.width
+        this.#height = grid.height
         this.updateShape()
+    }
+
+    get leadPoint() {
+        return this.#leadPoint
+    }
+
+    get direction() {
+        return this.#direction
+    }
+
+    get shape() {
+        return this.#shape
     }
 
     /**
@@ -35,36 +47,36 @@ export class Snake {
      */
     moveForward() {
         // Коориднаты каждой предыдущей точки хвоста копируем в следующую
-        let prevPointPosition = [this.leadPoint.x, this.leadPoint.y]
+        let prevPointPosition = [this.#leadPoint.x, this.#leadPoint.y]
 
-        switch (this.direction) {
+        switch (this.#direction) {
             case MoveDirection.down:
-                this.leadPoint.setPosition(
-                    this.leadPoint.x,
-                    this.leadPoint.y + 1
+                this.#leadPoint.setPosition(
+                    this.#leadPoint.x,
+                    this.#leadPoint.y + 1
                 )
                 break
             case MoveDirection.up:
-                this.leadPoint.setPosition(
-                    this.leadPoint.x,
-                    this.leadPoint.y - 1
+                this.#leadPoint.setPosition(
+                    this.#leadPoint.x,
+                    this.#leadPoint.y - 1
                 )
                 break
             case MoveDirection.right:
-                this.leadPoint.setPosition(
-                    this.leadPoint.x + 1,
-                    this.leadPoint.y
+                this.#leadPoint.setPosition(
+                    this.#leadPoint.x + 1,
+                    this.#leadPoint.y
                 )
                 break
             case MoveDirection.left:
-                this.leadPoint.setPosition(
-                    this.leadPoint.x - 1,
-                    this.leadPoint.y
+                this.#leadPoint.setPosition(
+                    this.#leadPoint.x - 1,
+                    this.#leadPoint.y
                 )
                 break
         }
 
-        this.points.forEach((point) => {
+        this.#points.forEach((point) => {
             const position = [point.x, point.y]
             point.setPosition(prevPointPosition[0], prevPointPosition[1])
             prevPointPosition = position
@@ -73,9 +85,12 @@ export class Snake {
         this.updateShape()
     }
 
+    /**
+     * Добавляет новую точку в тело змейки
+     */
     addPointToEnd() {
-        const lastPoint = this.points[this.points.length - 1]
-        this.points.push(new SnakePoint(lastPoint.x, lastPoint.y))
+        const lastPoint = this.#points[this.#points.length - 1]
+        this.#points.push(new SnakePoint(lastPoint.x, lastPoint.y))
         this.updateShape()
     }
 
@@ -83,8 +98,8 @@ export class Snake {
      * Обновляем битмап фигуры Mshape
      */
     updateShape() {
-        const bitmap = HArray.createTwoDemGrid(this.width, this.height)
-        const points = [this.leadPoint, ...this.points]
+        const bitmap = HArray.createTwoDemGrid(this.#width, this.#height)
+        const points = [this.#leadPoint, ...this.#points]
 
         points.forEach((point) => {
             if (bitmap?.[point.y]?.[point.x] !== undefined) {
@@ -92,7 +107,7 @@ export class Snake {
             }
         })
 
-        this.shape.bitmap = bitmap
+        this.#shape.bitmap = bitmap
     }
 
     /**
@@ -102,16 +117,16 @@ export class Snake {
      * @param direction
      */
     changeDirection(direction: MoveDirection) {
-        this.newDirection = direction
+        this.#newDirection = direction
     }
 
     applyNewDirection() {
         // Если пользователь нажал противоположное направление - игнорируем
-        if (this.isReverseDirection(this.newDirection)) {
+        if (this.isReverseDirection(this.#newDirection)) {
             return
         }
 
-        this.direction = this.newDirection
+        this.#direction = this.#newDirection
     }
 
     /**
@@ -119,7 +134,7 @@ export class Snake {
      * @param direction
      */
     isReverseDirection(direction: MoveDirection) {
-        const reverseDirection = ReverseDirections[this.direction]
+        const reverseDirection = ReverseDirections[this.#direction]
 
         return reverseDirection === direction
     }
@@ -128,10 +143,10 @@ export class Snake {
      * Змейка вышла за границы
      */
     isSnakeOutOfBounds() {
-        const lessThanX = this.leadPoint.x < 0
-        const lessThanY = this.leadPoint.y < 0
-        const moreThanX = this.leadPoint.x > this.width - 1
-        const moreThanY = this.leadPoint.y > this.height - 1
+        const lessThanX = this.#leadPoint.x < 0
+        const lessThanY = this.#leadPoint.y < 0
+        const moreThanX = this.#leadPoint.x > this.#width - 1
+        const moreThanY = this.#leadPoint.y > this.#height - 1
 
         return lessThanX || lessThanY || moreThanX || moreThanY
     }
@@ -143,8 +158,11 @@ export class Snake {
     isSnakeAteItSelf() {
         let isAte = false
 
-        this.points.forEach((point) => {
-            if (point.x === this.leadPoint.x && point.y === this.leadPoint.y) {
+        this.#points.forEach((point) => {
+            if (
+                point.x === this.#leadPoint.x &&
+                point.y === this.#leadPoint.y
+            ) {
                 isAte = true
             }
         })

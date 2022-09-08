@@ -35,6 +35,6 @@ keyboard.registerSubscriber((key: KeyCode) => {
 })
 
 onUnmounted(() => {
-    game.gameIsOver()
+    game.setGameOver()
 })
 </script>

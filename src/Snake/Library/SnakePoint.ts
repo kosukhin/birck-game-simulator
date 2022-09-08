@@ -18,6 +18,11 @@ export class SnakePoint {
         return this.#y
     }
 
+    /**
+     * Устанавливает позицию точки
+     * @param x
+     * @param y
+     */
     setPosition(x: number, y: number) {
         this.#x = x
         this.#y = y

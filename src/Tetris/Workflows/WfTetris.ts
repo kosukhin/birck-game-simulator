@@ -5,86 +5,47 @@ import { WfTetrisConditions } from '~~/src/Tetris/Workflows/WfTetrisConditions'
 import { Shapes } from '~~/src/Tetris/Data/Shapes'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { HApp } from '~~/src/Common/Helpers/HApp'
-import { HLog } from '~~/src/Common/Helpers/HLog'
 import { HObjects } from '~~/src/Common/Helpers/HObjects'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
+import { HArray } from '~~/src/Common/Helpers/HArray'
 
 /**
  * Основной класс хода выполнения игры тетрис
  */
 export class WfTetris {
-    /**
-     * Основная сетка тетриса
-     */
+    /** Основная сетка тетриса */
     #grid: MGrid
-
-    /**
-     * Счет игры
-     */
+    /** Счет игры */
     #score: Ref<number>
-
-    /**
-     * Скорость падения блоков
-     */
+    /** Скорость падения блоков */
     #speed: Ref<number>
-
-    /**
-     * Флаг игра закончена
-     */
+    /** Флаг игра закончена */
     #isGameOver: Ref<boolean>
-
-    /**
-     * Условия игры
-     */
+    /** Условия игры */
     #conditions: WfTetrisConditions
-
-    /**
-     * Счетчик необходимый для формирования ключа обновления сетки
-     */
-    #updateCounter: Ref<number>
 
     constructor() {
         this.#grid = new MGrid({})
-        this.createEmptyGrid()
+        this.#grid.createEmptyGrid()
         this.#conditions = new WfTetrisConditions(this.#grid)
         this.#score = ref(0)
         this.#speed = ref(500)
         this.#isGameOver = ref(false)
-        this.#updateCounter = ref(0)
     }
 
-    /**
-     * Отдает флаг закончена ли игра
-     */
     get isGameOver() {
         return this.#isGameOver
     }
 
-    /**
-     * Отдаем сетку на рендеринг из этого процесса
-     */
     get grid(): MGrid {
         return this.#grid
     }
 
-    /**
-     * Отдает счетчик обновления интерфейса
-     */
-    get updateCounter() {
-        return this.#updateCounter
-    }
-
-    /**
-     * Отдает счет игры
-     */
     get score() {
         return this.#score
     }
 
-    /**
-     * Отдает скорость игры
-     */
     get speed() {
         return this.#speed
     }
@@ -103,24 +64,14 @@ export class WfTetris {
                 } else {
                     this.#isGameOver.value = true
                 }
-
-                this.rerenderGrid()
             }
         )
-    }
-
-    /**
-     * Перерисовывает сетку
-     */
-    rerenderGrid() {
-        this.#updateCounter.value += 1
     }
 
     /**
      * Рендерит следующий фрейм игры
      */
     renderNextFrame() {
-        HLog.log('fulltrace', 'render next frame')
         const grid = this.#grid.render()
         let shape = this.#grid.getFirstShape()
 
@@ -129,7 +80,6 @@ export class WfTetris {
             shape = this.#grid.getFirstShape()
         }
 
-        HLog.log('fulltrace', 'has shape?', shape ? 'yes' : 'no')
         const canMove = this.#conditions.canShapeMoveNext()
 
         if (!canMove) {
@@ -137,16 +87,12 @@ export class WfTetris {
             this.#grid.clearShapes()
             const filledLineIndexes = this.#conditions.checkLinesFilled()
 
-            HLog.log(
-                'fulltrace',
-                'filledLineIndexes',
-                JSON.stringify(filledLineIndexes)
-            )
-
             if (filledLineIndexes.length) {
                 for (const index of filledLineIndexes) {
                     this.#grid.removeRowByIndex(Number(index))
-                    this.#grid.addRowToTop(this.createEmptyRow())
+                    this.#grid.addRowToTop(
+                        HArray.createEmptyRow(this.#grid.width)
+                    )
                     this.#score.value += 1
                     this.#speed.value -= 10
                 }
@@ -156,8 +102,6 @@ export class WfTetris {
         if (shape && canMove) {
             shape.moveY()
         }
-
-        HLog.log('fulltrace', grid)
     }
 
     /**
@@ -175,25 +119,5 @@ export class WfTetris {
         ]
         this.#grid.clearShapes()
         this.#grid.addShape(shape)
-    }
-
-    /**
-     * Создает пустую строку для сетки
-     */
-    createEmptyRow() {
-        const newRow = []
-
-        for (let i = 0; i < this.#grid.width; i++) {
-            newRow[i] = 0
-        }
-
-        return newRow
-    }
-
-    /**
-     * Создает пустую сетку
-     */
-    createEmptyGrid() {
-        this.#grid.createEmptyGrid()
     }
 }

@@ -17,41 +17,51 @@ const SHOOT_SPEED = 50
  * Главная логика игры танки
  */
 export class WfTanks {
-    grid: MGrid
-    tank: MShape
-    bots: MShape[] = []
-    isGameOver: Ref<boolean>
-    score: Ref<number>
-    lastShoot: Shoot
-    lastBot: Bot
+    /** Основная сетка игры */
+    #grid: MGrid
+    /** Танк игрока */
+    #tank: MShape
+    /** Флаг игра закончена */
+    #isGameOver: Ref<boolean>
+    /** Счет игры */
+    #score: Ref<number>
+    /** Ссылка на бота */
+    #lastBot: Bot
+    /** Логика перемещения танка */
     #shapeMover: ShapeMover = new ShapeMover()
 
-    frameRenderTimePointer: any = null
-
     constructor() {
-        this.grid = new MGrid({
+        this.#grid = new MGrid({
             height: 20,
             width: 20,
         })
-        this.score = ref(0)
-        this.grid.createEmptyGrid()
-        this.isGameOver = ref(false)
-        this.tank = new MShape({
+        this.#score = ref(0)
+        this.#grid.createEmptyGrid()
+        this.#isGameOver = ref(false)
+        this.#tank = new MShape({
             id: 'tank',
             bitmap: Shapes.player,
             direction: MoveDirection.down,
         })
-
-        const maxHeight = this.grid.maxY - this.tank.height + 1
-        this.lastBot = new Bot({
-            game: this,
-            grid: this.grid,
-            enemy: this.tank,
-            position: [this.grid.maxX, maxHeight],
+        this.#lastBot = new Bot({
+            grid: this.#grid,
+            enemy: this.#tank,
+            position: [this.#grid.maxX, this.calculateMaxHeight()],
             direction: MoveDirection.up,
         })
+        this.#grid.addShape(this.#tank)
+    }
 
-        this.grid.addShape(this.tank)
+    get grid() {
+        return this.#grid
+    }
+
+    get isGameOver() {
+        return this.#isGameOver
+    }
+
+    get score() {
+        return this.#score
     }
 
     /**
@@ -62,24 +72,21 @@ export class WfTanks {
         useService<SConnectors>('connectors').browser.requestAnimationFrame(
             () => {
                 // Если нету врагов, добавляем еще бота
-                if (this.grid.shapesCount <= 1) {
-                    const maxHeight = this.grid.maxY - this.tank.height + 1
-                    this.lastBot = new Bot({
-                        game: this,
-                        grid: this.grid,
-                        enemy: this.tank,
-                        position: [this.grid.maxX, maxHeight],
+                if (this.#grid.shapesCount <= 1) {
+                    this.#lastBot = new Bot({
+                        grid: this.#grid,
+                        enemy: this.#tank,
+                        position: [this.#grid.maxX, this.calculateMaxHeight()],
                         direction: MoveDirection.up,
                     })
 
-                    if (this.score.value >= 10) {
-                        this.lastBot = new Bot({
-                            game: this,
-                            grid: this.grid,
-                            enemy: this.tank,
+                    if (this.#score.value >= 10) {
+                        this.#lastBot = new Bot({
+                            grid: this.#grid,
+                            enemy: this.#tank,
                             position: [
-                                HMath.round(this.grid.maxX / 2),
-                                maxHeight,
+                                HMath.round(this.#grid.maxX / 2),
+                                this.calculateMaxHeight(),
                             ],
                             direction: MoveDirection.up,
                         })
@@ -87,16 +94,9 @@ export class WfTanks {
                 }
 
                 this.checkGameOver()
-                !this.isGameOver.value && this.run()
+                !this.#isGameOver.value && this.run()
             }
         )
-    }
-
-    /**
-     * Останавливает игру, удаляя основной цикл
-     */
-    stop() {
-        clearInterval(this.frameRenderTimePointer)
     }
 
     /**
@@ -104,11 +104,11 @@ export class WfTanks {
      * @param direction
      */
     moveTank(direction: MoveDirection) {
-        if (this.tank.getRotation() === direction) {
-            this.#shapeMover.move(this.tank, direction)
+        if (this.#tank.getRotation() === direction) {
+            this.#shapeMover.move(this.#tank, direction)
         }
 
-        this.tank.setRotation(direction)
+        this.#tank.setRotation(direction)
     }
 
     /**
@@ -116,20 +116,41 @@ export class WfTanks {
      * Игра будет закончена если танк игрока уничтожен
      */
     checkGameOver() {
-        const isTankAlive = this.grid.hasShape(this.tank)
-        this.isGameOver.value = !isTankAlive
+        const isTankAlive = this.#grid.hasShape(this.#tank)
+        this.#isGameOver.value = !isTankAlive
     }
 
     /**
      * Стреляет танк
      */
     shoot() {
-        this.lastShoot = new Shoot({
-            game: this,
-            direction: this.tank.getRotation(),
-            fromShape: this.tank,
-            grid: this.grid,
-            position: [this.tank.midX, this.tank.midY],
+        const shoot = new Shoot({
+            direction: this.#tank.getRotation(),
+            fromShape: this.#tank,
+            grid: this.#grid,
+            position: [this.#tank.midX, this.#tank.midY],
         })
+
+        // Подписываемся на попадание
+        shoot.hitTheTarget.registerSubscriber((target) => {
+            if (target !== this.#tank) {
+                this.increaseScore()
+            }
+        })
+    }
+
+    /**
+     * Увеличивает счет игры на 1
+     */
+    increaseScore() {
+        this.#score.value++
+    }
+
+    /**
+     * Рассчитывает максимальную высоту для установки танка
+     * @returns
+     */
+    calculateMaxHeight() {
+        return this.#grid.maxY - this.#tank.height + 1
     }
 }

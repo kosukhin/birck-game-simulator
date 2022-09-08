@@ -37,37 +37,18 @@ keyboard.registerSubscriber((key: KeyCode) => {
 
     if (key === KeyCode.W) {
         shape.bitmap = HArray.rotate90(shape.bitmap)
-        game.rerenderGrid()
     }
 
     if (key === KeyCode.S) {
-        shape.y = shape.y + 1
-        game.rerenderGrid()
+        shape.moveY(1)
     }
 
     if (key === KeyCode.A) {
-        shape.x = shape.x - 1
-        game.rerenderGrid()
+        shape.moveX(-1)
     }
 
     if (key === KeyCode.D) {
-        shape.x = shape.x + 1
-        game.rerenderGrid()
+        shape.moveX(1)
     }
 })
 </script>
-
-<style lang="scss" scoped>
-.game-over {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 20px;
-    padding: 30px;
-    background: $c_red;
-    text-align: center;
-    z-index: 2;
-    font-weight: bold;
-}
-</style>

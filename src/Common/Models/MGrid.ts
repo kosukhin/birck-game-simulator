@@ -1,5 +1,4 @@
 import { HArray } from '~~/src/Common/Helpers/HArray'
-import { HLog } from '~~/src/Common/Helpers/HLog'
 import { HObjects } from '~~/src/Common/Helpers/HObjects'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { TGrid } from '~~/src/Common/Types/GridTypes'
@@ -145,7 +144,6 @@ export class MGrid {
      */
     removeShapeById(id) {
         const index = this.#shapes.findIndex((shape) => shape.id === id)
-        HLog.log('snake', id, index, this.#shapes)
 
         if (index !== -1) {
             this.#shapes.splice(index, 1)

@@ -19,9 +19,9 @@ const services = {
     tanks: new STanks(),
 }
 
-// Если у сервиса есть метод afterInit вызываем этот метод
 Object.values(services).forEach((service) => {
     if ('afterInit' in service) {
+        // Это позволяет в сервисах подписаться на хуки системы
         ;(service as any).afterInit(hooks)
     }
 })

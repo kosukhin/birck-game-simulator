@@ -15,16 +15,11 @@ import { Snake } from '~~/src/Snake/Library/Snake'
  */
 export class WfSnake {
     #grid: MGrid
-    snake: Snake
-    target: MShape
-    isGameOver: Ref<boolean>
-    score: Ref<number>
-    speed: Ref<number>
-
-    /**
-     * Счетчик необходимый для формирования ключа обновления сетки
-     */
-    #updateCounter: Ref<number>
+    #snake: Snake
+    #target: MShape
+    #isGameOver: Ref<boolean>
+    #score: Ref<number>
+    #speed: Ref<number>
 
     constructor() {
         this.#grid = new MGrid({
@@ -32,71 +27,93 @@ export class WfSnake {
             width: 15,
         })
         this.#grid.createEmptyGrid()
-        this.#updateCounter = ref(0)
-        this.snake = new Snake(this.#grid)
-        this.#grid.addShape(this.snake.shape)
-        this.isGameOver = ref(false)
-        this.speed = ref(400)
-        this.score = ref(0)
+        this.#snake = new Snake(this.#grid)
+        this.#grid.addShape(this.#snake.shape)
+        this.#isGameOver = ref(false)
+        this.#speed = ref(400)
+        this.#score = ref(0)
     }
 
+    get grid(): MGrid {
+        return this.#grid
+    }
+
+    get score() {
+        return this.#score
+    }
+
+    get speed() {
+        return this.#speed
+    }
+
+    get isGameOver() {
+        return this.#isGameOver
+    }
+
+    /**
+     * Запускает игру змейка
+     */
     run() {
         this.addTargetDot()
         this.renderNextFrame()
     }
 
+    /**
+     * Рендерит новый фрейм игры
+     */
     async renderNextFrame() {
-        await HApp.wait(this.speed.value)
+        await HApp.wait(this.#speed.value)
         useService<SConnectors>('connectors').browser.requestAnimationFrame(
             () => {
-                this.snake.applyNewDirection()
-                this.snake.moveForward()
+                this.#snake.applyNewDirection()
+                this.#snake.moveForward()
 
                 // Если змейка достигла точки
                 if (
-                    this.snake.leadPoint.x === this.target.x &&
-                    this.snake.leadPoint.y === this.target.y
+                    this.#snake.leadPoint.x === this.#target.x &&
+                    this.#snake.leadPoint.y === this.#target.y
                 ) {
-                    this.snake.addPointToEnd()
+                    this.#snake.addPointToEnd()
                     this.addTargetDot()
-                    this.score.value++
-                    this.speed.value -= 10
+                    this.#score.value++
+                    this.#speed.value -= 10
                 }
-
-                this.#updateCounter.value++
 
                 // Если змейка вышла за границы - конец игры
-                if (this.snake.isSnakeOutOfBounds()) {
-                    this.isGameOver.value = true
+                if (this.#snake.isSnakeOutOfBounds()) {
+                    this.#isGameOver.value = true
                     return
                 }
 
-                // Змейка сама себя съела
-                if (this.snake.isSnakeAteItSelf()) {
-                    this.isGameOver.value = true
+                // Змейка сама себя съела - конец игры
+                if (this.#snake.isSnakeAteItSelf()) {
+                    this.#isGameOver.value = true
                     return
                 }
 
-                !this.isGameOver.value && this.renderNextFrame()
+                !this.#isGameOver.value && this.renderNextFrame()
             }
         )
     }
 
-    gameIsOver() {
-        this.isGameOver.value = true
+    /**
+     * Устанавливает флаг что игра завершена
+     */
+    setGameOver() {
+        this.#isGameOver.value = true
     }
 
     /**
-     * Изменить направление движения змейки
+     * Изменяет направление движения змейки
      * @param direction
      */
     moveSnake(direction: MoveDirection) {
-        if (this.snake.direction === direction) {
-            this.snake.moveForward()
+        if (this.#snake.direction === direction) {
+            this.#snake.moveForward()
             return
         }
 
-        this.snake.changeDirection(direction)
+        this.#snake.changeDirection(direction)
     }
 
     /**
@@ -105,15 +122,15 @@ export class WfSnake {
      */
     addTargetDot() {
         this.#grid.removeShapeById('target')
-        this.target = new MShape({ id: 'target', bitmap: [[1]] })
+        this.#target = new MShape({ id: 'target', bitmap: [[1]] })
         const { x, y } = this.findRandomEmptyCoordinate()
-        this.target.position = [x, y]
-        this.#grid.addShape(this.target)
-        HLog.log('snake', this.target.position)
+        this.#target.position = [x, y]
+        this.#grid.addShape(this.#target)
+        HLog.log('snake', this.#target.position)
     }
 
     /**
-     * Найти рандомные координаты в которых нету заполненной точки
+     * Находит рандомные координаты в которых нету заполненной точки
      */
     findRandomEmptyCoordinate(): { x: number; y: number } {
         const gridBitmap = this.#grid.render()
@@ -128,21 +145,7 @@ export class WfSnake {
         })
 
         return emptyCoordinates.length
-            ? HArray.shuffleArray(emptyCoordinates)[0]
+            ? HArray.shuffle(emptyCoordinates)[0]
             : { x: 0, y: 0 }
-    }
-
-    /**
-     * Отдаем сетку на рендеринг из этого процесса
-     */
-    get grid(): MGrid {
-        return this.#grid
-    }
-
-    /**
-     * Отдает счетчик обновления интерфейса
-     */
-    get updateCounter() {
-        return this.#updateCounter
     }
 }
