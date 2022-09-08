@@ -1,5 +1,6 @@
 import { HApp } from '~~/src/Common/Helpers/HApp'
 import { HLog } from '~~/src/Common/Helpers/HLog'
+import { ShapeMover } from '~~/src/Common/Library/ShapeMover'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { MoveDirection } from '~~/src/Common/Types/GameTypes'
@@ -25,6 +26,7 @@ export class Shoot {
     position: TShapePosition
     direction: MoveDirection
     fromShape: MShape
+    #shapeMover: ShapeMover = new ShapeMover()
 
     constructor(params: IShootParam) {
         this.game = params.game
@@ -48,20 +50,7 @@ export class Shoot {
         HLog.log('tanks', shoot.position)
 
         const shootRenderHandler = setInterval(() => {
-            switch (direction) {
-                case MoveDirection.up:
-                    shoot.moveY(-1)
-                    break
-                case MoveDirection.down:
-                    shoot.moveY(1)
-                    break
-                case MoveDirection.right:
-                    shoot.moveX(1)
-                    break
-                case MoveDirection.left:
-                    shoot.moveX(-1)
-                    break
-            }
+            this.#shapeMover.move(shoot, direction)
 
             // Промах
             if (this.grid.isShapeOutOfBounds(shoot)) {

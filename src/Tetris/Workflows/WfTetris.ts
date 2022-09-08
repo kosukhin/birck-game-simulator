@@ -93,19 +93,20 @@ export class WfTetris {
      * Запускает работу тетриса
      */
     async run() {
-        await useService<SConnectors>(
-            'connectors'
-        ).browser.requestAnimationFrame()
         await HApp.wait(this.#speed.value)
-        this.renderNextFrame()
+        useService<SConnectors>('connectors').browser.requestAnimationFrame(
+            () => {
+                this.renderNextFrame()
 
-        if (!this.#conditions.checkGameOver()) {
-            this.run()
-        } else {
-            this.#isGameOver.value = true
-        }
+                if (!this.#conditions.checkGameOver()) {
+                    this.run()
+                } else {
+                    this.#isGameOver.value = true
+                }
 
-        this.rerenderGrid()
+                this.rerenderGrid()
+            }
+        )
     }
 
     /**

@@ -37,8 +37,4 @@ keyboard.registerSubscriber((key: KeyCode) => {
         game.shoot()
     }
 })
-
-onUnmounted(() => {
-    game.stop()
-})
 </script>

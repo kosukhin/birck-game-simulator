@@ -1,0 +1,154 @@
+import { HArray } from '~~/src/Common/Helpers/HArray'
+import { HObjects } from '~~/src/Common/Helpers/HObjects'
+import { MGrid } from '~~/src/Common/Models/MGrid'
+import { MShape } from '~~/src/Common/Models/MShape'
+import { MoveDirection, ReverseDirections } from '~~/src/Common/Types/GameTypes'
+import { SnakePoint } from '~~/src/Snake/Library/SnakePoint'
+
+/**
+ * Абстрацкция змейки
+ */
+export class Snake {
+    // Первая точка змейки
+    leadPoint: SnakePoint
+    // Хвост змейки
+    points: SnakePoint[] = []
+    direction: MoveDirection = MoveDirection.right
+    newDirection: MoveDirection = MoveDirection.right
+    shape: MShape
+    width: number
+    height: number
+
+    constructor(grid: MGrid) {
+        this.shape = new MShape({
+            bitmap: HObjects.clone(grid.bgBitmap),
+        })
+        this.leadPoint = new SnakePoint(2, 0)
+        this.points = [new SnakePoint(1, 0), new SnakePoint(0, 0)]
+        this.width = grid.width
+        this.height = grid.height
+        this.updateShape()
+    }
+
+    /**
+     * Двигает змейку вперед
+     */
+    moveForward() {
+        // Коориднаты каждой предыдущей точки хвоста копируем в следующую
+        let prevPointPosition = [this.leadPoint.x, this.leadPoint.y]
+
+        switch (this.direction) {
+            case MoveDirection.down:
+                this.leadPoint.setPosition(
+                    this.leadPoint.x,
+                    this.leadPoint.y + 1
+                )
+                break
+            case MoveDirection.up:
+                this.leadPoint.setPosition(
+                    this.leadPoint.x,
+                    this.leadPoint.y - 1
+                )
+                break
+            case MoveDirection.right:
+                this.leadPoint.setPosition(
+                    this.leadPoint.x + 1,
+                    this.leadPoint.y
+                )
+                break
+            case MoveDirection.left:
+                this.leadPoint.setPosition(
+                    this.leadPoint.x - 1,
+                    this.leadPoint.y
+                )
+                break
+        }
+
+        this.points.forEach((point) => {
+            const position = [point.x, point.y]
+            point.setPosition(prevPointPosition[0], prevPointPosition[1])
+            prevPointPosition = position
+        })
+
+        this.updateShape()
+    }
+
+    addPointToEnd() {
+        const lastPoint = this.points[this.points.length - 1]
+        this.points.push(new SnakePoint(lastPoint.x, lastPoint.y))
+        this.updateShape()
+    }
+
+    /**
+     * Обновляем битмап фигуры Mshape
+     */
+    updateShape() {
+        const bitmap = HArray.createTwoDemGrid(this.width, this.height)
+        const points = [this.leadPoint, ...this.points]
+
+        points.forEach((point) => {
+            if (bitmap?.[point.y]?.[point.x] !== undefined) {
+                bitmap[point.y][point.x] = 1
+            }
+        })
+
+        this.shape.bitmap = bitmap
+    }
+
+    /**
+     * Изменяет направление движения змейки, запоминает только
+     * новое направление, оно будет применено после вызова
+     * applyDirection метода
+     * @param direction
+     */
+    changeDirection(direction: MoveDirection) {
+        this.newDirection = direction
+    }
+
+    applyNewDirection() {
+        // Если пользователь нажал противоположное направление - игнорируем
+        if (this.isReverseDirection(this.newDirection)) {
+            return
+        }
+
+        this.direction = this.newDirection
+    }
+
+    /**
+     * Определяет является ли направление противоположным
+     * @param direction
+     */
+    isReverseDirection(direction: MoveDirection) {
+        const reverseDirection = ReverseDirections[this.direction]
+
+        return reverseDirection === direction
+    }
+
+    /**
+     * Змейка вышла за границы
+     */
+    isSnakeOutOfBounds() {
+        const lessThanX = this.leadPoint.x < 0
+        const lessThanY = this.leadPoint.y < 0
+        const moreThanX = this.leadPoint.x > this.width - 1
+        const moreThanY = this.leadPoint.y > this.height - 1
+
+        return lessThanX || lessThanY || moreThanX || moreThanY
+    }
+
+    /**
+     * Змейка съела сама себя, если координата
+     * лидирующей точки совпала с хотябы одной точкой хвоста
+     */
+    isSnakeAteItSelf() {
+        let isAte = false
+
+        this.points.forEach((point) => {
+            if (point.x === this.leadPoint.x && point.y === this.leadPoint.y) {
+                isAte = true
+            }
+        })
+
+        return isAte
+    }
+}

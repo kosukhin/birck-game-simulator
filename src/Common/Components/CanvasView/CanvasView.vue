@@ -21,7 +21,7 @@ const canvas = ref()
 const renderer = new CanvasRenderer(props.grid, props.fps)
 
 onMounted(() => {
-    renderer.canvas = canvas.value as HTMLCanvasElement
+    renderer.setСanvas(canvas.value as HTMLCanvasElement)
     renderer.run()
 })
 

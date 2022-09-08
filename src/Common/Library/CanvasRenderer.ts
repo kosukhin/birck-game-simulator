@@ -21,7 +21,7 @@ export class CanvasRenderer {
         return this.#canvas
     }
 
-    set canvas(canvas: HTMLCanvasElement) {
+    setСanvas(canvas: HTMLCanvasElement) {
         this.#canvas = canvas
     }
 

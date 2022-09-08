@@ -2,21 +2,15 @@ import { Ref } from 'nuxt/dist/app/compat/capi'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { MoveDirection } from '~~/src/Common/Types/GameTypes'
-import { HLog } from '~~/src/Common/Helpers/HLog'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { Bot } from '~~/src/Tanks/Library/Bot'
 import { Shoot } from '~~/src/Tanks/Library/Shoot'
 import { HMath } from '~~/src/Common/Helpers/HMath'
+import { Shapes } from '~~/src/Tanks/Data/Shapes'
+import { ShapeMover } from '~~/src/Common/Library/ShapeMover'
+import { HApp } from '~~/src/Common/Helpers/HApp'
 
-/**
- * Моделька танка
- */
-const TANK_SHAPE = [
-    [0, 1, 0],
-    [1, 1, 1],
-    [1, 0, 1],
-]
 const SHOOT_SPEED = 50
 
 /**
@@ -24,16 +18,15 @@ const SHOOT_SPEED = 50
  */
 export class WfTanks {
     grid: MGrid
-    updateCounter: Ref<number>
     tank: MShape
     bots: MShape[] = []
     isGameOver: Ref<boolean>
     score: Ref<number>
     lastShoot: Shoot
     lastBot: Bot
+    #shapeMover: ShapeMover = new ShapeMover()
 
     frameRenderTimePointer: any = null
-    moveDebounceHandler: any = null
 
     constructor() {
         this.grid = new MGrid({
@@ -42,11 +35,10 @@ export class WfTanks {
         })
         this.score = ref(0)
         this.grid.createEmptyGrid()
-        this.updateCounter = ref(0)
         this.isGameOver = ref(false)
         this.tank = new MShape({
             id: 'tank',
-            bitmap: TANK_SHAPE,
+            bitmap: Shapes.player,
             direction: MoveDirection.down,
         })
 
@@ -62,38 +54,47 @@ export class WfTanks {
         this.grid.addShape(this.tank)
     }
 
-    run() {
-        this.frameRenderTimePointer = setInterval(async () => {
-            // Если нету врагов, добавляем еще бота
-            if (this.grid.shapesCount <= 1) {
-                const maxHeight = this.grid.maxY - this.tank.height + 1
-                this.lastBot = new Bot({
-                    game: this,
-                    grid: this.grid,
-                    enemy: this.tank,
-                    position: [this.grid.maxX, maxHeight],
-                    direction: MoveDirection.up,
-                })
-
-                if (this.score.value >= 10) {
+    /**
+     * Запускает игру танки
+     */
+    async run() {
+        await HApp.wait(SHOOT_SPEED)
+        useService<SConnectors>('connectors').browser.requestAnimationFrame(
+            () => {
+                // Если нету врагов, добавляем еще бота
+                if (this.grid.shapesCount <= 1) {
+                    const maxHeight = this.grid.maxY - this.tank.height + 1
                     this.lastBot = new Bot({
                         game: this,
                         grid: this.grid,
                         enemy: this.tank,
-                        position: [HMath.round(this.grid.maxX / 2), maxHeight],
+                        position: [this.grid.maxX, maxHeight],
                         direction: MoveDirection.up,
                     })
-                }
-            }
 
-            this.checkGameOver()
-            await useService<SConnectors>(
-                'connectors'
-            ).browser.requestAnimationFrame()
-            this.updateCounter.value++
-        }, SHOOT_SPEED)
+                    if (this.score.value >= 10) {
+                        this.lastBot = new Bot({
+                            game: this,
+                            grid: this.grid,
+                            enemy: this.tank,
+                            position: [
+                                HMath.round(this.grid.maxX / 2),
+                                maxHeight,
+                            ],
+                            direction: MoveDirection.up,
+                        })
+                    }
+                }
+
+                this.checkGameOver()
+                !this.isGameOver.value && this.run()
+            }
+        )
     }
 
+    /**
+     * Останавливает игру, удаляя основной цикл
+     */
     stop() {
         clearInterval(this.frameRenderTimePointer)
     }
@@ -102,50 +103,21 @@ export class WfTanks {
      * Обеспечивает передвижение танка
      * @param direction
      */
-    async moveTank(direction: MoveDirection) {
-        HLog.log('tanks', direction)
-
+    moveTank(direction: MoveDirection) {
         if (this.tank.getRotation() === direction) {
-            switch (direction) {
-                case MoveDirection.up:
-                    this.tank.moveY(-1)
-                    break
-                case MoveDirection.down:
-                    this.tank.moveY(1)
-                    break
-                case MoveDirection.right:
-                    this.tank.moveX(1)
-                    break
-                case MoveDirection.left:
-                    this.tank.moveX(-1)
-                    break
-            }
+            this.#shapeMover.move(this.tank, direction)
         }
 
         this.tank.setRotation(direction)
-        await useService<SConnectors>(
-            'connectors'
-        ).browser.requestAnimationFrame()
-        this.updateCounter.value++
     }
 
     /**
      * Проверяет что игра закончена
+     * Игра будет закончена если танк игрока уничтожен
      */
     checkGameOver() {
-        let isTankAlive = false
-
-        this.grid.getShapes().forEach((shape) => {
-            if (shape === this.tank) {
-                isTankAlive = true
-            }
-        })
-
+        const isTankAlive = this.grid.hasShape(this.tank)
         this.isGameOver.value = !isTankAlive
-
-        if (this.isGameOver.value) {
-            this.stop()
-        }
     }
 
     /**
