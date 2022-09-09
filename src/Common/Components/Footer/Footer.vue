@@ -57,11 +57,9 @@ import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
     align-items: center;
     margin-top: 40px;
 
-    :deep {
-        .flag-link {
-            color: $c_body;
-            margin-bottom: 15px;
-        }
+    :deep(.flag-link) {
+        color: $c_body;
+        margin-bottom: 15px;
     }
 }
 
@@ -74,14 +72,12 @@ import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
     padding: 20px 40px 0;
     position: relative;
 
-    :deep {
-        .breadcrumbs {
-            margin: 0;
+    :deep(.breadcrumbs) {
+        margin: 0;
+    }
 
-            .el-breadcrumb__inner {
-                color: $c_body;
-            }
-        }
+    :deep(.el-breadcrumb__inner) {
+        color: $c_body;
     }
 }
 
