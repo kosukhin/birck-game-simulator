@@ -1,9 +1,15 @@
 <template>
     <header class="header">
-        <div class="middle">
-            <nuxt-link to="/">
+        <div class="middle header-inner">
+            <nuxt-link class="logo" to="/">
                 <el-avatar :size="32" class="mr-3" src="/static/logo.jpg" />
+                BrickGame
             </nuxt-link>
+            <div class="menu">
+                <el-icon>
+                    <Menu />
+                </el-icon>
+            </div>
         </div>
     </header>
     <div class="content">
@@ -12,12 +18,12 @@
         </div>
         <NuxtPage />
     </div>
-    <footer class="footer">
-        <div class="middle">footer</div>
-    </footer>
+    <Footer />
 </template>
 
 <script lang="ts" setup>
+import { Menu } from '@element-plus/icons-vue'
+import Footer from './src/Common/Components/Footer/Footer.vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'

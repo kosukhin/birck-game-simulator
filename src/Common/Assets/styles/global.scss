@@ -74,10 +74,32 @@ body {
 }
 
 .header {
+    display: flex;
     padding: 10px;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu {
+    padding: 10px;
+    background: $c_white;
+    display: inline-block;
+    line-height: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
 }
 
 .content {
@@ -85,16 +107,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.footer {
-    background: $c_black;
-    min-height: 300px;
-    color: $c_white;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
 }
 
 .middle {

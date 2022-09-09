@@ -11,8 +11,16 @@ export default {
     Snake: 'Змейка',
     Tanks: 'Танки',
     'Failed to load the game': 'Не удалось загрузить игру',
-    'выберите другую, пожалуйста': 'choose another one, please',
+    'choose another one, please': 'выберите другую, пожалуйста',
     Controls: 'Управление',
     Fire: 'Выстрел',
     Simulator: 'Симулятор',
+    'It is allowed to use the Software free of charge without restrictions':
+        'Разрешается безвозмездно использовать Программное обеспечение без ограничений',
+    'Create new game': 'Создать свою игру',
+    Documentation: 'Документация',
+    'About project': 'О проекте',
+    English: 'Английский',
+    Russian: 'Русский',
+    'Switch to': 'Переключить на',
 }

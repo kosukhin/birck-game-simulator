@@ -41,6 +41,18 @@ export class SBreadcrumbs {
                     parent: 'simulator',
                     params: { action: {} },
                 },
+                'new-game': {
+                    parent: 'index',
+                    text: lang.t('Create new game'),
+                },
+                documentation: {
+                    parent: 'index',
+                    text: lang.t('Documentation'),
+                },
+                about: {
+                    parent: 'index',
+                    text: lang.t('About project'),
+                },
             }
 
             app.$router.beforeEach(() => {
