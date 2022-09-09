@@ -29,7 +29,13 @@
         "selector-pseudo-element-no-unknown": [
             true,
             {
-                "ignorePseudoElements": ["v-deep"]
+                "ignorePseudoElements": ["v-deep", "deep"]
+            }
+        ],
+        "selector-pseudo-class-no-unknown": [
+            true,
+            {
+                "ignorePseudoClasses": ["deep"]
             }
         ],
         "selector-list-comma-newline-after": "always-multi-line",

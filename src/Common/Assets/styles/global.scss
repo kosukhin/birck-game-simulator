@@ -129,4 +129,8 @@ body {
     display: flex;
     gap: 10px;
     align-items: center;
+
+    &.selected {
+        font-weight: bold;
+    }
 }

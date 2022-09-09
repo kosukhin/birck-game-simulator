@@ -27,22 +27,7 @@
                 }}</nuxt-link>
             </div>
             <div class="footer-column">
-                <a class="flag-link" href="#">
-                    <img
-                        class="flag"
-                        src="/static/flags/en.svg"
-                        :alt="$services.lang.t('Switch to') + ' en'"
-                    />
-                    {{ $services.lang.t('English') }}
-                </a>
-                <a class="flag-link" href="#">
-                    <img
-                        class="flag"
-                        src="/static/flags/ru.svg"
-                        :alt="$services.lang.t('Switch to') + ' ru'"
-                    />
-                    {{ $services.lang.t('Russian') }}
-                </a>
+                <LangChanger />
             </div>
         </div>
         <div class="footer-bottom">
@@ -60,6 +45,7 @@
 
 <script setup>
 import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'
+import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
 </script>
 
 <style lang="scss" scoped>
@@ -70,6 +56,13 @@ import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'
     flex-direction: column;
     align-items: center;
     margin-top: 40px;
+
+    :deep {
+        .flag-link {
+            color: $c_body;
+            margin-bottom: 15px;
+        }
+    }
 }
 
 .footer-content {
@@ -81,7 +74,7 @@ import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'
     padding: 20px 40px 0;
     position: relative;
 
-    ::v-deep {
+    :deep {
         .breadcrumbs {
             margin: 0;
 

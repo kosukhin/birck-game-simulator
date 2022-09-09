@@ -1,10 +1,10 @@
 <template>
     <div class="main">
-        <nuxt-link to="/simulator/">Симулятор</nuxt-link>
+        <nuxt-link to="/simulator/">{{
+            $services.lang.t('Simulator')
+        }}</nuxt-link>
     </div>
 </template>
-
-<script setup lang="ts"></script>
 
 <style scoped>
 .main {

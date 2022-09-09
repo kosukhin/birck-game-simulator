@@ -19,22 +19,7 @@
         </div>
         <el-divider />
         <div class="sidebar-group">
-            <a class="flag-link" href="#">
-                <img
-                    class="flag"
-                    src="/static/flags/en.svg"
-                    :alt="$services.lang.t('Switch to') + ' en'"
-                />
-                {{ $services.lang.t('English') }}
-            </a>
-            <a class="flag-link" href="#">
-                <img
-                    class="flag"
-                    src="/static/flags/ru.svg"
-                    :alt="$services.lang.t('Switch to') + ' ru'"
-                />
-                {{ $services.lang.t('Russian') }}
-            </a>
+            <LangChanger />
         </div>
     </div>
 </template>
@@ -42,6 +27,7 @@
 <script setup lang="ts">
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SDrawer } from '~~/src/Common/Services/SDrawer'
+import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
 
 const afterClick = () => {
     useService<SDrawer>('drawer').close('menu')

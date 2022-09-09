@@ -1,5 +1,6 @@
 import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
+import { SCookies } from '~~/src/Common/Services/SCookies'
 import { SDrawer } from '~~/src/Common/Services/SDrawer'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
@@ -18,6 +19,7 @@ const services = {
     logger: new SLogger(),
     connectors: new SConnectors(),
     drawer: new SDrawer(),
+    cookies: new SCookies(),
 
     // Игры
     snake: new SSnake(),
