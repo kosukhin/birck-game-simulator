@@ -1,32 +1,22 @@
 <template>
-    <header class="header">
-        <div class="middle header-inner">
-            <nuxt-link class="logo" to="/">
-                <el-avatar :size="32" class="mr-3" src="/static/logo.jpg" />
-                BrickGame
-            </nuxt-link>
-            <div class="menu">
-                <el-icon>
-                    <Menu />
-                </el-icon>
-            </div>
-        </div>
-    </header>
+    <Header />
     <div class="content">
         <div class="middle">
             <breadcrumbs />
         </div>
         <NuxtPage />
     </div>
+    <DrawerWrapper />
     <Footer />
 </template>
 
 <script lang="ts" setup>
-import { Menu } from '@element-plus/icons-vue'
 import Footer from './src/Common/Components/Footer/Footer.vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'
+import DrawerWrapper from '~~/src/Common/Components/DrawerWrapper/DrawerWrapper.vue'
+import Header from '~~/src/Common/Components/Header/Header.vue'
 
 useService<SHooks>('hooks').init.runSubscribers()
 useHead({

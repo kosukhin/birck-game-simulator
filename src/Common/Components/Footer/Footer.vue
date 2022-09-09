@@ -27,17 +27,17 @@
                 }}</nuxt-link>
             </div>
             <div class="footer-column">
-                <a class="footer-link" href="#">
+                <a class="flag-link" href="#">
                     <img
-                        class="footer-flag"
+                        class="flag"
                         src="/static/flags/en.svg"
                         :alt="$services.lang.t('Switch to') + ' en'"
                     />
                     {{ $services.lang.t('English') }}
                 </a>
-                <a class="footer-link" href="#">
+                <a class="flag-link" href="#">
                     <img
-                        class="footer-flag"
+                        class="flag"
                         src="/static/flags/ru.svg"
                         :alt="$services.lang.t('Switch to') + ' ru'"
                     />
@@ -75,17 +75,6 @@ import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'
 .footer-content {
     flex: 1;
     display: flex;
-}
-
-.footer-flag {
-    width: 30px;
-    height: 30px;
-}
-
-.footer-link {
-    display: flex;
-    gap: 10px;
-    align-items: center;
 }
 
 .footer-breadcrumbs {

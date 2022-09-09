@@ -90,9 +90,14 @@ body {
     padding: 10px;
     background: $c_white;
     display: inline-block;
-    line-height: 100%;
+    line-height: 0;
     border-radius: 10px;
     cursor: pointer;
+    transition: box-shadow 0.2s;
+
+    &:hover {
+        box-shadow: 0 0 3px $c_black;
+    }
 }
 
 .logo {
@@ -113,4 +118,15 @@ body {
     width: 100%;
     max-width: 1000px;
     padding: 0 20px;
+}
+
+.flag {
+    width: 30px;
+    height: 30px;
+}
+
+.flag-link {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
