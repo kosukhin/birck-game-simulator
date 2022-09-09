@@ -1,6 +1,6 @@
 <template>
-    <div class="simulator">
-        <nuxt-link to="/">{{ $services.lang.t('Home') }}</nuxt-link>
+    <div class="simulator middle">
+        <h1>Игры</h1>
         <nuxt-link to="/simulator/tetris/">{{
             $services.lang.t('Tetris')
         }}</nuxt-link>
@@ -13,13 +13,11 @@
     </div>
 </template>
 
+<script setup lang="ts"></script>
+
 <style lang="scss" scoped>
 .simulator {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    flex: 1;
-    height: 100%;
 }
 </style>

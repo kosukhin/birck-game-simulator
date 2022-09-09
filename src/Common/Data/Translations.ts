@@ -14,4 +14,5 @@ export default {
     'выберите другую, пожалуйста': 'choose another one, please',
     Controls: 'Управление',
     Fire: 'Выстрел',
+    Simulator: 'Симулятор',
 }

@@ -4,13 +4,11 @@
     </div>
 </template>
 
+<script setup lang="ts"></script>
+
 <style scoped>
 .main {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    height: 100%;
 }
 </style>

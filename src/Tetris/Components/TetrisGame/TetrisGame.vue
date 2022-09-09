@@ -1,8 +1,5 @@
 <template>
     <div class="game screen">
-        <nuxt-link class="back" to="/simulator/">
-            {{ $services.lang.t('Back') }} &rarr;
-        </nuxt-link>
         <div v-if="game.isGameOver.value" class="game-over">
             <p>{{ $services.lang.t('Game over') }}</p>
             <p>{{ $services.lang.t('Score') }}: {{ game.score }}</p>

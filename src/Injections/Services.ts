@@ -1,3 +1,4 @@
+import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
@@ -11,6 +12,7 @@ const hooks = new SHooks()
 const services = {
     hooks,
     lang: new SLanguage(),
+    breadcrumbs: new SBreadcrumbs(),
     keyboard: new SKeyboard(),
     logger: new SLogger(),
     connectors: new SConnectors(),

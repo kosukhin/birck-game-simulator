@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="middle">
         <Simulator :action="$route.params.action" />
     </div>
 </template>

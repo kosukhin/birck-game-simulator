@@ -25,11 +25,8 @@ defineProps({
 
 <style lang="scss" scoped>
 .tetris {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: solid 1px $c_black;
+    display: inline-block;
     background: $c_white;
+    position: relative;
 }
 </style>
