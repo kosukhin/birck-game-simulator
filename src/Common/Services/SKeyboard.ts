@@ -38,6 +38,7 @@ export class SKeyboard extends Observable<TKeyboardSubscriber> {
             window,
             'keypress',
             (e) => {
+                e.preventDefault()
                 const key = e.code
                 HLog.log('keyboard', 'key', key)
                 this.runSubscribers(key)

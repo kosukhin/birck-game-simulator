@@ -1,5 +1,6 @@
 <template>
     <el-breadcrumb
+        v-show="breadcrumbs.getLinks().length > 1"
         :key="breadcrumbs.renderCounter.value"
         class="breadcrumbs"
         separator="/"
@@ -22,6 +23,6 @@ const breadcrumbs = useService<SBreadcrumbs>('breadcrumbs')
 
 <style lang="scss">
 .breadcrumbs {
-    margin: 20px 0;
+    margin: 20px 0 40px;
 }
 </style>

@@ -39,10 +39,8 @@ const onKeyPress = (keyCode: string) => {
 
 <style lang="scss">
 .keyhint {
-    position: absolute;
-    top: 100%;
+    position: static;
     margin-top: 20px;
-    left: 0;
     display: flex;
     align-items: center;
     flex-direction: column;

@@ -26,7 +26,6 @@ defineProps({
 <style lang="scss" scoped>
 .tetris {
     display: inline-block;
-    background: $c_white;
     position: relative;
 }
 </style>

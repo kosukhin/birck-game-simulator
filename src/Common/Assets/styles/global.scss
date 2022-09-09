@@ -1,3 +1,5 @@
+@import "~~/src/Common/Assets/styles/colors.scss";
+
 * {
     font-family: Arial, sans-serif;
     font-size: 16px;
@@ -12,6 +14,7 @@ body,
     overflow: hidden;
     margin: 0;
     padding: 0;
+    overflow-y: auto;
 }
 
 #__nuxt {
@@ -38,10 +41,15 @@ body {
     justify-content: center;
     flex-direction: column;
     gap: 8px;
-    background: #9fb08f;
+    background: $c_tetris;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 10px 20px;
     padding-top: 19px;
+    border-radius: 20px;
+
+    canvas {
+        background: $c_tetris_screen;
+    }
 }
 
 .back {
@@ -86,6 +94,7 @@ body {
     padding: 10px;
     display: flex;
     justify-content: center;
+    margin-top: 40px;
 }
 
 .middle {
