@@ -35,6 +35,16 @@ body {
     background: $c_body;
 }
 
+h1 {
+    font-size: 35px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 25px;
+    text-align: center;
+}
+
 .screen {
     display: flex;
     align-items: center;
@@ -133,4 +143,17 @@ body {
     &.selected {
         font-weight: bold;
     }
+}
+
+.games-list {
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.article {
+    max-width: 500px;
+    margin: 0 auto;
 }

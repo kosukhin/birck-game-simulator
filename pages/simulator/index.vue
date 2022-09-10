@@ -1,19 +1,16 @@
 <template>
     <div class="simulator middle">
-        <h1>Игры</h1>
-        <nuxt-link to="/simulator/tetris/">{{
-            $services.lang.t('Tetris')
-        }}</nuxt-link>
-        <nuxt-link to="/simulator/snake/">{{
-            $services.lang.t('Snake')
-        }}</nuxt-link>
-        <nuxt-link to="/simulator/tanks/">{{
-            $services.lang.t('Tanks')
-        }}</nuxt-link>
+        <h1>{{ $services.lang.t('Games') }}</h1>
+        <div class="games-list">
+            <GameCard v-for="game in games()" :key="game.title" :game="game" />
+        </div>
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import GameCard from '~~/src/Common/Components/GameCard/GameCard.vue'
+import { games } from '~~/src/Common/Data/Games'
+</script>
 
 <style lang="scss" scoped>
 .simulator {
