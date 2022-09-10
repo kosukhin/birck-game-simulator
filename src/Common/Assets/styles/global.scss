@@ -27,10 +27,6 @@ a {
     text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
 body {
     background: $c_body;
 }
@@ -156,4 +152,5 @@ h2 {
 .article {
     max-width: 500px;
     margin: 0 auto;
+    line-height: 160%;
 }

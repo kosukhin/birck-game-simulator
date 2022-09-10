@@ -32,5 +32,11 @@ export default {
         'Non-standard implementation of classic tankers, in this version the rivals are more aggressive, they know exactly where you are! And they will seek to destroy you.':
             'Нестандартная реализация классических танчиков, в этой версии соперники более агрессивны, они точно знают где вы находитесь! И будут стремиться вас уничтожить.',
         'Popular games': 'Популярные игры',
+        'Welcome to the BrickGame Simulator project!':
+            'Добро пожаловать в проект BrickGame симулятор!',
+        'This project is being developed as a work for an open source portfolio. So that the author of the project could show his skills on the example of this work.':
+            'Этот проект разрабатывается в качестве работы для портфолио с открытым исходным кодом. Чтобы автор проекта мог показать свои навыки на примере этой работы.',
+        'Perhaps in the future the project will grow into something more than a work for a portfolio. You can help the author in this difficult task and create your own game based on this simulator. You will find a detailed tutorial on how to make your own game here:':
+            'Возможно в будущем проект перерастет во что-то большее чем работа для портфолио. Вы можете помочь автору в этом нелегком деле и создать свою игру на основе этого симулятора. Подбробную инстуркцию как сделать свою игру вы найдете здесь:',
     },
 }
