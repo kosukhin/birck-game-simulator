@@ -3,7 +3,7 @@ import { Observable } from '~~/src/Common/Library/Observable'
 import { ShapeMover } from '~~/src/Common/Library/ShapeMover'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
-import { MoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { TShapePosition } from '~~/src/Common/Types/GridTypes'
 
 const SHOOT_SPEED = 50
@@ -11,7 +11,7 @@ const SHOOT_SPEED = 50
 interface IShootParam {
     grid: MGrid
     position: TShapePosition
-    direction: MoveDirection
+    direction: EMoveDirection
     fromShape: MShape
 }
 
@@ -21,7 +21,7 @@ interface IShootParam {
 export class Shoot {
     #grid: MGrid
     #position: TShapePosition
-    #direction: MoveDirection
+    #direction: EMoveDirection
     #fromShape: MShape
     #shapeMover: ShapeMover = new ShapeMover()
     /** Хук попадания в цель, передает фигуру по которой попали */

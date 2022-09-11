@@ -1,7 +1,7 @@
 import { HMath } from '~~/src/Common/Helpers/HMath'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
-import { MoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { Shapes } from '~~/src/Tanks/Data/Shapes'
 import { Shoot } from '~~/src/Tanks/Library/Shoot'
 
@@ -9,7 +9,7 @@ interface IBotParams {
     grid: MGrid
     enemy: MShape
     position: [number, number]
-    direction: MoveDirection
+    direction: EMoveDirection
 }
 
 /**
@@ -59,22 +59,22 @@ export class Bot {
 
             if (isSameX || isSameY) {
                 // 2. если находится, то определить направление стрельбы и сделать шаг в это направление, затем выстрел
-                let shootDirection = MoveDirection.up
+                let shootDirection = EMoveDirection.up
 
                 if (isSameX && this.#tank.midX <= this.#enemy.midX) {
-                    shootDirection = MoveDirection.down
+                    shootDirection = EMoveDirection.down
                 }
 
                 if (isSameX && this.#tank.midX >= this.#enemy.midX) {
-                    shootDirection = MoveDirection.up
+                    shootDirection = EMoveDirection.up
                 }
 
                 if (isSameY && this.#tank.midY >= this.#enemy.midY) {
-                    shootDirection = MoveDirection.left
+                    shootDirection = EMoveDirection.left
                 }
 
                 if (isSameY && this.#tank.midY <= this.#enemy.midY) {
-                    shootDirection = MoveDirection.right
+                    shootDirection = EMoveDirection.right
                 }
 
                 this.#tank.setDirection(shootDirection)
@@ -89,14 +89,16 @@ export class Bot {
                 if (Math.abs(yDistance) < Math.abs(xDistance)) {
                     const step = yDistance < 0 ? 1 : -1
                     this.#tank.setDirection(
-                        yDistance < 0 ? MoveDirection.down : MoveDirection.up
+                        yDistance < 0 ? EMoveDirection.down : EMoveDirection.up
                     )
                     // Двигаемся по y
                     this.#tank.moveY(step)
                 } else {
                     const step = xDistance < 0 ? 1 : -1
                     this.#tank.setDirection(
-                        xDistance < 0 ? MoveDirection.right : MoveDirection.left
+                        xDistance < 0
+                            ? EMoveDirection.right
+                            : EMoveDirection.left
                     )
                     // Двигаемся по x
                     this.#tank.moveX(step)

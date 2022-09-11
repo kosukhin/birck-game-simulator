@@ -1,5 +1,5 @@
 import { MShape } from '~~/src/Common/Models/MShape'
-import { MoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 
 /**
  * Класс, который отвечает за перемещение фигуры в указанном направлении
@@ -10,18 +10,18 @@ export class ShapeMover {
      * @param shape
      * @param direction
      */
-    move(shape: MShape, direction: MoveDirection) {
+    move(shape: MShape, direction: EMoveDirection) {
         switch (direction) {
-            case MoveDirection.up:
+            case EMoveDirection.up:
                 shape.moveY(-1)
                 break
-            case MoveDirection.down:
+            case EMoveDirection.down:
                 shape.moveY(1)
                 break
-            case MoveDirection.right:
+            case EMoveDirection.right:
                 shape.moveX(1)
                 break
-            case MoveDirection.left:
+            case EMoveDirection.left:
                 shape.moveX(-1)
                 break
         }

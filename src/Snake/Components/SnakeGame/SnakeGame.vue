@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { useService } from '~~/src/Common/Helpers/HService'
-import { KeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
+import { EKeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { КeysToMoveMap } from '~~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
@@ -27,7 +27,7 @@ const game = new WfSnake()
 game.run()
 
 keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: KeyCode) => {
+keyboard.registerSubscriber((key: EKeyCode) => {
     if (КeysToMoveMap[key] !== undefined) {
         game.moveSnake(КeysToMoveMap[key])
     }

@@ -1,6 +1,6 @@
 import { HArray } from '~~/src/Common/Helpers/HArray'
 import { HMath } from '~~/src/Common/Helpers/HMath'
-import { MoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { TGrid, TShapePosition } from '~~/src/Common/Types/GridTypes'
 
 interface IShapeParams {
@@ -8,7 +8,7 @@ interface IShapeParams {
     y?: number
     bitmap?: TGrid
     id?: any
-    direction?: MoveDirection
+    direction?: EMoveDirection
 }
 
 /**
@@ -27,7 +27,7 @@ export class MShape {
     /** Статический счетчик всех id фигур */
     static #shapeIdCounter = 0
     /** Направление фигуры, полезно для установки вращения */
-    #direction: MoveDirection = MoveDirection.up
+    #direction: EMoveDirection = EMoveDirection.up
 
     constructor(params: IShapeParams) {
         const { x = 0, y = 0, bitmap = [] } = params
@@ -48,12 +48,12 @@ export class MShape {
         let bitmap = this.#bitmap
 
         // Если у фигуры нестандартный поворот, то поворачиваем битмап
-        if (this.#direction !== MoveDirection.up) {
-            this.#direction === MoveDirection.right &&
+        if (this.#direction !== EMoveDirection.up) {
+            this.#direction === EMoveDirection.right &&
                 (bitmap = HArray.rotate90(this.#bitmap))
-            this.#direction === MoveDirection.down &&
+            this.#direction === EMoveDirection.down &&
                 (bitmap = HArray.rotate180(this.#bitmap))
-            this.#direction === MoveDirection.left &&
+            this.#direction === EMoveDirection.left &&
                 (bitmap = HArray.rotate270(this.#bitmap))
         }
 
@@ -112,7 +112,7 @@ export class MShape {
      * Устанавливает направление поворота фигуры
      * @param direction
      */
-    setDirection(direction: MoveDirection) {
+    setDirection(direction: EMoveDirection) {
         this.#direction = direction
     }
 

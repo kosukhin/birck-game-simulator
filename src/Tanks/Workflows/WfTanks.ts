@@ -1,7 +1,7 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
-import { MoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { Bot } from '~~/src/Tanks/Library/Bot'
@@ -41,13 +41,13 @@ export class WfTanks {
         this.#tank = new MShape({
             id: 'tank',
             bitmap: Shapes.player,
-            direction: MoveDirection.down,
+            direction: EMoveDirection.down,
         })
         this.#lastBot = new Bot({
             grid: this.#grid,
             enemy: this.#tank,
             position: [this.#grid.maxX, this.calculateMaxHeight()],
-            direction: MoveDirection.up,
+            direction: EMoveDirection.up,
         })
         this.#grid.addShape(this.#tank)
     }
@@ -77,7 +77,7 @@ export class WfTanks {
                         grid: this.#grid,
                         enemy: this.#tank,
                         position: [this.#grid.maxX, this.calculateMaxHeight()],
-                        direction: MoveDirection.up,
+                        direction: EMoveDirection.up,
                     })
 
                     if (this.#score.value >= 10) {
@@ -88,7 +88,7 @@ export class WfTanks {
                                 HMath.round(this.#grid.maxX / 2),
                                 this.calculateMaxHeight(),
                             ],
-                            direction: MoveDirection.up,
+                            direction: EMoveDirection.up,
                         })
                     }
 
@@ -97,7 +97,7 @@ export class WfTanks {
                             grid: this.#grid,
                             enemy: this.#tank,
                             position: [0, this.calculateMaxHeight()],
-                            direction: MoveDirection.up,
+                            direction: EMoveDirection.up,
                         })
                     }
                 }
@@ -112,7 +112,7 @@ export class WfTanks {
      * Обеспечивает передвижение танка
      * @param direction
      */
-    moveTank(direction: MoveDirection) {
+    moveTank(direction: EMoveDirection) {
         if (this.#tank.direction === direction) {
             this.#shapeMover.move(this.#tank, direction)
         }

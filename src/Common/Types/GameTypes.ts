@@ -1,11 +1,11 @@
-import { KeyCode } from '~~/src/Common/Services/SKeyboard'
+import { EKeyCode } from '~~/src/Common/Services/SKeyboard'
 
 export type TGameRunner = () => void
 
 /**
  * Направление движения
  */
-export enum MoveDirection {
+export enum EMoveDirection {
     up,
     down,
     right,
@@ -16,18 +16,18 @@ export enum MoveDirection {
  * Карта противоположных направлений
  */
 export const ReverseDirections = {
-    [MoveDirection.up]: MoveDirection.down,
-    [MoveDirection.down]: MoveDirection.up,
-    [MoveDirection.right]: MoveDirection.left,
-    [MoveDirection.left]: MoveDirection.right,
+    [EMoveDirection.up]: EMoveDirection.down,
+    [EMoveDirection.down]: EMoveDirection.up,
+    [EMoveDirection.right]: EMoveDirection.left,
+    [EMoveDirection.left]: EMoveDirection.right,
 }
 
 /**
  * Карта мапинга клавиш на направления движения
  */
 export const КeysToMoveMap = {
-    [KeyCode.W]: MoveDirection.up,
-    [KeyCode.S]: MoveDirection.down,
-    [KeyCode.A]: MoveDirection.left,
-    [KeyCode.D]: MoveDirection.right,
+    [EKeyCode.W]: EMoveDirection.up,
+    [EKeyCode.S]: EMoveDirection.down,
+    [EKeyCode.A]: EMoveDirection.left,
+    [EKeyCode.D]: EMoveDirection.right,
 }

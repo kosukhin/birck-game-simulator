@@ -8,7 +8,7 @@ import { HLog } from '~~/src/Common/Helpers/HLog'
 /**
  * Коды управляющих клавиш
  */
-export enum KeyCode {
+export enum EKeyCode {
     W = 'KeyW',
     A = 'KeyA',
     S = 'KeyS',

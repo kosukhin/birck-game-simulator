@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { WfTetris } from '~~/src/Tetris/Workflows/WfTetris'
 import { useService } from '~~/src/Common/Helpers/HService'
-import { KeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
+import { EKeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { HArray } from '~~/src/Common/Helpers/HArray'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
@@ -27,26 +27,26 @@ const game = new WfTetris()
 game.run()
 
 keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: KeyCode) => {
+keyboard.registerSubscriber((key: EKeyCode) => {
     const shape = game.grid.getFirstShape()
 
     if (!shape) {
         return
     }
 
-    if (key === KeyCode.W) {
+    if (key === EKeyCode.W) {
         shape.setBitmap(HArray.rotate90(shape.bitmap))
     }
 
-    if (key === KeyCode.S) {
+    if (key === EKeyCode.S) {
         shape.moveY(1)
     }
 
-    if (key === KeyCode.A) {
+    if (key === EKeyCode.A) {
         shape.moveX(-1)
     }
 
-    if (key === KeyCode.D) {
+    if (key === EKeyCode.D) {
         shape.moveX(1)
     }
 })

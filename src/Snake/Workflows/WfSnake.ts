@@ -8,7 +8,7 @@ import { useService } from '~~/src/Common/Helpers/HService'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
-import { MoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { Snake } from '~~/src/Snake/Library/Snake'
 
 /**
@@ -108,7 +108,7 @@ export class WfSnake {
      * Изменяет направление движения змейки
      * @param direction
      */
-    moveSnake(direction: MoveDirection) {
+    moveSnake(direction: EMoveDirection) {
         this.#snake.changeDirection(direction)
     }
 

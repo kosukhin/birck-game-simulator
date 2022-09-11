@@ -2,7 +2,10 @@ import { HArray } from '~~/src/Common/Helpers/HArray'
 import { HObjects } from '~~/src/Common/Helpers/HObjects'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
-import { MoveDirection, ReverseDirections } from '~~/src/Common/Types/GameTypes'
+import {
+    EMoveDirection,
+    ReverseDirections,
+} from '~~/src/Common/Types/GameTypes'
 import { SnakePoint } from '~~/src/Snake/Library/SnakePoint'
 
 /**
@@ -13,8 +16,8 @@ export class Snake {
     #leadPoint: SnakePoint
     // Хвост змейки
     #points: SnakePoint[] = []
-    #direction: MoveDirection = MoveDirection.right
-    #newDirection: MoveDirection = MoveDirection.right
+    #direction: EMoveDirection = EMoveDirection.right
+    #newDirection: EMoveDirection = EMoveDirection.right
     #shape: MShape
     #width: number
     #height: number
@@ -50,25 +53,25 @@ export class Snake {
         let prevPointPosition = [this.#leadPoint.x, this.#leadPoint.y]
 
         switch (this.#direction) {
-            case MoveDirection.down:
+            case EMoveDirection.down:
                 this.#leadPoint.setPosition(
                     this.#leadPoint.x,
                     this.#leadPoint.y + 1
                 )
                 break
-            case MoveDirection.up:
+            case EMoveDirection.up:
                 this.#leadPoint.setPosition(
                     this.#leadPoint.x,
                     this.#leadPoint.y - 1
                 )
                 break
-            case MoveDirection.right:
+            case EMoveDirection.right:
                 this.#leadPoint.setPosition(
                     this.#leadPoint.x + 1,
                     this.#leadPoint.y
                 )
                 break
-            case MoveDirection.left:
+            case EMoveDirection.left:
                 this.#leadPoint.setPosition(
                     this.#leadPoint.x - 1,
                     this.#leadPoint.y
@@ -116,7 +119,7 @@ export class Snake {
      * applyDirection метода
      * @param direction
      */
-    changeDirection(direction: MoveDirection) {
+    changeDirection(direction: EMoveDirection) {
         this.#newDirection = direction
     }
 
@@ -133,7 +136,7 @@ export class Snake {
      * Определяет является ли направление противоположным
      * @param direction
      */
-    isReverseDirection(direction: MoveDirection) {
+    isReverseDirection(direction: EMoveDirection) {
         const reverseDirection = ReverseDirections[this.#direction]
 
         return reverseDirection === direction
