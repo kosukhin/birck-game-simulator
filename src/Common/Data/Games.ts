@@ -13,7 +13,7 @@ export const games = (): IGame[] => {
 
     return [
         {
-            photo: '/static/games/tetris.png',
+            photo: '/images/games/tetris.png',
             link: '/simulator/tetris/',
             title: lang.t('Tetris'),
             description: lang.t(
@@ -21,7 +21,7 @@ export const games = (): IGame[] => {
             ),
         },
         {
-            photo: '/static/games/snake.png',
+            photo: '/images/games/snake.png',
             link: '/simulator/snake/',
             title: lang.t('Snake'),
             description: lang.t(
@@ -29,7 +29,7 @@ export const games = (): IGame[] => {
             ),
         },
         {
-            photo: '/static/games/tanks.png',
+            photo: '/images/games/tanks.png',
             link: '/simulator/tanks/',
             title: lang.t('Tanks'),
             description: lang.t(

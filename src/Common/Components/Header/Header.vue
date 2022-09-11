@@ -2,7 +2,9 @@
     <header class="header">
         <div class="middle header-inner">
             <nuxt-link class="logo" to="/">
-                <el-avatar :size="32" class="mr-3" src="/static/logo.jpg" />
+                <el-avatar :size="32" class="mr-3">
+                    <img src="/images/logo.jpg" alt="" />
+                </el-avatar>
                 BrickGame
             </nuxt-link>
             <div class="menu" @click="openMenu">

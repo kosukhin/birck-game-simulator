@@ -6,7 +6,7 @@
     >
         <img
             class="flag"
-            src="/static/flags/en.svg"
+            src="/images/flags/en.svg"
             :alt="$services.lang.t('Switch to') + ' en'"
         />
         {{ $services.lang.t('English') }}
@@ -18,7 +18,7 @@
     >
         <img
             class="flag"
-            src="/static/flags/ru.svg"
+            src="/images/flags/ru.svg"
             :alt="$services.lang.t('Switch to') + ' ru'"
         />
         {{ $services.lang.t('Russian') }}
