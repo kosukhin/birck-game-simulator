@@ -40,5 +40,13 @@ export default {
             'Возможно в будущем проект перерастет во что-то большее чем работа для портфолио. Вы можете помочь автору в этом нелегком деле и создать свою игру на основе этого симулятора. Подбробную инстуркцию как сделать свою игру вы найдете здесь:',
         Error: 'Ошибка',
         'Page not found': 'Страница не найдена',
+        'There are several types of documentation in the project.':
+            'В проекте есть несколько видов документации.',
+        'Documentation for the source code of the modules can be found here':
+            'Документацию на исходный код модулей вы можете найти здесь',
+        'Documentation for modules': 'Документация на модули',
+        'Documentation on all the main points of the project is stored in the repository on GitHub':
+            'Документация по всем основным моментам проекта храниться в репозитории на GitHub',
+        'Project documentation': 'Документация на проект',
     },
 }

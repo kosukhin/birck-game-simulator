@@ -7,7 +7,7 @@
     "preview": "nuxt preview",
     "test": "jest --passWithNoTests",
     "prepare": "husky install",
-    "generatedoc": "./node_modules/.bin/typedoc src/**/*.ts --out jsdocs",
+    "generatedoc": "./node_modules/.bin/typedoc --entryPointStrategy expand ./src --out public/jsdocs",
     "lint": "eslint --ext \".ts,.js,.vue\" --ignore-path .eslintignore .",
     "lintfix": "eslint --fix --ext \".ts,.js,.vue\" --ignore-path .eslintignore .",
     "stylelint": "stylelint '**/*.{vue,scss}' --ignore-pattern 'node_modules/*' --ignore-pattern '.nuxt/*' --ignore-pattern 'dist/*'"
