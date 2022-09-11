@@ -48,5 +48,39 @@ export default {
         'Documentation on all the main points of the project is stored in the repository on GitHub':
             'Документация по всем основным моментам проекта храниться в репозитории на GitHub',
         'Project documentation': 'Документация на проект',
+        and: 'и',
+        'Create a new game': 'Создать новую игру',
+        'To create a new game, create a directory, for example,':
+            'Чтобы создать новую игру, создайте директорию, например,',
+        'Next, create a directory': 'Дальше создайте директорию',
+        'and a file called, for example,': ' и файл под названием, например,',
+        'This service is needed in order to connect a new game to the Simulator component':
+            'Этот сервис нужен для того чтобы подключить новую игру к компоненту Simulator',
+        'For example, the code from the STetris service looks like this:':
+            'Например, код из сервиса STetris выглядит так:',
+        'The TetrisGame component is added to the games List':
+            'В gamesList добавляется компонент TetrisGame',
+        'After the work done, you will be able to open your game if you go to':
+            'После проделанной работы, вы сможете открыть свою игру если перейдете по адресу',
+        'To create your own game, you only need to use 2 models:':
+            'Для создания своей игры вам нужно использовать всего лишь 2 модели:',
+        'responsible for the formation of the main grid of the game.function':
+            'отвечает за формирование основной сетки игры.функция',
+        'how to deploy the main two-dimensional array of the game':
+            'как раз вернет основной двумерный массив игры',
+        'responsible for creating shapes on the MGrid grid. After creating a new instance of MShape, you can place it on the grid of the game Grid by calling the add Shape function.':
+            'отвечает за создание фигур на сетке MGrid. Создав новый экземпляр MShape вы можете поместить его на сетку игры MGrid вызвав функцию addShape.',
+        'To see the results of your game, use the component':
+            'Чтобы увидеть результаты работы своей игры используйте компонент',
+        'Transfer your Mgrid instance to the prop':
+            'Передайте свой экземпляр Mgrid в пропс',
+        'and set the desired refresh rate level of the game, for example fps=10 will update the display 10 times per second.':
+            'и установите желаемый уровень частоты обновления игры, например fps=10 будет обновлять отбражение 10 раз в секунду.',
+        'In principle, this should be enough to develop a new game.':
+            'Впринципе этого должно быть достаточно чтобы раработать новую игру.',
+        'If you have any questions, you can ask them in Issues on Github.':
+            'Если есть вопросы можете задать их в Issues на Github.',
+        'Ask a question about creating a game':
+            'Задать вопрос по созданию игры',
     },
 }

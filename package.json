@@ -54,6 +54,7 @@
     "element-plus": "^2.2.16",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
-    "pinia": "^2.0.22"
+    "pinia": "^2.0.22",
+    "vue3-highlightjs": "^1.0.5"
   }
 }
