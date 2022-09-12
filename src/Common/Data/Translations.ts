@@ -86,7 +86,7 @@ export default new Map([
                 'Этот сервис нужен для того чтобы подключить новую игру к компоненту Simulator',
             ],
             [
-                'For example, the code from the STetris service looks like this,',
+                'For example, the code from the STetris service looks like this:',
                 'Например, код из сервиса STetris выглядит так,',
             ],
             [
