@@ -10,6 +10,7 @@ import { SCookies } from '~~/src/Common/Services/SCookies'
  * Сервис для работы с переводами
  */
 export class SLanguage {
+    /** Текущий язык */
     #lang: Ref<string>
 
     afterInit(hooks: SHooks) {

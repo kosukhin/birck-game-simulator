@@ -3,22 +3,20 @@
  * полезен для отладки и профилирования
  */
 export class SLogger {
-    /**
-     * Конфиг тэгов отладки
-     */
-    private config = {
-        limit: false,
-        shape: false,
-        max: false,
-        shape_form: false,
-        fulltrace: false,
-        snake: false,
-        keyboard: false,
-        game_resolving: false,
-        tanks: false,
-        bot: false,
-        canvas: false,
-    }
+    /** Конфиг тэгов отладки */
+    #config = new Map([
+        ['limit', false],
+        ['shape', false],
+        ['max', false],
+        ['shape_form', false],
+        ['fulltrace', false],
+        ['snake', false],
+        ['keyboard', false],
+        ['game_resolving', false],
+        ['tanks', false],
+        ['bot', false],
+        ['canvas', false],
+    ])
 
     /**
      * Помещает в лог новое сообщение, если тэг включен
@@ -27,7 +25,7 @@ export class SLogger {
      * @returns
      */
     log(tag: string, ...rest: any[]) {
-        if (!this.config[tag]) {
+        if (!this.#config.get(tag)) {
             return
         }
 

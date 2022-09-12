@@ -3,7 +3,6 @@ import { Observable } from '~~/src/Common/Library/Observable'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { TKeyboardSubscriber } from '~~/src/Common/Types/KeyboardTypes'
-import { HLog } from '~~/src/Common/Helpers/HLog'
 
 /**
  * Коды управляющих клавиш
@@ -40,7 +39,6 @@ export class SKeyboard extends Observable<TKeyboardSubscriber> {
             (e) => {
                 e.preventDefault()
                 const key = e.code
-                HLog.log('keyboard', 'key', key)
                 this.runSubscribers(key)
             }
         )

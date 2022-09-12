@@ -21,7 +21,7 @@ import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
 const breadcrumbs = useService<SBreadcrumbs>('breadcrumbs')
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .breadcrumbs {
     margin: 20px 0 40px;
 }

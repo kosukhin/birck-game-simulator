@@ -11,7 +11,9 @@ export interface IDrawer {
  * Сервис управления дроверами
  */
 export class SDrawer {
+    /** Событие открытия дровера */
     opening = new Observable<(drawer: IDrawer) => void>()
+    /** Событие закрытия дровера */
     closing = new Observable<(name: string) => void>()
 
     /**

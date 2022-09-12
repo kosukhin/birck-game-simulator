@@ -37,7 +37,7 @@ const onKeyPress = (keyCode: string) => {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .keyhint {
     position: static;
     margin-top: 20px;

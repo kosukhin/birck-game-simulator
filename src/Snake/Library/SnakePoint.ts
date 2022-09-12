@@ -2,7 +2,9 @@
  * Одна точка тела змейки
  */
 export class SnakePoint {
+    /** x позиция точки */
     #x = 0
+    /** y позиция точки */
     #y = 0
 
     constructor(x: number, y: number) {

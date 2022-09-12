@@ -12,15 +12,16 @@ import { SnakePoint } from '~~/src/Snake/Library/SnakePoint'
  * Абстрацкция змейки
  */
 export class Snake {
-    // Первая точка змейки
+    /** Первая точка змейки */
     #leadPoint: SnakePoint
-    // Хвост змейки
+    /** Хвост змейки  */
     #points: SnakePoint[] = []
+    /** Направление движения змейки */
     #direction: EMoveDirection = EMoveDirection.right
+    /** Следующее направление которое возможно будет применено */
     #newDirection: EMoveDirection = EMoveDirection.right
+    /** Фигура змейки */
     #shape: MShape
-    #width: number
-    #height: number
 
     constructor(grid: MGrid) {
         this.#shape = new MShape({
@@ -28,8 +29,6 @@ export class Snake {
         })
         this.#leadPoint = new SnakePoint(2, 0)
         this.#points = [new SnakePoint(1, 0), new SnakePoint(0, 0)]
-        this.#width = grid.width
-        this.#height = grid.height
         this.updateShape()
     }
 
@@ -101,7 +100,10 @@ export class Snake {
      * Обновляем битмап фигуры Mshape
      */
     updateShape() {
-        const bitmap = HArray.createTwoDemGrid(this.#width, this.#height)
+        const bitmap = HArray.createTwoDemGrid(
+            this.#shape.width,
+            this.#shape.height
+        )
         const points = [this.#leadPoint, ...this.#points]
 
         points.forEach((point) => {
@@ -148,8 +150,8 @@ export class Snake {
     isSnakeOutOfBounds() {
         const lessThanX = this.#leadPoint.x < 0
         const lessThanY = this.#leadPoint.y < 0
-        const moreThanX = this.#leadPoint.x > this.#width - 1
-        const moreThanY = this.#leadPoint.y > this.#height - 1
+        const moreThanX = this.#leadPoint.x > this.#shape.width - 1
+        const moreThanY = this.#leadPoint.y > this.#shape.height - 1
 
         return lessThanX || lessThanY || moreThanX || moreThanY
     }

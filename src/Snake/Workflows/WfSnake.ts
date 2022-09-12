@@ -15,11 +15,17 @@ import { Snake } from '~~/src/Snake/Library/Snake'
  * Змейка логика игры
  */
 export class WfSnake {
+    /** Основная сетка игры */
     #grid: MGrid
+    /** Асбракция змейки */
     #snake: Snake
+    /** Точка которую нужно съесть */
     #target: MShape
+    /** Флаг что игра закончена */
     #isGameOver: Ref<boolean>
+    /** Счет игры */
     #score: Ref<number>
+    /** Скорость движения змейки */
     #speed: Ref<number>
 
     constructor() {

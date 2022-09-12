@@ -16,10 +16,15 @@ interface IBotParams {
  * Представление бота
  */
 export class Bot {
+    /** Сетка игры, чтобы видеть игрока */
     #grid: MGrid
+    /** Объект фигуры игрока */
     #enemy: MShape
+    /** Фигура танка этого бота */
     #tank: MShape
+    /** Интервал обновления логики бота */
     #runTimeInterval: any
+    /** Последний выстрел */
     #lastShoot: Shoot
 
     constructor(params: IBotParams) {

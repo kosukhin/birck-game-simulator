@@ -7,6 +7,7 @@ import { MGrid } from '~~/src/Common/Models/MGrid'
  * условий игры.
  */
 export class WfTetrisConditions {
+    /** Основная сетка игры */
     #grid: MGrid
 
     constructor(grid: MGrid) {

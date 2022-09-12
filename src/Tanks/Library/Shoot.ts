@@ -19,10 +19,15 @@ interface IShootParam {
  * Абстракция выстрела
  */
 export class Shoot {
+    /** Сетка игры */
     #grid: MGrid
+    /** Стартовая позиция выстрела */
     #position: TShapePosition
+    /** Направление полета выстрела */
     #direction: EMoveDirection
+    /** Фигура от которой выстрел сделан */
     #fromShape: MShape
+    /** Логика перемещения фигуры на гриде */
     #shapeMover: ShapeMover = new ShapeMover()
     /** Хук попадания в цель, передает фигуру по которой попали */
     hitTheTarget = new Observable<(target: MShape) => void>()
@@ -35,6 +40,9 @@ export class Shoot {
         this.run()
     }
 
+    /**
+     * Запускает цикл полета выстрела
+     */
     run() {
         const direction = this.#direction
         const shootId = HApp.uniqueId()
