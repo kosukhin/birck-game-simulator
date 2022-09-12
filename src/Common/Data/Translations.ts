@@ -98,7 +98,7 @@ export default new Map([
                 'После проделанной работы, вы сможете открыть свою игру если перейдете по адресу',
             ],
             [
-                'To create your own game, you only need to use 2 models,',
+                'To create your own game, you only need to use 2 models:',
                 'Для создания своей игры вам нужно использовать всего лишь 2 модели,',
             ],
             [
