@@ -1,4 +1,6 @@
-# Brick game simulator
+# <kbd>![image info](https://bricks.kosuha606.ru/images/logo.jpg)</kbd> Brick game simulator
+
+
 
 Посмотреть результат и попробовать игры можно здесь: [https://bricks.kosuha606.ru/](https://bricks.kosuha606.ru/)
 
