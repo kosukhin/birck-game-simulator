@@ -2,7 +2,7 @@
     <div>
         <h1>{{ $services.lang.t('Documentation') }}</h1>
 
-        <div class="article">
+        <div class="middle article">
             <p>
                 {{
                     $services.lang.t(

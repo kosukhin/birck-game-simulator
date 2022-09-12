@@ -1,10 +1,12 @@
 <template>
     <div class="main">
-        <el-carousel class="carousel" height="400px">
-            <el-carousel-item v-for="item in 3" :key="item">
-                <img :src="`/images/banner/slide${item}-min.jpg`" />
-            </el-carousel-item>
-        </el-carousel>
+        <div class="middle">
+            <el-carousel class="carousel" height="400px">
+                <el-carousel-item v-for="item in 3" :key="item">
+                    <img :src="`/images/banner/slide${item}-min.jpg`" />
+                </el-carousel-item>
+            </el-carousel>
+        </div>
 
         <div class="middle">
             <h2>{{ $services.lang.t('About project') }}</h2>

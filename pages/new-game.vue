@@ -1,5 +1,5 @@
 <template>
-    <div class="article">
+    <div class="middle article">
         <link
             rel="stylesheet"
             href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.3.2/styles/dark.min.css"

@@ -66,6 +66,10 @@ import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
 .footer-content {
     flex: 1;
     display: flex;
+
+    @include media1024 {
+        flex-direction: column;
+    }
 }
 
 .footer-breadcrumbs {
@@ -78,6 +82,12 @@ import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
 
     :deep(.el-breadcrumb__inner) {
         color: $c_body;
+    }
+
+    @include media1024 {
+        opacity: 0;
+        height: 20px;
+        width: 100%;
     }
 }
 
@@ -110,6 +120,15 @@ import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
     }
 
     &:first-child {
+        &:before {
+            content: none;
+        }
+    }
+
+    @include media1024 {
+        padding: 0;
+        margin-bottom: 15px;
+
         &:before {
             content: none;
         }

@@ -5,6 +5,7 @@
             :key="drawerName"
             :model-value="drawerValue"
             :direction="drawersHashNotReactive[drawerName].direction"
+            :size="$services.device.isMobile() ? '100%' : '30%'"
             @closed="closed(drawerName)"
         >
             <div>
