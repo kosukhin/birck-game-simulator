@@ -70,22 +70,20 @@ export class CanvasRenderer {
 
         for (const row of grid) {
             for (const cell of row) {
-                if (cell) {
-                    ctx.fillRect(leftOffset, topOffset, DOT_SIZE, DOT_SIZE)
-                    ctx.clearRect(
-                        leftOffset + 1,
-                        topOffset + 1,
-                        DOT_SIZE - 2,
-                        DOT_SIZE - 2
-                    )
-                    ctx.fillRect(
-                        leftOffset + 3,
-                        topOffset + 3,
-                        DOT_SIZE - 6,
-                        DOT_SIZE - 6
-                    )
-                }
-
+                ctx.fillStyle = cell ? '#000200' : '#99a78c'
+                ctx.fillRect(leftOffset, topOffset, DOT_SIZE, DOT_SIZE)
+                ctx.clearRect(
+                    leftOffset + 1,
+                    topOffset + 1,
+                    DOT_SIZE - 2,
+                    DOT_SIZE - 2
+                )
+                ctx.fillRect(
+                    leftOffset + 3,
+                    topOffset + 3,
+                    DOT_SIZE - 6,
+                    DOT_SIZE - 6
+                )
                 leftOffset += DOT_SIZE + 1
             }
 
