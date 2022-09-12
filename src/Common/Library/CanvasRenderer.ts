@@ -1,4 +1,6 @@
+import { useService } from '~~/src/Common/Helpers/HService'
 import { MGrid } from '~~/src/Common/Models/MGrid'
+import { SConnectors } from '~~/src/Common/Services/SConnectors'
 
 const DOT_SIZE = 12
 
@@ -6,10 +8,15 @@ const DOT_SIZE = 12
  * Рендерит сетку MGrid на канвас
  */
 export class CanvasRenderer {
+    /** Основная сетка */
     #grid: MGrid
+    /** Количество кадров в секунду */
     #fps: number
+    /** Объект html канваса */
     #canvas: HTMLCanvasElement
+    /** Указатель на интервал цикла обновления канваса */
     #renderingIntervalPointer = null
+    /** Контекст канваса */
     #ctx: CanvasRenderingContext2D
 
     constructor(grid: MGrid, fps: number) {
@@ -38,9 +45,17 @@ export class CanvasRenderer {
         this.#ctx = this.#canvas.getContext('2d')
 
         const delay = Math.round(1000 / this.#fps)
-        this.#renderingIntervalPointer = setInterval(() => {
-            this.renderFrame()
-        }, delay)
+        const renderCycle = () => {
+            this.#renderingIntervalPointer = setTimeout(() => {
+                useService<SConnectors>(
+                    'connectors'
+                ).browser.requestAnimationFrame(() => {
+                    this.renderFrame()
+                    renderCycle()
+                })
+            }, delay)
+        }
+        renderCycle()
     }
 
     /**
