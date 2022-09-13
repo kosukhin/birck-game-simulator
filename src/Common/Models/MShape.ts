@@ -138,6 +138,13 @@ export class MShape {
     }
 
     /**
+     * Устанавливает x позицию
+     */
+    setX(x: number) {
+        this.#x = x
+    }
+
+    /**
      * Передвигает фигуру на Y переданный через by
      * @param by
      */

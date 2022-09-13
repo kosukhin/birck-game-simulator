@@ -1,7 +1,4 @@
-import { useService } from '~~/src/Common/Helpers/HService'
-import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
 import { SHooks } from '~~/src/Common/Services/SHooks'
-import { SLanguage } from '~~/src/Common/Services/SLanguage'
 import TetrisGame from '~~/src/Tetris/Components/TetrisGame/TetrisGame.vue'
 
 /**
@@ -9,19 +6,6 @@ import TetrisGame from '~~/src/Tetris/Components/TetrisGame/TetrisGame.vue'
  */
 export class STetris {
     afterInit(hooks: SHooks) {
-        hooks.init.registerSubscriber(() => {
-            const lang = useService<SLanguage>('lang')
-            // Добавляем хлебные крошки для игры тетрис
-            useService<SBreadcrumbs>('breadcrumbs').addBreadcrumbsConfig({
-                'simulator-action': {
-                    params: {
-                        action: {
-                            tetris: { text: lang.t('Tetris') },
-                        },
-                    },
-                },
-            })
-        })
         hooks.gamesResolving.registerSubscriber((gamesList) => {
             gamesList.tetris = TetrisGame
         })

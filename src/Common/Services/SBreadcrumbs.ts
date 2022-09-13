@@ -39,7 +39,14 @@ export class SBreadcrumbs {
                 },
                 'simulator-action': {
                     parent: 'simulator',
-                    params: { action: {} },
+                    params: {
+                        action: {
+                            snake: { text: lang.t('Snake') },
+                            tanks: { text: lang.t('Tanks') },
+                            tetris: { text: lang.t('Tetris') },
+                            arcanoid: { text: lang.t('Arcanoid') },
+                        },
+                    },
                 },
                 'new-game': {
                     parent: 'index',

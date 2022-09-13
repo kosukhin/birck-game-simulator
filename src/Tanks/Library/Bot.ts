@@ -3,7 +3,7 @@ import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { Shapes } from '~~/src/Tanks/Data/Shapes'
-import { Shoot } from '~~/src/Tanks/Library/Shoot'
+import { Shoot } from '~~/src/Common/Library/Shoot'
 
 interface IBotParams {
     grid: MGrid
