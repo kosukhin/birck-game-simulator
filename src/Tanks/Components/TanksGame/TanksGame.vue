@@ -10,6 +10,7 @@
         <CanvasView :grid="game.grid" :fps="20" />
         <KeyboardHint @pause="onPaused">
             <SpaceHint />
+            <br />
         </KeyboardHint>
     </div>
 </template>
