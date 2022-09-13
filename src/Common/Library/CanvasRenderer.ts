@@ -1,3 +1,4 @@
+import { HLog } from '~~/src/Common/Helpers/HLog'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
@@ -36,26 +37,30 @@ export class CanvasRenderer {
      * Запускает цикл рендеринга канваса
      */
     run() {
-        this.#canvas.width = Number(
-            this.#grid.width * DOT_SIZE + this.#grid.width
-        )
-        this.#canvas.height = Number(
-            this.#grid.height * DOT_SIZE + this.#grid.height
-        )
-        this.#ctx = this.#canvas.getContext('2d')
+        try {
+            this.#canvas.width = Number(
+                this.#grid.width * DOT_SIZE + this.#grid.width
+            )
+            this.#canvas.height = Number(
+                this.#grid.height * DOT_SIZE + this.#grid.height
+            )
+            this.#ctx = this.#canvas.getContext('2d')
 
-        const delay = Math.round(1000 / this.#fps)
-        const renderCycle = () => {
-            this.#renderingIntervalPointer = setTimeout(() => {
-                useService<SConnectors>(
-                    'connectors'
-                ).browser.requestAnimationFrame(() => {
-                    this.renderFrame()
-                    renderCycle()
-                })
-            }, delay)
+            const delay = Math.round(1000 / this.#fps)
+            const renderCycle = () => {
+                this.#renderingIntervalPointer = setTimeout(() => {
+                    useService<SConnectors>(
+                        'connectors'
+                    ).browser.requestAnimationFrame(() => {
+                        this.renderFrame()
+                        renderCycle()
+                    })
+                }, delay)
+            }
+            renderCycle()
+        } catch (e) {
+            HLog.log('canvas', 'rendering error')
         }
-        renderCycle()
     }
 
     /**

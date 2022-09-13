@@ -39,6 +39,10 @@ export class SLanguage {
      * @returns
      */
     t(key: string) {
+        if (!this.#lang) {
+            return key
+        }
+
         if (!Translations.has(this.#lang.value)) {
             return key
         }

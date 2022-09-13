@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { CanvasRenderer } from '~~/src/Common/Library/CanvasRenderer'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 
