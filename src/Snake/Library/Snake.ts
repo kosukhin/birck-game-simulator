@@ -36,6 +36,10 @@ export class Snake {
         return this.#leadPoint
     }
 
+    get points() {
+        return this.#points
+    }
+
     get direction() {
         return this.#direction
     }

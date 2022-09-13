@@ -45,7 +45,7 @@ export class Shoot {
      */
     run() {
         const direction = this.#direction
-        const shootId = HApp.uniqueId()
+        const shootId = HApp.uniqueId('shoot')
         const shoot = new MShape({
             id: shootId,
             x: this.#position[0],

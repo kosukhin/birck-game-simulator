@@ -16,4 +16,5 @@ module.exports = {
         '.*\\.(vue)$': '@vue/vue3-jest',
     },
     transformIgnorePatterns: ['node_modules/(?!(nuxt3|unenv))'],
+    coverageReporters: ['lcov', 'text-summary'],
 }

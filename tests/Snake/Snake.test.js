@@ -45,3 +45,61 @@ test('snake game move y', () => {
         })
     jest.runAllTimers()
 })
+
+test('snake ate target', () => {
+    const game = new WfSnake()
+    game.run()
+        .then(() => {
+            // Помещаем точку ближе к змейке
+            game.target.setPosition([4, 0])
+            jest.runAllTimers()
+            expect(game.snake.points.length).toBe(2)
+        })
+        .then(() => {
+            expect(game.snake.points.length).toBe(3)
+        })
+    jest.runAllTimers()
+})
+
+test('snake cross top bound', () => {
+    const game = new WfSnake()
+    game.run()
+        .then(() => {
+            expect(game.isGameOver.value).toBe(false)
+            game.moveSnake(EMoveDirection.up)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.isGameOver.value).toBe(true)
+        })
+    jest.runAllTimers()
+})
+
+test('snake ate itself', () => {
+    const game = new WfSnake()
+    game.snake.addPointToEnd()
+    game.snake.addPointToEnd()
+    game.snake.addPointToEnd()
+    game.snake.addPointToEnd()
+    game.snake.leadPoint.setPosition(6, 0)
+    game.run()
+        .then(() => {
+            expect(game.isGameOver.value).toBe(false)
+            game.moveSnake(EMoveDirection.down)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.isGameOver.value).toBe(false)
+            game.moveSnake(EMoveDirection.left)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.isGameOver.value).toBe(false)
+            game.moveSnake(EMoveDirection.up)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.isGameOver.value).toBe(true)
+        })
+    jest.runAllTimers()
+})

@@ -1,10 +1,11 @@
 import debounce from 'lodash.debounce'
-import uniqueId from 'lodash/uniqueId.js'
 
 /**
  * Вспомогательные функции для приложения
  */
 export class HApp {
+    static #uniqCounter = 99
+
     /**
      * Таймаут в формате промиса
      * @param ms время задержки в мс
@@ -34,6 +35,9 @@ export class HApp {
      * @returns
      */
     static uniqueId(prefix?: string) {
-        return uniqueId(prefix)
+        HApp.#uniqCounter++
+        return (
+            'app_' + (prefix ? prefix + HApp.#uniqCounter : HApp.#uniqCounter)
+        )
     }
 }

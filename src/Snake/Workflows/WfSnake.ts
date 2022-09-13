@@ -51,6 +51,10 @@ export class WfSnake implements IGameWorkflow {
         return this.#snake
     }
 
+    get target(): MShape {
+        return this.#target
+    }
+
     get score() {
         return this.#score
     }

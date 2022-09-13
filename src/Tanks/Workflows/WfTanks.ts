@@ -1,4 +1,5 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
+import { ref } from 'vue'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { EMoveDirection, IGameWorkflow } from '~~/src/Common/Types/GameTypes'
@@ -66,6 +67,10 @@ export class WfTanks implements IGameWorkflow {
 
     get score() {
         return this.#score
+    }
+
+    get tank() {
+        return this.#tank
     }
 
     /**
