@@ -5,6 +5,7 @@ import { HArray } from '~~/src/Common/Helpers/HArray'
 import { HLog } from '~~/src/Common/Helpers/HLog'
 import { HMath } from '~~/src/Common/Helpers/HMath'
 import { useService } from '~~/src/Common/Helpers/HService'
+import { Observable } from '~~/src/Common/Library/Observable'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
@@ -29,6 +30,8 @@ export class WfSnake implements IGameWorkflow {
     #speed: Ref<number>
     /** Флаг остановлена игра или нет */
     #isPaused: boolean
+    /** Событие после рендеринга фрейма */
+    afterFrameRendered = new Observable<() => void>()
 
     constructor() {
         this.#grid = new MGrid({
@@ -45,6 +48,10 @@ export class WfSnake implements IGameWorkflow {
 
     get grid(): MGrid {
         return this.#grid
+    }
+
+    get snake(): Snake {
+        return this.#snake
     }
 
     get score() {
@@ -117,6 +124,7 @@ export class WfSnake implements IGameWorkflow {
                 }
 
                 !this.#isGameOver.value && this.renderNextFrame()
+                this.afterFrameRendered.runSubscribers()
             }
         )
     }

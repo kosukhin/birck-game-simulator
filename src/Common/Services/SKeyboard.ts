@@ -5,17 +5,6 @@ import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { TKeyboardSubscriber } from '~~/src/Common/Types/KeyboardTypes'
 
 /**
- * Коды управляющих клавиш
- */
-export enum EKeyCode {
-    W = 'KeyW',
-    A = 'KeyA',
-    S = 'KeyS',
-    D = 'KeyD',
-    SPC = 'Space',
-}
-
-/**
  * Сервис взаимодействия с клавиатурой
  */
 export class SKeyboard extends Observable<TKeyboardSubscriber> {

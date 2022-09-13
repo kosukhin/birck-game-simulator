@@ -17,10 +17,11 @@
 <script setup lang="ts">
 import { WfTetris } from '~~/src/Tetris/Workflows/WfTetris'
 import { useService } from '~~/src/Common/Helpers/HService'
-import { EKeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
+import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { HArray } from '~~/src/Common/Helpers/HArray'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import { EKeyCode } from '~~/src/Common/Types/GameTypes'
 
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfTetris()

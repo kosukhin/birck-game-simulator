@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import SpaceHint from '../../../Common/Components/KeyboardHint/SpaceHint.vue'
 import { useService } from '~~/src/Common/Helpers/HService'
-import { EKeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
+import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
-import { КeysToMoveMap } from '~~/src/Common/Types/GameTypes'
+import { КeysToMoveMap, EKeyCode } from '~~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 

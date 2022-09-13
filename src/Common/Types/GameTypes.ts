@@ -1,4 +1,13 @@
-import { EKeyCode } from '~~/src/Common/Services/SKeyboard'
+/**
+ * Коды управляющих клавиш
+ */
+export enum EKeyCode {
+    W = 'KeyW',
+    A = 'KeyA',
+    S = 'KeyS',
+    D = 'KeyD',
+    SPC = 'Space',
+}
 
 /**
  * Интерфейс игры

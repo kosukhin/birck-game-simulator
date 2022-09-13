@@ -16,9 +16,9 @@
 
 <script setup lang="ts">
 import { useService } from '~~/src/Common/Helpers/HService'
-import { EKeyCode, SKeyboard } from '~~/src/Common/Services/SKeyboard'
+import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
-import { КeysToMoveMap } from '~~/src/Common/Types/GameTypes'
+import { КeysToMoveMap, EKeyCode } from '~~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 

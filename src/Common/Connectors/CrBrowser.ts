@@ -26,7 +26,7 @@ export class CrBrowser {
      * нужно чтобы на забивать очередь задач
      */
     requestAnimationFrame(callback: () => void) {
-        if (process.client && window) {
+        if (window) {
             window.requestAnimationFrame(callback)
         }
     }
