@@ -25,6 +25,12 @@
         </div>
         <br />
         <slot></slot>
+        <div class="keyhint__row">
+            <div class="key--control">
+                <div class="key__circle" @click="$emit('pause')"></div>
+                <span>{{ $services.lang.t('pause') }}</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -57,6 +63,27 @@ const onKeyPress = (keyCode: string) => {
     display: flex;
     flex-direction: row;
     margin-bottom: 5px;
+}
+
+.key__circle {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: $c_white;
+    box-shadow: 0 2px 2px $c_black;
+    cursor: pointer;
+    transition: box-shadow 0.2s linear;
+
+    &:active {
+        box-shadow: none;
+    }
+}
+
+.key--control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .key {

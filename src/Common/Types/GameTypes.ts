@@ -1,6 +1,15 @@
 import { EKeyCode } from '~~/src/Common/Services/SKeyboard'
 
-export type TGameRunner = () => void
+/**
+ * Интерфейс игры
+ */
+export interface IGameWorkflow {
+    run(): void
+    /**
+     * Приостанавливает игру или запускает снова после приостановки
+     */
+    pause(): void
+}
 
 /**
  * Направление движения

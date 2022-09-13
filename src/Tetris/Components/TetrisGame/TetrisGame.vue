@@ -10,7 +10,7 @@
             {{ game.speed }}
         </div>
         <CanvasView :grid="game.grid" :fps="10" />
-        <KeyboardHint />
+        <KeyboardHint @pause="onPaused" />
     </div>
 </template>
 
@@ -50,4 +50,8 @@ keyboard.registerSubscriber((key: EKeyCode) => {
         shape.moveX(1)
     }
 })
+
+const onPaused = () => {
+    game.pause()
+}
 </script>

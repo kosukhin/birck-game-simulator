@@ -26,6 +26,8 @@ export class Bot {
     #runTimeInterval: any
     /** Последний выстрел */
     #lastShoot: Shoot
+    /** Бот отсновлен */
+    #isPaused: boolean = false
 
     constructor(params: IBotParams) {
         this.#grid = params.grid
@@ -122,5 +124,25 @@ export class Bot {
             grid: this.#grid,
             position: [this.#tank.midX, this.#tank.midY],
         })
+    }
+
+    /**
+     * Останавливает работу бота
+     */
+    stop() {
+        clearInterval(this.#runTimeInterval)
+    }
+
+    /**
+     * Останавливает или возобновляет работу бота
+     */
+    pause() {
+        this.#isPaused = !this.#isPaused
+
+        if (!this.#isPaused) {
+            this.run()
+        } else {
+            this.stop()
+        }
     }
 }

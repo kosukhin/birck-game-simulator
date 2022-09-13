@@ -8,7 +8,7 @@
             {{ $services.lang.t('Score') }}: {{ game.score }}
         </div>
         <CanvasView :grid="game.grid" :fps="20" />
-        <KeyboardHint>
+        <KeyboardHint @pause="onPaused">
             <SpaceHint />
         </KeyboardHint>
     </div>
@@ -37,4 +37,8 @@ keyboard.registerSubscriber((key: EKeyCode) => {
         game.shoot()
     }
 })
+
+const onPaused = () => {
+    game.pause()
+}
 </script>

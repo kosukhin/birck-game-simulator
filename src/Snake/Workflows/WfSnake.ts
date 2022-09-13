@@ -8,13 +8,13 @@ import { useService } from '~~/src/Common/Helpers/HService'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
-import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection, IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 import { Snake } from '~~/src/Snake/Library/Snake'
 
 /**
  * Змейка логика игры
  */
-export class WfSnake {
+export class WfSnake implements IGameWorkflow {
     /** Основная сетка игры */
     #grid: MGrid
     /** Асбракция змейки */
@@ -27,6 +27,8 @@ export class WfSnake {
     #score: Ref<number>
     /** Скорость движения змейки */
     #speed: Ref<number>
+    /** Флаг остановлена игра или нет */
+    #isPaused: boolean
 
     constructor() {
         this.#grid = new MGrid({
@@ -66,12 +68,28 @@ export class WfSnake {
     }
 
     /**
+     * {@inheritDoc IGameWorkflow}
+     */
+    pause() {
+        if (this.#isPaused) {
+            this.#isPaused = false
+            this.renderNextFrame()
+        } else {
+            this.#isPaused = true
+        }
+    }
+
+    /**
      * Рендерит новый фрейм игры
      */
     async renderNextFrame() {
         await HApp.wait(this.#speed.value)
         useService<SConnectors>('connectors').browser.requestAnimationFrame(
             () => {
+                if (this.#isPaused) {
+                    return
+                }
+
                 this.#snake.applyNewDirection()
                 this.#snake.moveForward()
 

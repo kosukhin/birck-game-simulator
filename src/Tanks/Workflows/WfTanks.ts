@@ -1,7 +1,7 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
-import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection, IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { Bot } from '~~/src/Tanks/Library/Bot'
@@ -16,7 +16,7 @@ const SHOOT_SPEED = 50
 /**
  * Главная логика игры танки
  */
-export class WfTanks {
+export class WfTanks implements IGameWorkflow {
     /** Основная сетка игры */
     #grid: MGrid
     /** Танк игрока */
@@ -25,10 +25,12 @@ export class WfTanks {
     #isGameOver: Ref<boolean>
     /** Счет игры */
     #score: Ref<number>
-    /** Ссылка на бота */
-    #lastBot: Bot
+    /** Боты */
+    #bots: Bot[] = []
     /** Логика перемещения танка */
     #shapeMover: ShapeMover = new ShapeMover()
+    /** Флаг остановлена игра или нет */
+    #isPaused: boolean = false
 
     constructor() {
         this.#grid = new MGrid({
@@ -43,12 +45,14 @@ export class WfTanks {
             bitmap: Shapes.player,
             direction: EMoveDirection.down,
         })
-        this.#lastBot = new Bot({
-            grid: this.#grid,
-            enemy: this.#tank,
-            position: [this.#grid.maxX, this.calculateMaxHeight()],
-            direction: EMoveDirection.up,
-        })
+        this.#bots.push(
+            new Bot({
+                grid: this.#grid,
+                enemy: this.#tank,
+                position: [this.#grid.maxX, this.calculateMaxHeight()],
+                direction: EMoveDirection.up,
+            })
+        )
         this.#grid.addShape(this.#tank)
     }
 
@@ -71,34 +75,47 @@ export class WfTanks {
         await HApp.wait(SHOOT_SPEED)
         useService<SConnectors>('connectors').browser.requestAnimationFrame(
             () => {
+                if (this.#isPaused) {
+                    return
+                }
+
                 // Если нету врагов, добавляем еще бота
                 if (this.#grid.shapesCount <= 1) {
-                    this.#lastBot = new Bot({
-                        grid: this.#grid,
-                        enemy: this.#tank,
-                        position: [this.#grid.maxX, this.calculateMaxHeight()],
-                        direction: EMoveDirection.up,
-                    })
-
-                    if (this.#score.value >= 10) {
-                        this.#lastBot = new Bot({
+                    this.#bots.push(
+                        new Bot({
                             grid: this.#grid,
                             enemy: this.#tank,
                             position: [
-                                HMath.round(this.#grid.maxX / 2),
+                                this.#grid.maxX,
                                 this.calculateMaxHeight(),
                             ],
                             direction: EMoveDirection.up,
                         })
+                    )
+
+                    if (this.#score.value >= 10) {
+                        this.#bots.push(
+                            new Bot({
+                                grid: this.#grid,
+                                enemy: this.#tank,
+                                position: [
+                                    HMath.round(this.#grid.maxX / 2),
+                                    this.calculateMaxHeight(),
+                                ],
+                                direction: EMoveDirection.up,
+                            })
+                        )
                     }
 
                     if (this.#score.value >= 20) {
-                        this.#lastBot = new Bot({
-                            grid: this.#grid,
-                            enemy: this.#tank,
-                            position: [0, this.calculateMaxHeight()],
-                            direction: EMoveDirection.up,
-                        })
+                        this.#bots.push(
+                            new Bot({
+                                grid: this.#grid,
+                                enemy: this.#tank,
+                                position: [0, this.calculateMaxHeight()],
+                                direction: EMoveDirection.up,
+                            })
+                        )
                     }
                 }
 
@@ -109,10 +126,30 @@ export class WfTanks {
     }
 
     /**
+     * {@inheritDoc IGameWorkflow}
+     */
+    pause() {
+        this.#isPaused = !this.#isPaused
+
+        if (!this.#isPaused) {
+            this.run()
+        }
+
+        // Останавливаем логику ботов
+        this.#bots.forEach((bot) => {
+            bot.pause()
+        })
+    }
+
+    /**
      * Обеспечивает передвижение танка
      * @param direction
      */
     moveTank(direction: EMoveDirection) {
+        if (this.#isPaused) {
+            return
+        }
+
         if (this.#tank.direction === direction) {
             this.#shapeMover.move(this.#tank, direction)
         }
@@ -133,6 +170,10 @@ export class WfTanks {
      * Стреляет танк
      */
     shoot() {
+        if (this.#isPaused) {
+            return
+        }
+
         const shoot = new Shoot({
             direction: this.#tank.direction,
             fromShape: this.#tank,

@@ -137,6 +137,7 @@ export default new Map([
                 'Ask a question about creating a game',
                 'Задать вопрос по созданию игры',
             ],
+            ['pause', 'пауза'],
         ]),
     ],
 ])

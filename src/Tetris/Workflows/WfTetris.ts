@@ -9,11 +9,12 @@ import { HObjects } from '~~/src/Common/Helpers/HObjects'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { HArray } from '~~/src/Common/Helpers/HArray'
+import { IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 
 /**
  * Основной класс хода выполнения игры тетрис
  */
-export class WfTetris {
+export class WfTetris implements IGameWorkflow {
     /** Основная сетка тетриса */
     #grid: MGrid
     /** Счет игры */
@@ -24,6 +25,8 @@ export class WfTetris {
     #isGameOver: Ref<boolean>
     /** Условия игры */
     #conditions: WfTetrisConditions
+    /** Флаг остановлена игра или нет */
+    #isPaused: boolean
 
     constructor() {
         this.#grid = new MGrid({})
@@ -57,6 +60,10 @@ export class WfTetris {
         await HApp.wait(this.#speed.value)
         useService<SConnectors>('connectors').browser.requestAnimationFrame(
             () => {
+                if (this.#isPaused) {
+                    return
+                }
+
                 this.renderNextFrame()
 
                 if (!this.#conditions.checkGameOver()) {
@@ -66,6 +73,18 @@ export class WfTetris {
                 }
             }
         )
+    }
+
+    /**
+     * {@inheritDoc IGameWorkflow}
+     */
+    pause() {
+        if (this.#isPaused) {
+            this.#isPaused = false
+            this.run()
+        } else {
+            this.#isPaused = true
+        }
     }
 
     /**
