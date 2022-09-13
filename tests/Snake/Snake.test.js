@@ -14,26 +14,34 @@ afterEach(() => {
 test('snake game move x', () => {
     const game = new WfSnake()
     game.run()
-    expect(game.snake.leadPoint.x).toBe(2)
-
+        .then(() => {
+            expect(game.snake.leadPoint.x).toBe(3)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.snake.leadPoint.x).toBe(4)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.snake.leadPoint.x).toBe(5)
+        })
     jest.runAllTimers()
-
-    game.afterFrameRendered.registerSubscriber(() => {
-        expect(game.snake.leadPoint.x).toBe(3)
-    })
-    game.afterFrameRendered.clearSubscribers()
 })
 
 test('snake game move y', () => {
     const game = new WfSnake()
-    game.run()
     game.moveSnake(EMoveDirection.down)
-    expect(game.snake.leadPoint.y).toBe(0)
-
+    game.run()
+        .then(() => {
+            expect(game.snake.leadPoint.y).toBe(1)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.snake.leadPoint.y).toBe(2)
+            jest.runAllTimers()
+        })
+        .then(() => {
+            expect(game.snake.leadPoint.y).toBe(3)
+        })
     jest.runAllTimers()
-
-    game.afterFrameRendered.registerSubscriber(() => {
-        expect(game.snake.leadPoint.y).toBe(1)
-    })
-    game.afterFrameRendered.clearSubscribers()
 })
