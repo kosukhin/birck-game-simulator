@@ -36,5 +36,13 @@ export const games = (): IGame[] => {
                 'Non-standard implementation of classic tankers, in this version the rivals are more aggressive, they know exactly where you are! And they will seek to destroy you.'
             ),
         },
+        {
+            photo: '/images/games/blasteroid.png',
+            link: '/simulator/blasteroid/',
+            title: lang.t('Blasteroid'),
+            description: lang.t(
+                'As a pilot of a spaceship equipped with two blasters, you must destroy the threat coming at you.'
+            ),
+        },
     ]
 }

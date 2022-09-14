@@ -13,6 +13,7 @@ interface IShootParam {
     position: TShapePosition
     direction: EMoveDirection
     fromShape: MShape
+    byPixel?: boolean
 }
 
 /**
@@ -29,14 +30,18 @@ export class Shoot {
     #fromShape: MShape
     /** Логика перемещения фигуры на гриде */
     #shapeMover: ShapeMover = new ShapeMover()
+    /** Флаг разрушения цели по пикселям */
+    #byPixel: boolean
     /** Хук попадания в цель, передает фигуру по которой попали */
-    hitTheTarget = new Observable<(target: MShape) => void>()
+    hitTheTarget: Observable<(target: MShape) => void>
 
     constructor(params: IShootParam) {
         this.#grid = params.grid
         this.#position = params.position
         this.#direction = params.direction
         this.#fromShape = params.fromShape
+        this.#byPixel = params.byPixel
+        this.hitTheTarget = new Observable()
         this.run()
     }
 
@@ -72,10 +77,22 @@ export class Shoot {
                 intersectedShape !== this.#fromShape &&
                 intersectedShape !== shoot
             ) {
-                this.#grid.removeShapeById(shootId)
-                this.#grid.removeShape(intersectedShape)
-                clearInterval(shootRenderHandler)
-                this.hitTheTarget.runSubscribers(intersectedShape)
+                // Разрушаем фигуру по пикселям
+                if (this.#byPixel) {
+                    const shapeInX = shoot.x - intersectedShape.x
+                    const shapeInY = shoot.y - intersectedShape.y
+
+                    if (intersectedShape.removePixel(shapeInX, shapeInY)) {
+                        this.#grid.removeShapeById(shootId)
+                        clearInterval(shootRenderHandler)
+                        this.hitTheTarget.runSubscribers(intersectedShape)
+                    }
+                } else {
+                    this.#grid.removeShapeById(shootId)
+                    this.#grid.removeShape(intersectedShape)
+                    clearInterval(shootRenderHandler)
+                    this.hitTheTarget.runSubscribers(intersectedShape)
+                }
             }
         }, SHOOT_SPEED)
     }

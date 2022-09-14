@@ -44,7 +44,7 @@ export class SBreadcrumbs {
                             snake: { text: lang.t('Snake') },
                             tanks: { text: lang.t('Tanks') },
                             tetris: { text: lang.t('Tetris') },
-                            arcanoid: { text: lang.t('Arcanoid') },
+                            blasteroid: { text: lang.t('Blasteroid') },
                         },
                     },
                 },

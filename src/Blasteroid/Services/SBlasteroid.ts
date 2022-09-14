@@ -1,13 +1,13 @@
 import { SHooks } from '~~/src/Common/Services/SHooks'
-import ArcanoidGame from '~~/src/Arcanoid/Components/ArcanoidGame/ArcanoidGame.vue'
+import BlasteroidGame from '~~/src/Blasteroid/Components/BlasteroidGame/BlasteroidGame.vue'
 
 /**
  * Сервис игры Арканоид
  */
-export class SArcanoid {
+export class SBlasteroid {
     afterInit(hooks: SHooks) {
         hooks.gamesResolving.registerSubscriber((gamesList) => {
-            gamesList.arcanoid = ArcanoidGame
+            gamesList.blasteroid = BlasteroidGame
         })
     }
 }

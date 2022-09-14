@@ -175,6 +175,15 @@ export class MGrid {
     }
 
     /**
+     * Проверяем наличие фигуры по id
+     * @param id
+     * @returns
+     */
+    hasShapeById(id) {
+        return this.#shapes.findIndex((shape) => shape.id === id) !== -1
+    }
+
+    /**
      * Очищает все фигуры с сетки
      */
     clearShapes() {

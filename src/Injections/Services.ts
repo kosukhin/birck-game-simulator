@@ -1,4 +1,4 @@
-import { SArcanoid } from '~~/src/Arcanoid/Services/SArcanoid'
+import { SBlasteroid } from '~~/src/Blasteroid/Services/SBlasteroid'
 import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { SCookies } from '~~/src/Common/Services/SCookies'
@@ -28,7 +28,7 @@ const services = {
     snake: new SSnake(),
     tetris: new STetris(),
     tanks: new STanks(),
-    arcanoid: new SArcanoid(),
+    blasteroid: new SBlasteroid(),
 }
 
 Object.values(services).forEach((service) => {

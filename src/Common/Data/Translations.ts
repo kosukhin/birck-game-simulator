@@ -139,6 +139,11 @@ export default new Map([
             ],
             ['pause', 'пауза'],
             ['Arcanoid', 'Арканоид'],
+            ['Blasteroid', 'Бластероид'],
+            [
+                'As a pilot of a spaceship equipped with two blasters, you must destroy the threat coming at you.',
+                'Вы как пилот космического корабля оснащенного двумя бластерами должны уничтожить надвигающуюся на вас угрозу.',
+            ],
         ]),
     ],
 ])

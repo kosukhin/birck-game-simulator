@@ -161,6 +161,38 @@ export class MShape {
     }
 
     /**
+     * Возвращает true если на фигуре нету ни одной точки
+     */
+    isShapeEmpty() {
+        let empty = true
+
+        for (const row of this.#bitmap) {
+            if (row.includes(1)) {
+                empty = false
+                break
+            }
+        }
+
+        return empty
+    }
+
+    /**
+     * Удаление пикселя из фигуры
+     * @param x
+     * @param y
+     */
+    removePixel(x: number, y: number) {
+        if (this.#bitmap[y][x] === 1) {
+            this.#bitmap[y][x] = 0
+            return true
+        } else if (this.#bitmap?.[y - 1]?.[x] !== undefined) {
+            return this.removePixel(x, y - 1)
+        }
+
+        return false
+    }
+
+    /**
      * Генерирует новый уникальный id для фигуры
      * @returns void
      */

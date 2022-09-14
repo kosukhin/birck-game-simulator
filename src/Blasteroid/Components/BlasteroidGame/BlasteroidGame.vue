@@ -10,12 +10,16 @@
             {{ game.speed }}
         </div>
         <CanvasView :grid="game.grid" :fps="20" />
-        <KeyboardHint @pause="onPaused" />
+        <KeyboardHint @pause="onPaused">
+            <SpaceHint />
+            <br />
+        </KeyboardHint>
     </div>
 </template>
 
 <script setup lang="ts">
-import { WfArcanoid } from '~~/src/Arcanoid/Workflows/WfArcanoid'
+import SpaceHint from '../../../Common/Components/KeyboardHint/SpaceHint.vue'
+import { WfBlasteroid } from '~~/src/Blasteroid/Workflows/WfBlasteroid'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import { useService } from '~~/src/Common/Helpers/HService'
@@ -27,12 +31,12 @@ import {
 } from '~~/src/Common/Types/GameTypes'
 
 const keyboard = useService<SKeyboard>('keyboard')
-const game = new WfArcanoid()
+const game = new WfBlasteroid()
 game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-    game.moveArcanoid(КeysToMoveMap[key] ?? EMoveDirection.up)
+    game.move(КeysToMoveMap[key] ?? EMoveDirection.up)
 
     if (key === EKeyCode.SPC) {
         game.shoot()
