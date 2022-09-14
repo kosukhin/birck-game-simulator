@@ -17,4 +17,12 @@ module.exports = {
     },
     transformIgnorePatterns: ['node_modules/(?!(nuxt3|unenv))'],
     coverageReporters: ['lcov', 'text-summary'],
+    coverageThreshold: {
+        global: {
+            branches: 52,
+            functions: 69,
+            lines: 75,
+            statements: 75,
+        },
+    },
 }

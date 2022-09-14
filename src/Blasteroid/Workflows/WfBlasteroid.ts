@@ -1,4 +1,5 @@
 import { Ref } from 'nuxt/dist/app/compat/capi'
+import { ref } from 'vue'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { EMoveDirection, IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 import { MShape } from '~~/src/Common/Models/MShape'
@@ -66,6 +67,10 @@ export class WfBlasteroid implements IGameWorkflow {
 
     get isGameOver() {
         return this.#isGameOver
+    }
+
+    get blasteroid() {
+        return this.#blasteroid
     }
 
     async run() {

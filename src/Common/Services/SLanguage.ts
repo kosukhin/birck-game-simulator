@@ -1,5 +1,6 @@
 import { storeToRefs } from 'pinia'
 import { Ref } from 'nuxt/dist/app/compat/capi'
+import { ref } from 'vue'
 import Translations from '~~/src/Common/Data/Translations'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import { useApplicationStore } from '~~/stores/application'
@@ -31,6 +32,18 @@ export class SLanguage {
                 location.reload()
             })
         })
+    }
+
+    /**
+     * Устанавливает значение языка
+     * @param lang
+     */
+    setLangValue(lang: string) {
+        if (!this.#lang) {
+            this.#lang = ref(lang)
+        }
+
+        this.#lang.value = lang
     }
 
     /**

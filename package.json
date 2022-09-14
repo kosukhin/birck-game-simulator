@@ -6,7 +6,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "test": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --collectCoverage=true",
     "testcoverage": "jest --coverage --passWithNoTests",
     "prepare": "husky install",
     "generatedoc": "./node_modules/.bin/typedoc --entryPointStrategy expand ./src --out public/jsdocs",
