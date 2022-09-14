@@ -6,6 +6,7 @@
         </div>
         <NuxtPage />
     </div>
+    <ForkMe />
     <DrawerWrapper />
     <Footer />
 </template>
@@ -17,6 +18,7 @@ import { SHooks } from '~~/src/Common/Services/SHooks'
 import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'
 import DrawerWrapper from '~~/src/Common/Components/DrawerWrapper/DrawerWrapper.vue'
 import Header from '~~/src/Common/Components/Header/Header.vue'
+import ForkMe from '~~/src/Common/Components/ForkMe/ForkMe.vue'
 
 useService<SHooks>('hooks').init.runSubscribers()
 useHead({
