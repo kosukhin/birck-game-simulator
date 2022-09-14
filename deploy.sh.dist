@@ -1,3 +1,4 @@
 # Синхронизует файлы проекта с сервером
 npm run build
 rsync -zavP .output/ root@example.com:/var/www/brick-game-simulator/.output/
+rsync -zavP public/jsdocs root@example.com:/var/www/brick-game-simulator/public/jsdocs/
