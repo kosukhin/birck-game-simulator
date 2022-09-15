@@ -182,14 +182,29 @@ export class MShape {
      * @param y
      */
     removePixel(x: number, y: number) {
+        let result = false
+
         if (this.#bitmap[y][x] === 1) {
             this.#bitmap[y][x] = 0
-            return true
+            result = true
         } else if (this.#bitmap?.[y - 1]?.[x] !== undefined) {
-            return this.removePixel(x, y - 1)
+            result = this.removePixel(x, y - 1)
         }
 
-        return false
+        this.clearEmptyRows()
+
+        return result
+    }
+
+    /**
+     * Очищает пустые строки битмапа фигуры
+     */
+    clearEmptyRows() {
+        this.#bitmap.forEach((row, index) => {
+            if (HArray.isAllElementsEqualsTo(row, 0)) {
+                this.#bitmap.splice(index, 1)
+            }
+        })
     }
 
     /**
