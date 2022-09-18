@@ -4,3 +4,6 @@
 
 ## Структура страниц
 - https://v3.nuxtjs.org/guide/directory-structure/pages
+
+## Web Workers
+- https://www.npmjs.com/package/vue-worker

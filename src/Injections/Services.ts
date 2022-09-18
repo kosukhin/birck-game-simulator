@@ -1,4 +1,5 @@
 import { SBlasteroid } from '~~/src/Blasteroid/Services/SBlasteroid'
+import { SAdvertisment } from '~~/src/Common/Services/SAdvertisment'
 import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { SCookies } from '~~/src/Common/Services/SCookies'
@@ -23,6 +24,7 @@ const services = {
     drawer: new SDrawer(),
     cookies: new SCookies(),
     device: new SDevice(),
+    advertisment: new SAdvertisment(),
 
     // Игры
     snake: new SSnake(),
