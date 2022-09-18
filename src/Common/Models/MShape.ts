@@ -69,7 +69,7 @@ export class MShape {
     }
 
     get width(): number {
-        return this.#bitmap[0].length
+        return this.#bitmap[0] && this.#bitmap[0].length
     }
 
     get x() {

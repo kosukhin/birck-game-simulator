@@ -144,6 +144,10 @@ export default new Map([
                 'As a pilot of a spaceship equipped with two blasters, you must destroy the threat coming at you.',
                 'Вы как пилот космического корабля оснащенного двумя бластерами должны уничтожить надвигающуюся на вас угрозу.',
             ],
+            ['Dmitry scored 100 points', 'Дмитрий набрал 100 очков'],
+            ['Vladimir earned 40 points', 'Владимир заработал 40 очков'],
+            ['Evgeny scored 30 points', 'Евгений набрал 30 очков'],
+            ['Vladislav destroyed 50 tanks', 'Владислав уничтожил 50 танков'],
         ]),
     ],
 ])
