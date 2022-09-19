@@ -67,7 +67,7 @@ const beginTranslation = () => {
                 return
             }
 
-            const socket = window.io(configService.config.socketWsUrl, {})
+            const socket = io(configService.config.socketWsUrl, {})
 
             socketTimeInterval = setInterval(() => {
                 if (!grid) {
