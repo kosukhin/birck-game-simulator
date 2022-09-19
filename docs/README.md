@@ -5,3 +5,4 @@
 - [Требования к проекту](./Requirements.md)
 - [Соглашение о префиксах](./Prefixies.md)
 - [Полезные ссылки](./Links.md)
+- [Карта по коду](./UsedTechsInCode.md)
