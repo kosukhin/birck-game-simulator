@@ -2,6 +2,20 @@
 
 ## Инструменты разработки
 
+### JEST
+
+Для запуска модульных тестов используется Jest
+https://github.com/kosukhin/brick-game-simulator/blob/master/jest.config.js
+
+Для отслеживания покрытия тестами есть команда
+`npm run testcovarage`
+Которая сформирует отчет по покрытию тестами.
+
+### Stylelint
+
+Для слежения за качеством Стилей используется stylelint
+https://github.com/kosukhin/brick-game-simulator/blob/master/.stylelintrc.json
+
 ### EsLint
 
 Для отслеживания качества кода используется EsLint конфиг здесь
