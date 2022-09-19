@@ -1,6 +1,7 @@
 import { SBlasteroid } from '~~/src/Blasteroid/Services/SBlasteroid'
 import { SAdvertisment } from '~~/src/Common/Services/SAdvertisment'
 import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
+import { SConfig } from '~~/src/Common/Services/SConfig'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { SCookies } from '~~/src/Common/Services/SCookies'
 import { SDevice } from '~~/src/Common/Services/SDevice'
@@ -25,6 +26,7 @@ const services = {
     cookies: new SCookies(),
     device: new SDevice(),
     advertisment: new SAdvertisment(),
+    config: new SConfig(),
 
     // Игры
     snake: new SSnake(),

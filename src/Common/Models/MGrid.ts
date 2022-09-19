@@ -118,6 +118,22 @@ export class MGrid {
     }
 
     /**
+     * Устанавливает высоту сетки
+     * @param height
+     */
+    setHeight(height: number) {
+        this.#height = height
+    }
+
+    /**
+     * Устанавливает ширину сетки
+     * @param width
+     */
+    setWidth(width: number) {
+        this.#width = width
+    }
+
+    /**
      * Добавляет наверх сетки новую строку
      * @param row
      */

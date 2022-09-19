@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import SpaceHint from '../../../Common/Components/KeyboardHint/SpaceHint.vue'
 import { WfBlasteroid } from '~~/src/Blasteroid/Workflows/WfBlasteroid'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
@@ -41,6 +42,11 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     if (key === EKeyCode.SPC) {
         game.shoot()
     }
+})
+
+const emit = defineEmits(['grid'])
+onMounted(() => {
+    emit('grid', game.grid)
 })
 
 const onPaused = () => {

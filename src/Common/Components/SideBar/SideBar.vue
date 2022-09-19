@@ -11,6 +11,9 @@
             </el-icon>
         </el-divider>
         <div class="sidebar-group">
+            <nuxt-link to="/translation/">{{
+                $services.lang.t('Broadcasting online')
+            }}</nuxt-link>
             <nuxt-link to="/about/">{{
                 $services.lang.t('About project')
             }}</nuxt-link>

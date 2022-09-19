@@ -10,3 +10,4 @@ dist
 deploy.sh
 coverage
 public/jsdocs
+config/config-local.ts

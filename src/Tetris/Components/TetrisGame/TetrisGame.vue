@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { WfTetris } from '~~/src/Tetris/Workflows/WfTetris'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
@@ -50,6 +51,11 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     if (key === EKeyCode.D) {
         shape.moveX(1)
     }
+})
+
+const emit = defineEmits(['grid'])
+onMounted(() => {
+    emit('grid', game.grid)
 })
 
 const onPaused = () => {

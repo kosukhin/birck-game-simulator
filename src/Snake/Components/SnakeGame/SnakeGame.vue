@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
+import { onUnmounted, onMounted } from 'vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
@@ -37,6 +37,11 @@ keyboard.registerSubscriber((key: EKeyCode) => {
 const onPaused = () => {
     game.pause()
 }
+
+const emit = defineEmits(['grid'])
+onMounted(() => {
+    emit('grid', game.grid)
+})
 
 onUnmounted(() => {
     game.setGameOver()

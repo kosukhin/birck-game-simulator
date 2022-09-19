@@ -148,6 +148,14 @@ export default new Map([
             ['Vladimir earned 40 points', 'Владимир заработал 40 очков'],
             ['Evgeny scored 30 points', 'Евгений набрал 30 очков'],
             ['Vladislav destroyed 50 tanks', 'Владислав уничтожил 50 танков'],
+            ['End the broadcast', 'Завершить трансляцию'],
+            ['Start broadcasting', 'Начать трансляцию'],
+            ['Broadcasting online', 'Онлайн трансляция'],
+            ['Game Broadcast Online', 'Трансляция игры онлайн'],
+            [
+                'Here you can watch someone playing Brick Game',
+                'Здесь вы можете наблюдать как кто-то играет в BrickGame',
+            ],
         ]),
     ],
 ])
