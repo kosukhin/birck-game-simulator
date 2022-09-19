@@ -24,6 +24,10 @@ Lines        : 75.18% ( 703/935 )
 
 **Карта использованных технологий: [Карта по коду](./docs/UsedTechsInCode.md)**
 
+## Можно транслировать свою игру онлайн
+
+https://user-images.githubusercontent.com/109918884/191014776-067e46a6-0aa3-493a-ad4a-edc202a973f2.mp4
+
 ## Тетрис
 
 https://user-images.githubusercontent.com/109918884/185798568-eba22412-1a1c-46c0-983f-70142560819b.mp4
