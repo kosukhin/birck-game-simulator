@@ -31,6 +31,36 @@ https://github.com/kosukhin/brick-game-simulator/blob/master/plugins/element-plu
 Если бы приложение было для продакшена и важен был бы размер бандлов, то нужно было бы
 думать о более сложной стратегии разделения кода компонентов ElementUI
 
+### Pinia
+
+В качестве глобального хранилища данных используется Pinia, подключается в проект как плагин
+здесь: https://github.com/kosukhin/brick-game-simulator/blob/master/plugins/pinia.ts
+
+Пока только один стор сделал для хранения текущего языка приложения
+https://github.com/kosukhin/brick-game-simulator/blob/master/stores/application.ts
+
+В будущем возможно расширю
+
+### WebWorker
+
+В качестве примера запуска параллельного потока выполнения JS использовал Worker
+https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/WebWorker.ts
+
+За основу взял этот репозиторий: https://github.com/israelss/simple-web-worker/
+Но столкнулся с проблемой, что в реализации simple-web-worker нельзя запускать асинхронный код.
+А я хотел именно сделать асинхронную работу внутри воркера, поэтому сделал свой библиотечный класс
+
+### WebSockets
+
+Для работы серверной стороны использую socket.io сделал сервер по стандартной доке:
+https://github.com/kosukhin/brick-game-simulator/blob/master/sockets/index.js
+
+Для клиентской стороны отправляю события из компонента Simulator после нажатия кнопки "Начать трансляцию"
+https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Components/Simulator/Simulator.vue#L56
+
+Дальше в компоненте pages/translation.vue я подписываюсь на сокет и отображаю сетку на канвасе
+https://github.com/kosukhin/brick-game-simulator/blob/master/pages/translation.vue#L31
+При изменении ширины\высоты сетки с помощью key заставляю канвас перерендериться
 
 ## Инструменты разработки
 
@@ -68,3 +98,8 @@ lint-staged сконфигурирован в package.json
     "*.{vue,scss}": "stylelint '**/*.{vue,scss}'"
   },
 ```
+
+### VsCode launch.json
+
+Настроил конфиг для запуска тестов, чтобы было удобнее тестировать один файл
+https://github.com/kosukhin/brick-game-simulator/blob/master/.vscode/launch.json
