@@ -1,0 +1,4 @@
+import config from '~~/config/config'
+
+config.socketHttpUrl = 'http://localhost:3512/'
+config.socketWsUrl = 'ws://localhost:3512/'
