@@ -19,7 +19,7 @@ export class SCookies {
      * @returns
      */
     get(key: string) {
-        return Cookies.get(key)
+        return Cookies ? Cookies.get(key) : null
     }
 
     /**
