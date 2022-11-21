@@ -22,11 +22,16 @@ const props = defineProps({
 })
 
 const canvas = ref()
-const baseSize = 20
-const spaceBetween = 9
+const baseSize = 10
+const spaceBetween = 5
 
 const initThreeJs = () => {
     let gridArray = props.grid.render()
+
+    if (!gridArray[0]) {
+        return
+    }
+
     const height = (gridArray.length + 1) * (baseSize + spaceBetween)
     const width = (gridArray[0].length + 1) * (baseSize + spaceBetween)
     const scene = new THREE.Scene()
@@ -45,17 +50,19 @@ const initThreeJs = () => {
     renderer.setSize(width, height)
     canvas.value.appendChild(renderer.domElement)
 
+    const spotLight = new THREE.SpotLight(0xeeeece)
+    spotLight.position.set(1000, 1000, 1000)
+    scene.add(spotLight)
+
     const geometry = new THREE.BoxGeometry(baseSize, baseSize, baseSize)
-    const material = new THREE.MeshLambertMaterial({
+    const material = new THREE.MeshPhongMaterial({
         color: 0x666666,
     })
+    material.flatShading = false
 
     const cubesGrid = []
     let topOffset = -1 * (baseSize + spaceBetween)
     let leftOffset = 0
-
-    const light = new THREE.AmbientLight(0xffffff, 1)
-    scene.add(light)
 
     for (const row in gridArray) {
         gridArray[row].reverse()
