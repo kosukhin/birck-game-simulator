@@ -5,7 +5,7 @@
             class="canvas-view__switch"
             active-color="#13ce66"
             inactive-color="#ff4949"
-            active-text="Использовать 3D"
+            :active-text="$services.lang.t('Use 3D')"
             @input="changeUseTreeJs"
         >
         </el-switch>

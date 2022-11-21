@@ -29,36 +29,36 @@ export class SBreadcrumbs {
             const lang = useService<SLanguage>('lang')
             this.#breadcrumbs = {
                 index: {
-                    text: lang.t('Home'),
+                    text: () => lang.t('Home'),
                     link: '/',
                 },
                 simulator: {
                     parent: 'index',
-                    text: lang.t('Simulator'),
+                    text: () => lang.t('Simulator'),
                     link: '/simulator/',
                 },
                 'simulator-action': {
                     parent: 'simulator',
                     params: {
                         action: {
-                            snake: { text: lang.t('Snake') },
-                            tanks: { text: lang.t('Tanks') },
-                            tetris: { text: lang.t('Tetris') },
-                            blasteroid: { text: lang.t('Blasteroid') },
+                            snake: { text: () => lang.t('Snake') },
+                            tanks: { text: () => lang.t('Tanks') },
+                            tetris: { text: () => lang.t('Tetris') },
+                            blasteroid: { text: () => lang.t('Blasteroid') },
                         },
                     },
                 },
                 'new-game': {
                     parent: 'index',
-                    text: lang.t('Create new game'),
+                    text: () => lang.t('Create new game'),
                 },
                 documentation: {
                     parent: 'index',
-                    text: lang.t('Documentation'),
+                    text: () => lang.t('Documentation'),
                 },
                 about: {
                     parent: 'index',
-                    text: lang.t('About project'),
+                    text: () => lang.t('About project'),
                 },
             }
 
@@ -89,9 +89,7 @@ export class SBreadcrumbs {
      */
     getLinks(): IBreadcrumbLink[] {
         const route = useNuxtApp().$router.currentRoute.value
-        const links = this.buildBreadcrumb(route.name, route.params)
-
-        return links
+        return this.buildBreadcrumb(route.name, route.params)
     }
 
     /**

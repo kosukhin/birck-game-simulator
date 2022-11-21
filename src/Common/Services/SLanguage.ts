@@ -29,7 +29,6 @@ export class SLanguage {
             // Вотчим изменение языка в сторе, и записываем куки
             watch(lang, () => {
                 cookieService.set('lang', lang.value)
-                location.reload()
             })
         })
     }

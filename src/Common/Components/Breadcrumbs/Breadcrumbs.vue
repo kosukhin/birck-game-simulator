@@ -9,7 +9,7 @@
             v-for="link in breadcrumbs.getLinks()"
             :key="link.link"
             :to="link.link"
-            >{{ link.text }}</el-breadcrumb-item
+            >{{ link.text() }}</el-breadcrumb-item
         >
     </el-breadcrumb>
 </template>

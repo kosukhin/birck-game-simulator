@@ -3,6 +3,9 @@
         <div class="middle footer-breadcrumbs">
             <Breadcrumbs />
         </div>
+        <el-button class="footer__button">{{
+            $services.lang.t('Offer game')
+        }}</el-button>
         <div class="middle footer-content">
             <div class="footer-column">
                 <nuxt-link to="/simulator/tetris/">{{
@@ -60,6 +63,16 @@ import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
     :deep(.flag-link) {
         color: $c_body;
         margin-bottom: 15px;
+    }
+
+    &__button {
+        background: #111;
+        border-color: #111;
+        color: #fff;
+
+        &:hover {
+            color: orangered;
+        }
     }
 }
 

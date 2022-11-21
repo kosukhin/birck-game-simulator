@@ -3,6 +3,8 @@ export default new Map([
         'ru',
         new Map([
             ['Hello', 'Привет'],
+            ['Use 3D', 'Использовать 3D'],
+            ['Offer game', 'Предложить игру'],
             ['Settings', 'Настройки'],
             ['Start game', 'Начать игру'],
             ['Back', 'Назад'],
