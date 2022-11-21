@@ -46,6 +46,7 @@ const changeUseTreeJs = () => {
 <style scoped lang="scss">
 canvas {
     border: solid 1px $c_pixel;
+    background: $c_tetris_screen;
 }
 
 .canvas-view {
