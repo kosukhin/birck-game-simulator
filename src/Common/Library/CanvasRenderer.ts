@@ -29,7 +29,7 @@ export class CanvasRenderer {
         return this.#canvas
     }
 
-    setСanvas(canvas: HTMLCanvasElement) {
+    setCanvas(canvas: HTMLCanvasElement) {
         this.#canvas = canvas
     }
 
