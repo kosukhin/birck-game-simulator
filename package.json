@@ -60,6 +60,7 @@
     "lodash": "^4.17.21",
     "pinia": "^2.0.22",
     "socket.io": "^4.5.2",
+    "three": "^0.146.0",
     "vue3-highlightjs": "^1.0.5"
   }
 }
