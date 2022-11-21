@@ -24,6 +24,10 @@ Lines        : 75.18% ( 703/935 )
 
 **Карта использованных технологий: [Карта по коду](./docs/UsedTechsInCode.md)**
 
+## Можно переключиться на 3D рендерер
+
+https://user-images.githubusercontent.com/109918884/203058156-6eb102d6-bbb8-494b-9056-5ab2d14a8bfd.mp4
+
 ## Можно транслировать свою игру онлайн
 
 https://user-images.githubusercontent.com/109918884/191014776-067e46a6-0aa3-493a-ad4a-edc202a973f2.mp4
