@@ -11,6 +11,12 @@ https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/
 Канвас устроен очень просто, он рендерит все квадратики массива в MGrid
 но закрашивает черным только те, у которых 1 в значении
 
+### Three.js 3D
+
+Для отрисовки блоков тетриса в виде 3д кубов была использована
+библиотека three.js, на основе которой был написан специальный рендерер
+https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/ThreeJsRenderer.ts
+
 ### Хуки приложения
 
 В приложении хуки используются на основе собственного класса Observable
