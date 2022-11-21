@@ -3,9 +3,11 @@
         <div class="middle footer-breadcrumbs">
             <Breadcrumbs />
         </div>
-        <el-button class="footer__button">{{
-            $services.lang.t('Offer game')
-        }}</el-button>
+        <nuxt-link to="/offer/">
+            <el-button class="footer__button">
+                {{ $services.lang.t('Offer game') }}
+            </el-button>
+        </nuxt-link>
         <div class="middle footer-content">
             <div class="footer-column">
                 <nuxt-link to="/simulator/tetris/">{{
