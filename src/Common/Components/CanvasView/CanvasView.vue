@@ -51,10 +51,6 @@ canvas {
 }
 
 .canvas-view {
-    &__switch {
-        display: block;
-    }
-
     &__renderer {
         display: flex;
         justify-content: center;
