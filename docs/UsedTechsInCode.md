@@ -19,7 +19,7 @@ https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/
 
 ### Работа с формами
 
-В проекте использован element-ui, у которого есть свои формы и есть встроенная
+В проекте использован element-ui+, у которого есть свои формы и есть встроенная
 система валидации форм. Пример кода формы и ее валидации можно посмотреть здесь:
 https://github.com/kosukhin/brick-game-simulator/blob/master/pages/offer.vue#L43
 
