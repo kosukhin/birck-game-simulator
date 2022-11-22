@@ -17,6 +17,12 @@ https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/
 библиотека three.js, на основе которой был написан специальный рендерер
 https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/ThreeJsRenderer.ts
 
+### Работа с формами
+
+В проекте использован element-ui, у которого есть свои формы и есть встроенная
+система валидации форм. Пример кода формы и ее валидации можно посмотреть здесь:
+https://github.com/kosukhin/brick-game-simulator/blob/master/pages/offer.vue#L43
+
 ### Хуки приложения
 
 В приложении хуки используются на основе собственного класса Observable
