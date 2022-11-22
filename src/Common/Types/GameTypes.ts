@@ -43,7 +43,7 @@ export const ReverseDirections = {
 /**
  * Карта мапинга клавиш на направления движения
  */
-export const КeysToMoveMap = {
+export const KeysToMoveMap = {
     [EKeyCode.W]: EMoveDirection.up,
     [EKeyCode.S]: EMoveDirection.down,
     [EKeyCode.A]: EMoveDirection.left,

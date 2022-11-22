@@ -1,8 +1,11 @@
 <template>
     <div class="game screen">
         <div v-if="game.isGameOver.value" class="game-over">
-            <p>{{ $services.lang.t('Game over') }}</p>
-            <p>{{ $services.lang.t('Score') }}: {{ game.score }}</p>
+            <el-result
+                icon="error"
+                :title="$services.lang.t('Game over')"
+                :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+            />
         </div>
         <div class="grid-header">
             {{ $services.lang.t('Score') }}: {{ game.score }},
@@ -28,7 +31,7 @@ import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import {
     EKeyCode,
     EMoveDirection,
-    КeysToMoveMap,
+    KeysToMoveMap,
 } from '~~/src/Common/Types/GameTypes'
 
 const keyboard = useService<SKeyboard>('keyboard')
@@ -37,7 +40,7 @@ game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-    game.move(КeysToMoveMap[key] ?? EMoveDirection.up)
+    game.move(KeysToMoveMap[key] ?? EMoveDirection.up)
 
     if (key === EKeyCode.SPC) {
         game.shoot()

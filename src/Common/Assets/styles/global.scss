@@ -68,18 +68,18 @@ h2 {
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 20px;
-    padding: 30px;
-    background: $c_red;
+    padding: 0 30px;
+    background: $c_white;
+    border: 1px solid $c_black;
+    border-radius: 3px;
     text-align: center;
     z-index: 2;
-    font-weight: bold;
 }
 
 .header {
     display: flex;
     padding: 10px;
     box-sizing: border-box;
-    display: flex;
     justify-content: center;
 }
 

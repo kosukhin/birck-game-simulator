@@ -1,8 +1,11 @@
 <template>
     <div class="game screen">
         <div v-if="game.isGameOver.value" class="game-over">
-            <p>{{ $services.lang.t('Game over') }}</p>
-            <p>{{ $services.lang.t('Score') }}: {{ game.score }}</p>
+            <el-result
+                icon="error"
+                :title="$services.lang.t('Game over')"
+                :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+            />
         </div>
         <div class="grid-header">
             {{ $services.lang.t('Score') }}: {{ game.score }}
@@ -21,7 +24,7 @@ import SpaceHint from '../../../Common/Components/KeyboardHint/SpaceHint.vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
-import { КeysToMoveMap, EKeyCode } from '~~/src/Common/Types/GameTypes'
+import { KeysToMoveMap, EKeyCode } from '~~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 
@@ -31,8 +34,8 @@ game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-    if (КeysToMoveMap[key] !== undefined) {
-        game.moveTank(КeysToMoveMap[key])
+    if (KeysToMoveMap[key] !== undefined) {
+        game.moveTank(KeysToMoveMap[key])
     }
 
     if (key === EKeyCode.SPC) {

@@ -1,8 +1,11 @@
 <template>
     <div class="game screen">
         <div v-if="game.isGameOver.value" class="game-over">
-            <p>{{ $services.lang.t('Game over') }}</p>
-            <p>{{ $services.lang.t('Score') }}: {{ game.score }}</p>
+            <el-result
+                icon="error"
+                :title="$services.lang.t('Game over')"
+                :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+            />
         </div>
         <div class="grid-header">
             {{ $services.lang.t('Score') }}: {{ game.score }},
