@@ -4,3 +4,9 @@
         @content;
     }
 }
+
+@mixin media648 {
+    @media (max-width:648px) {
+        @content;
+    }
+}

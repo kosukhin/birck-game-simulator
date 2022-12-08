@@ -14,7 +14,7 @@
                 <span>A</span>
                 <em>left</em>
             </div>
-            <div class="key" @click="onKeyPress('KeyS')">
+            <div class="key key--s" @click="onKeyPress('KeyS')">
                 <span>S</span>
                 <em>down</em>
             </div>
@@ -87,6 +87,8 @@ const onKeyPress = (keyCode: string) => {
 }
 
 .key {
+    $self: &;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -108,6 +110,22 @@ const onKeyPress = (keyCode: string) => {
 
     &--as5 {
         width: calc(40px * 5 + 5px * 4);
+
+        @include media648 {
+            width: 40px;
+        }
+    }
+
+    @include media648 {
+        border-radius: 100%;
+
+        span {
+            font-size: 0;
+        }
+
+        &#{$self}--s {
+            margin-top: 45px;
+        }
     }
 
     &:last-child {

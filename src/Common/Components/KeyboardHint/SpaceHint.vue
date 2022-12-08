@@ -18,3 +18,28 @@ const onKeyPress = (keyCode: string) => {
     useService<SKeyboard>('keyboard').triggerKeyPress(keyCode)
 }
 </script>
+
+<style lang="scss" scoped>
+.keyhint__text {
+    @include media648 {
+        display: none;
+    }
+}
+
+@include media648 {
+    .keyhint__row {
+        position: relative;
+        width: 100%;
+    }
+}
+
+.key--as5 {
+    @include media648 {
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        width: 60px;
+        height: 60px;
+    }
+}
+</style>
