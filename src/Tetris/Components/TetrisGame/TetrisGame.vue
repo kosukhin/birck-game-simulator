@@ -44,15 +44,15 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     }
 
     if (key === EKeyCode.S) {
-        shape.moveY(1)
+        game.moveShapeDown()
     }
 
     if (key === EKeyCode.A) {
-        shape.moveX(-1)
+        game.moveShapeByX(-1)
     }
 
     if (key === EKeyCode.D) {
-        shape.moveX(1)
+        game.moveShapeByX(1)
     }
 })
 

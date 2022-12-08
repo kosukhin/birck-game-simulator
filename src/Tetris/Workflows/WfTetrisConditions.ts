@@ -1,6 +1,7 @@
 import { HArray } from '~~/src/Common/Helpers/HArray'
 import { HObjects } from '~~/src/Common/Helpers/HObjects'
 import { MGrid } from '~~/src/Common/Models/MGrid'
+import { IPoint } from '~~/src/Common/Types/GameTypes'
 
 /**
  * Процесс отвечающий за выполнение основных
@@ -46,21 +47,43 @@ export class WfTetrisConditions {
             return false
         }
 
-        // Проверяем что текущая фигура не имеет пересечения с уже имеющимися элементами сетки
+        if (this.checkShapeIntersection({ y: 1 })) {
+            return false
+        }
+
+        return true
+    }
+
+    /**
+     * Проверяем что текущая фигура не имеет пересечения с уже существующими элементами сетки
+     * @param offset
+     */
+    checkShapeIntersection({ x: ox = 0, y: oy = 0 }: IPoint): boolean {
+        const shape = this.#grid.getFirstShape()
+
+        if (!shape) {
+            return false
+        }
+
+        const grid = this.#grid.bgBitmap
+        const gridShape = shape.bitmap
+        const y = Number(shape.y)
+        const x = Number(shape.x)
+
         for (let iy = 0; iy < gridShape.length; iy++) {
             for (let ix = 0; ix < gridShape[iy].length; ix++) {
-                const nx = ix + x
-                const ny = iy + y + 1
+                const nx = ix + x + ox
+                const ny = iy + y + oy
                 const valueInGridNext = grid[ny] && grid[ny][nx]
                 const valueInShape = gridShape[iy][ix]
 
                 if (valueInGridNext && valueInShape) {
-                    return false
+                    return true
                 }
             }
         }
 
-        return true
+        return false
     }
 
     /**

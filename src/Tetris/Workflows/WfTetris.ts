@@ -139,4 +139,29 @@ export class WfTetris implements IGameWorkflow {
         this.#grid.clearShapes()
         this.#grid.addShape(shape)
     }
+
+    /**
+     * Перемещает фигуру по x
+     * @param xOffset
+     */
+    moveShapeByX(xOffset: number) {
+        if (this.#conditions.checkShapeIntersection({ x: xOffset })) {
+            return
+        }
+
+        const shape = this.grid.getFirstShape()
+        shape.moveX(xOffset)
+    }
+
+    /**
+     * Перемещает фигуру вниз с проверкой возможности перемещения
+     */
+    moveShapeDown() {
+        if (!this.#conditions.canShapeMoveNext()) {
+            return
+        }
+
+        const shape = this.grid.getFirstShape()
+        shape.moveY(1)
+    }
 }

@@ -49,3 +49,8 @@ export const KeysToMoveMap = {
     [EKeyCode.A]: EMoveDirection.left,
     [EKeyCode.D]: EMoveDirection.right,
 }
+
+export interface IPoint {
+    x?: number
+    y?: number
+}
