@@ -3,6 +3,7 @@ import { Observable } from '~~/src/Common/Library/Observable'
 import { SHooks } from '~~/src/Common/Services/SHooks'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
 import { TKeyboardSubscriber } from '~~/src/Common/Types/KeyboardTypes'
+import { EKeyCode } from '~~/src/Common/Types/GameTypes'
 
 /**
  * Сервис взаимодействия с клавиатурой
@@ -27,6 +28,11 @@ export class SKeyboard extends Observable<TKeyboardSubscriber> {
             'keypress',
             (e) => {
                 const key = e.code
+
+                if (key === EKeyCode.SPC) {
+                    e.preventDefault()
+                }
+
                 this.runSubscribers(key)
             }
         )

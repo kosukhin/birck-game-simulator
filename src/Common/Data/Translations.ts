@@ -180,6 +180,7 @@ export default new Map([
             ['Need your post', 'Необходимо указать должность'],
             ['Need your experience', 'Необходимо указать опыт'],
             ['Need description', 'Необходимо указать описание'],
+            ['Send', 'Отправить'],
         ]),
     ],
 ])

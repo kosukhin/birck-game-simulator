@@ -81,6 +81,12 @@ h2 {
     padding: 10px;
     box-sizing: border-box;
     justify-content: center;
+
+    @include media1024 {
+        .header-inner {
+            padding: 0;
+        }
+    }
 }
 
 .header-inner {

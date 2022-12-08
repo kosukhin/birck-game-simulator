@@ -1,5 +1,5 @@
 <template>
-    <div class="offer">
+    <div class="offer middle">
         <h1>{{ $services.lang.t('Offer a game') }}</h1>
         <div v-show="isSuccessSubmitted">
             <el-result
@@ -110,7 +110,7 @@
                         type="primary"
                         @click="submitForm(formRef)"
                     >
-                        {{ $services.lang.t('Send an offer') }}
+                        {{ $services.lang.t('Send') }}
                     </el-button>
                 </el-col>
             </el-row>
@@ -194,6 +194,8 @@ const submitAgain = () => {
 }
 
 .offer {
+    max-width: 600px;
+
     &__description {
         font-size: 14px;
         margin-bottom: 50px;
