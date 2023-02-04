@@ -40,7 +40,7 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     }
 
     if (key === EKeyCode.W) {
-        shape.setBitmap(HArray.rotate90(shape.bitmap))
+        game.rotateShape()
     }
 
     if (key === EKeyCode.S) {

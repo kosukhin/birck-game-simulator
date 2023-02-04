@@ -145,6 +145,10 @@ export class WfTetris implements IGameWorkflow {
      * @param xOffset
      */
     moveShapeByX(xOffset: number) {
+        if (this.#isPaused) {
+            return
+        }
+
         if (this.#conditions.checkShapeIntersection({ x: xOffset })) {
             return
         }
@@ -153,10 +157,23 @@ export class WfTetris implements IGameWorkflow {
         shape.moveX(xOffset)
     }
 
+    rotateShape() {
+        if (this.#isPaused) {
+            return
+        }
+
+        const shape = this.grid.getFirstShape()
+        shape.setBitmap(HArray.rotate90(shape.bitmap))
+    }
+
     /**
      * Перемещает фигуру вниз с проверкой возможности перемещения
      */
     moveShapeDown() {
+        if (this.#isPaused) {
+            return
+        }
+
         if (!this.#conditions.canShapeMoveNext()) {
             return
         }
