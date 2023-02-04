@@ -17,6 +17,11 @@ https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/
 библиотека three.js, на основе которой был написан специальный рендерер
 https://github.com/kosukhin/brick-game-simulator/blob/master/src/Common/Library/ThreeJsRenderer.ts
 
+### Раота с изображениями
+
+Для работы с изображениями использовал nuxt-image, который по умолчанию использует
+провайдер ipx для динамического преборазования картинок налету.
+
 ### Работа с формами
 
 В проекте использован element-ui+, у которого есть свои формы и есть встроенная

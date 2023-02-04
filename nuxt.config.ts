@@ -1,10 +1,10 @@
-import { defineNuxtConfig } from 'nuxt'
+import { defineNuxtConfig } from 'nuxt/config'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-    mode: 'spa',
     ssr: false,
     css: ['~~/src/Common/Assets/styles/global.scss'],
+    modules: ['@nuxt/image-edge'],
     vite: {
         css: {
             preprocessorOptions: {

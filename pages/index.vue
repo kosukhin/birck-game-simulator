@@ -3,7 +3,10 @@
         <div class="middle">
             <el-carousel class="carousel" height="400px">
                 <el-carousel-item v-for="item in 3" :key="item">
-                    <img :src="`/images/banner/slide${item}-min.jpg`" />
+                    <nuxt-img
+                        :src="`/images/banner/slide${item}-min.jpg`"
+                        width="1000"
+                    />
                 </el-carousel-item>
             </el-carousel>
         </div>

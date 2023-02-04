@@ -2,7 +2,7 @@
     <nuxt-link class="game-card-wrapper" :to="game.link">
         <article class="game-card">
             <div class="game-card__photo">
-                <img :src="game.photo" :alt="game.title" />
+                <nuxt-img :src="game.photo" :alt="game.title" width="200" />
             </div>
             <div class="game-card__content">
                 <div class="game-card__title">
