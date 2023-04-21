@@ -1,10 +1,7 @@
 import config, { Config } from '~~/config/config'
 
-/**
- * Сервис получения конфигурации
- */
 export class SConfig {
-    config: Config
+    config!: Config
 
     async afterInit() {
         if (process.env.NODE_ENV !== 'production') {

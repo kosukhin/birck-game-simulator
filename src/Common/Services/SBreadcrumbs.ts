@@ -10,24 +10,19 @@ interface IBreadcrumbLink {
     link?: string
 }
 
-/**
- * Сервис работы формирования хлебных крошек
- */
 export class SBreadcrumbs {
-    /** Счетчик для обновления компонента хлебных крошек */
-    #breadcrumbsRenderCounter: Ref<number>
-    /** Конфигурация хлебных крошек, ее можно расширить методом addBreadcrumbsConfig */
-    #breadcrumbs: any = {}
+    private breadcrumbsRenderCounter: Ref<number>
+    private breadcrumbs: any = {}
 
     constructor() {
-        this.#breadcrumbsRenderCounter = ref(1)
+        this.breadcrumbsRenderCounter = ref(1)
     }
 
     afterInit(hooks: SHooks) {
         hooks.init.registerSubscriber(() => {
             const app = useNuxtApp()
             const lang = useService<SLanguage>('lang')
-            this.#breadcrumbs = {
+            this.breadcrumbs = {
                 index: {
                     text: () => lang.t('Home'),
                     link: '/',
@@ -63,58 +58,41 @@ export class SBreadcrumbs {
             }
 
             app.$router.beforeEach(() => {
-                this.#breadcrumbsRenderCounter.value++
+                this.breadcrumbsRenderCounter.value++
             })
         })
     }
 
-    /**
-     * Добавить конфиг в основной конфиг хлебных крошек
-     * @param config
-     */
     addBreadcrumbsConfig(config) {
-        this.#breadcrumbs = HObjects.merge(this.#breadcrumbs, config)
+        this.breadcrumbs = HObjects.merge(this.breadcrumbs, config)
     }
 
-    /**
-     * Позволяет перерисовать компонент Breadcrumbs
-     */
     get renderCounter() {
-        return this.#breadcrumbsRenderCounter
+        return this.breadcrumbsRenderCounter
     }
 
-    /**
-     * Возвращает массив хлебных крошек для текущего роута
-     * @returns
-     */
     getLinks(): IBreadcrumbLink[] {
         const route = useNuxtApp().$router.currentRoute.value
         return this.buildBreadcrumb(route.name, route.params)
     }
 
-    /**
-     * Строит хлебные крошки рекурсивно на основании данных в объекте #breadcrumbs
-     * @param name
-     * @param params
-     * @returns
-     */
     buildBreadcrumb(name: string, params?: any): IBreadcrumbLink[] {
         let result = []
 
-        if (this.#breadcrumbs[name]) {
-            if (params && this.#breadcrumbs[name].params) {
+        if (this.breadcrumbs[name]) {
+            if (params && this.breadcrumbs[name].params) {
                 Object.entries(params).forEach((entry: [string, string]) => {
                     const [paramKey, paramValue] = entry
 
                     if (
-                        this.#breadcrumbs[name].params[paramKey] &&
-                        this.#breadcrumbs[name].params[paramKey][paramValue]
+                        this.breadcrumbs[name].params[paramKey] &&
+                        this.breadcrumbs[name].params[paramKey][paramValue]
                     ) {
                         result.push({
-                            text: this.#breadcrumbs[name].params[paramKey][
+                            text: this.breadcrumbs[name].params[paramKey][
                                 paramValue
                             ].text,
-                            link: this.#breadcrumbs[name].params[paramKey][
+                            link: this.breadcrumbs[name].params[paramKey][
                                 paramValue
                             ].link,
                         })
@@ -122,14 +100,14 @@ export class SBreadcrumbs {
                 })
             } else {
                 result.push({
-                    text: this.#breadcrumbs[name].text,
-                    link: this.#breadcrumbs[name].link,
+                    text: this.breadcrumbs[name].text,
+                    link: this.breadcrumbs[name].link,
                 })
             }
 
-            if (this.#breadcrumbs[name].parent) {
+            if (this.breadcrumbs[name].parent) {
                 result = [
-                    ...this.buildBreadcrumb(this.#breadcrumbs[name].parent),
+                    ...this.buildBreadcrumb(this.breadcrumbs[name].parent),
                     ...result,
                 ]
             }

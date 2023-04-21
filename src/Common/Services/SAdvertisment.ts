@@ -9,16 +9,13 @@ interface IAdvertisment {
     message: string
 }
 
-/**
- * Сервис рекламных банеров
- */
 export class SAdvertisment {
-    #advertisments: Record<string, IAdvertisment>
+    private advertisments!: Record<string, IAdvertisment>
 
     afterInit(hooks: SHooks) {
         hooks.init.registerSubscriber(() => {
             const lang = useService<SLanguage>('lang')
-            this.#advertisments = {
+            this.advertisments = {
                 tetris: {
                     title: lang.t('Tetris'),
                     message: lang.t('Dmitry scored 100 points'),
@@ -56,7 +53,7 @@ export class SAdvertisment {
                 const { data } = event
 
                 ElNotification({
-                    ...this.#advertisments[data],
+                    ...this.advertisments[data],
                     position: 'bottom-right',
                 })
             })
