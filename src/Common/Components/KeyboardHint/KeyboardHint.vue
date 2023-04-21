@@ -4,21 +4,37 @@
             {{ $services.lang.t('Controls') }}
         </b>
         <div class="keyhint__row">
-            <div class="key" @click="onKeyPress('KeyW')">
+            <div
+                class="key"
+                @mouseup="keyboard.stopTriggerKeyPress()"
+                @mousedown="keyboard.beginTriggerKeyPress('KeyW')"
+            >
                 <span>W</span>
                 <em>up</em>
             </div>
         </div>
         <div class="keyhint__row">
-            <div class="key" @click="onKeyPress('KeyA')">
+            <div
+                class="key"
+                @mouseup="keyboard.stopTriggerKeyPress()"
+                @mousedown="keyboard.beginTriggerKeyPress('KeyA')"
+            >
                 <span>A</span>
                 <em>left</em>
             </div>
-            <div class="key key--s" @click="onKeyPress('KeyS')">
+            <div
+                class="key key--s"
+                @mouseup="keyboard.stopTriggerKeyPress()"
+                @mousedown="keyboard.beginTriggerKeyPress('KeyS')"
+            >
                 <span>S</span>
                 <em>down</em>
             </div>
-            <div class="key" @click="onKeyPress('KeyD')">
+            <div
+                class="key"
+                @mouseup="keyboard.stopTriggerKeyPress()"
+                @mousedown="keyboard.beginTriggerKeyPress('KeyD')"
+            >
                 <span>D</span>
                 <em>right</em>
             </div>
@@ -38,9 +54,7 @@
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 
-const onKeyPress = (keyCode: string) => {
-    useService<SKeyboard>('keyboard').triggerKeyPress(keyCode)
-}
+const keyboard = useService<SKeyboard>('keyboard')
 </script>
 
 <style lang="scss">
