@@ -7,12 +7,8 @@ import { useApplicationStore } from '~~/stores/application'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SCookies } from '~~/src/Common/Services/SCookies'
 
-/**
- * Сервис для работы с переводами
- */
 export class SLanguage {
-    /** Текущий язык */
-    #lang: Ref<string>
+    private lang!: Ref<string>
 
     afterInit(hooks: SHooks) {
         hooks.init.registerSubscriber(() => {
@@ -20,7 +16,7 @@ export class SLanguage {
             const appStore = useApplicationStore()
             const { lang } = storeToRefs(appStore)
             const cookieLang = cookieService.get('lang')
-            this.#lang = lang
+            this.lang = lang
 
             if (cookieLang) {
                 appStore.setLang(cookieLang)
@@ -38,11 +34,11 @@ export class SLanguage {
      * @param lang
      */
     setLangValue(lang: string) {
-        if (!this.#lang) {
-            this.#lang = ref(lang)
+        if (!this.lang) {
+            this.lang = ref(lang)
         }
 
-        this.#lang.value = lang
+        this.lang.value = lang
     }
 
     /**
@@ -50,19 +46,19 @@ export class SLanguage {
      * @param key
      * @returns
      */
-    t(key: string) {
-        if (!this.#lang) {
+    t(key: string): string {
+        if (!this.lang) {
             return key
         }
 
-        if (!Translations.has(this.#lang.value)) {
+        if (!Translations.has(this.lang.value)) {
             return key
         }
 
-        if (!Translations.get(this.#lang.value).has(key)) {
+        if (!Translations.get(this.lang.value).has(key)) {
             return key
         }
 
-        return Translations.get(this.#lang.value).get(key)
+        return Translations.get(this.lang.value).get(key)
     }
 }

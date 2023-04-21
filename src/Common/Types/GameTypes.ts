@@ -1,6 +1,3 @@
-/**
- * Коды управляющих клавиш
- */
 export enum EKeyCode {
     W = 'KeyW',
     A = 'KeyA',
@@ -9,20 +6,11 @@ export enum EKeyCode {
     SPC = 'Space',
 }
 
-/**
- * Интерфейс игры
- */
 export interface IGameWorkflow {
     run(): void
-    /**
-     * Приостанавливает игру или запускает снова после приостановки
-     */
     pause(): void
 }
 
-/**
- * Направление движения
- */
 export enum EMoveDirection {
     up,
     down,
@@ -30,9 +18,6 @@ export enum EMoveDirection {
     left,
 }
 
-/**
- * Карта противоположных направлений
- */
 export const ReverseDirections = {
     [EMoveDirection.up]: EMoveDirection.down,
     [EMoveDirection.down]: EMoveDirection.up,
@@ -40,9 +25,6 @@ export const ReverseDirections = {
     [EMoveDirection.left]: EMoveDirection.right,
 }
 
-/**
- * Карта мапинга клавиш на направления движения
- */
 export const KeysToMoveMap = {
     [EKeyCode.W]: EMoveDirection.up,
     [EKeyCode.S]: EMoveDirection.down,

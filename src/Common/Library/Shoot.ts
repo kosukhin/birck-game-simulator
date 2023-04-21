@@ -16,23 +16,13 @@ interface IShootParam {
     byPixel?: boolean
 }
 
-/**
- * Абстракция выстрела
- */
 export class Shoot {
-    /** Сетка игры */
     #grid: MGrid
-    /** Стартовая позиция выстрела */
     #position: TShapePosition
-    /** Направление полета выстрела */
     #direction: EMoveDirection
-    /** Фигура от которой выстрел сделан */
     #fromShape: MShape
-    /** Логика перемещения фигуры на гриде */
     #shapeMover: ShapeMover = new ShapeMover()
-    /** Флаг разрушения цели по пикселям */
     #byPixel: boolean
-    /** Хук попадания в цель, передает фигуру по которой попали */
     hitTheTarget: Observable<(target: MShape) => void>
 
     constructor(params: IShootParam) {
@@ -45,9 +35,6 @@ export class Shoot {
         this.run()
     }
 
-    /**
-     * Запускает цикл полета выстрела
-     */
     run() {
         const direction = this.#direction
         const shootId = HApp.uniqueId('shoot')

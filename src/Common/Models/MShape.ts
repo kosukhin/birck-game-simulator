@@ -11,22 +11,12 @@ interface IShapeParams {
     direction?: EMoveDirection
 }
 
-/**
- * Представление фигуры, позволяет хранить
- * пиксельные формы, которые могут быть частью Grid
- */
 export class MShape {
-    /** Уникальный id фигуры */
     #id: any = MShape.getNewShapeId()
-    /** Изображение фигуры пиксельное */
     #bitmap: TGrid
-    /** Позиция фигуры по x */
     #x: number
-    /** Позиция фигуры по y */
     #y: number
-    /** Статический счетчик всех id фигур */
     static #shapeIdCounter = 0
-    /** Направление фигуры, полезно для установки вращения */
     #direction: EMoveDirection = EMoveDirection.up
 
     constructor(params: IShapeParams) {
@@ -108,61 +98,34 @@ export class MShape {
         return this.#bitmap.length
     }
 
-    /**
-     * Устанавливает направление поворота фигуры
-     * @param direction
-     */
     setDirection(direction: EMoveDirection) {
         this.#direction = direction
     }
 
-    /**
-     * Устанавливает сетку фигуры
-     */
     setBitmap(bitmap) {
         this.#bitmap = bitmap
     }
 
-    /**
-     * Устанавливает пзицию через массив [x, y]
-     */
     setPosition(position: TShapePosition) {
         ;[this.#x, this.#y] = position
     }
 
-    /**
-     * Устанавливает позицию y
-     */
     setY(y: number) {
         this.#y = y
     }
 
-    /**
-     * Устанавливает x позицию
-     */
     setX(x: number) {
         this.#x = x
     }
 
-    /**
-     * Передвигает фигуру на Y переданный через by
-     * @param by
-     */
     moveY(by: number = 1) {
         this.#y += by
     }
 
-    /**
-     * Передвигает фигуру на x переданный через by
-     * @param by
-     */
     moveX(by: number = 1) {
         this.#x += by
     }
 
-    /**
-     * Возвращает true если на фигуре нету ни одной точки
-     */
     isShapeEmpty() {
         let empty = true
 
@@ -176,11 +139,6 @@ export class MShape {
         return empty
     }
 
-    /**
-     * Удаление пикселя из фигуры
-     * @param x
-     * @param y
-     */
     removePixel(x: number, y: number) {
         let result = false
 
@@ -196,9 +154,6 @@ export class MShape {
         return result
     }
 
-    /**
-     * Очищает пустые строки битмапа фигуры
-     */
     clearEmptyRows() {
         this.#bitmap.forEach((row, index) => {
             if (HArray.isAllElementsEqualsTo(row, 0)) {
@@ -207,10 +162,6 @@ export class MShape {
         })
     }
 
-    /**
-     * Генерирует новый уникальный id для фигуры
-     * @returns void
-     */
     static getNewShapeId() {
         MShape.#shapeIdCounter = MShape.#shapeIdCounter + 1
 

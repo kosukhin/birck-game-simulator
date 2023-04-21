@@ -1,10 +1,5 @@
-/**
- * Сервис логировния сообщений,
- * полезен для отладки и профилирования
- */
 export class SLogger {
-    /** Конфиг тэгов отладки */
-    #config = new Map([
+    private config = new Map([
         ['limit', false],
         ['shape', false],
         ['max', false],
@@ -18,14 +13,8 @@ export class SLogger {
         ['canvas', false],
     ])
 
-    /**
-     * Помещает в лог новое сообщение, если тэг включен
-     * @param tag
-     * @param rest
-     * @returns
-     */
     log(tag: string, ...rest: any[]) {
-        if (!this.#config.get(tag)) {
+        if (!this.config.get(tag)) {
             return
         }
 

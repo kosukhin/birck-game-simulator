@@ -2,15 +2,10 @@ import * as THREE from 'three'
 import { MGrid } from '~/src/Common/Models/MGrid'
 
 export class ThreeJsRenderer {
-    /** Основная сетка */
     #grid: MGrid
-    /** Элемент в котором нужно вывести канву */
     #canvasWrapper: HTMLElement
-    /** Базовый размер куба */
     #baseSize = 10
-    /** Пространство между кубами */
     #spaceBetween = 5
-    /** Скорость вращения куба */
     #rotationSpeed = 0.01
 
     constructor(grid: MGrid, canvasWrapper: HTMLElement) {

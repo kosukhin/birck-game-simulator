@@ -9,19 +9,10 @@ interface IGridParams {
     bgBitmap?: TGrid
 }
 
-/**
- * Представление сетки, позволяет выводить
- * на экран результаты игры, позволяет выполнять
- * манипуляции над пикселями
- */
 export class MGrid {
-    /** Ширина сетки */
     #width: number
-    /** Высота сетки */
     #height: number
-    /** Бэкграунд сетки */
     #bgBitmap: TGrid
-    /** Активные фигуры на сетке */
     #shapes: MShape[]
 
     constructor(params: IGridParams) {
@@ -56,9 +47,6 @@ export class MGrid {
         return this.height - 1
     }
 
-    /**
-     * Рендерит сетку
-     */
     render() {
         const grid = HObjects.clone(this.#bgBitmap)
         const copyShapeToGrid = (shape) => {
@@ -109,58 +97,30 @@ export class MGrid {
         return grid
     }
 
-    /**
-     * Устанавливает фон сетки
-     * @param bitmap
-     */
     setGrid(bitmap: TGrid) {
         this.#bgBitmap = bitmap
     }
 
-    /**
-     * Устанавливает высоту сетки
-     * @param height
-     */
     setHeight(height: number) {
         this.#height = height
     }
 
-    /**
-     * Устанавливает ширину сетки
-     * @param width
-     */
     setWidth(width: number) {
         this.#width = width
     }
 
-    /**
-     * Добавляет наверх сетки новую строку
-     * @param row
-     */
     addRowToTop(row: number[]) {
         this.#bgBitmap.unshift(row)
     }
 
-    /**
-     * Удаляет строку по индексу
-     * @param index
-     */
     removeRowByIndex(index: number) {
         this.#bgBitmap.splice(index, 1)
     }
 
-    /**
-     * Добавляет фигуру на сетку
-     * @param shape
-     */
     addShape(shape: MShape) {
         this.#shapes = [...this.#shapes, shape]
     }
 
-    /**
-     * Удаляет фигуру по id
-     * @param id
-     */
     removeShapeById(id) {
         const index = this.#shapes.findIndex((shape) => shape.id === id)
 
@@ -169,10 +129,6 @@ export class MGrid {
         }
     }
 
-    /**
-     * Удаление фигуры из массива
-     * @param shape
-     */
     removeShape(shape: MShape) {
         const index = this.#shapes.indexOf(shape)
 
@@ -181,59 +137,30 @@ export class MGrid {
         }
     }
 
-    /**
-     * Проверяет что на сетке есть фигуры
-     * @param shape
-     * @returns
-     */
     hasShape(shape: MShape) {
         return this.#shapes.includes(shape)
     }
 
-    /**
-     * Проверяем наличие фигуры по id
-     * @param id
-     * @returns
-     */
     hasShapeById(id) {
         return this.#shapes.findIndex((shape) => shape.id === id) !== -1
     }
 
-    /**
-     * Очищает все фигуры с сетки
-     */
     clearShapes() {
         this.#shapes = []
     }
 
-    /**
-     * Берет первую фигуру из всех на сетке
-     * @returns
-     */
     getFirstShape(): MShape | undefined {
         return this.#shapes[0]
     }
 
-    /**
-     * Возвращает все фигуры сетки
-     * @returns
-     */
     getShapes(): MShape[] {
         return this.#shapes
     }
 
-    /**
-     * Создает пустую сетку
-     */
     createEmptyGrid() {
         this.#bgBitmap = HArray.createTwoDemGrid(this.#width, this.#height)
     }
 
-    /**
-     * Проверяем что фигура вышла за пределы
-     * @param shape
-     * @returns
-     */
     isShapeOutOfBounds(shape: MShape): boolean {
         const lessThanX = shape.x < 0
         const lessThanY = shape.y < 0
@@ -243,12 +170,6 @@ export class MGrid {
         return lessThanX || lessThanY || moreThanX || moreThanY
     }
 
-    /**
-     * Проверяет пересечение переданной фигуры с какой-нибудь одной
-     * фигурой уже существующей на сетке, если пересечение найдено, то будет
-     * возвращена фигура с которой случилось пересечение, в противном случае undefined
-     * @param shape
-     */
     isShapeIntersectedWithOtherShape(shape: MShape): MShape | undefined {
         let intersected: MShape | undefined
 

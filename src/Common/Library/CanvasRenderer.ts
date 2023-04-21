@@ -5,19 +5,11 @@ import { SConnectors } from '~~/src/Common/Services/SConnectors'
 
 const DOT_SIZE = 12
 
-/**
- * Рендерит сетку MGrid на канвас
- */
 export class CanvasRenderer {
-    /** Основная сетка */
     #grid: MGrid
-    /** Количество кадров в секунду */
     #fps: number
-    /** Объект html канваса */
     #canvas: HTMLCanvasElement
-    /** Указатель на интервал цикла обновления канваса */
     #renderingIntervalPointer = null
-    /** Контекст канваса */
     #ctx: CanvasRenderingContext2D
 
     constructor(grid: MGrid, fps: number) {
@@ -33,9 +25,6 @@ export class CanvasRenderer {
         this.#canvas = canvas
     }
 
-    /**
-     * Запускает цикл рендеринга канваса
-     */
     run() {
         try {
             this.#canvas.width = Number(
@@ -63,9 +52,6 @@ export class CanvasRenderer {
         }
     }
 
-    /**
-     * Рендерит один фрейм канваса
-     */
     renderFrame() {
         const ctx = this.#ctx
         const grid = this.#grid.render()
@@ -97,9 +83,6 @@ export class CanvasRenderer {
         }
     }
 
-    /**
-     * Завершает цикл рендеринга
-     */
     destroy() {
         this.#renderingIntervalPointer &&
             clearInterval(this.#renderingIntervalPointer)

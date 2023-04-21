@@ -1,15 +1,6 @@
 import { HObjects } from '~~/src/Common/Helpers/HObjects'
 
-/**
- * Хелпер для работы над массивами
- */
 export class HArray {
-    /**
-     * Поворачивает массив на 90 градусов,
-     * возвращает новый массив, не мутирует массив из параметров
-     * @param a исходный массив
-     * @returns
-     */
     static rotate90(a: any[]) {
         const w = a.length
         const h = a[0].length
@@ -26,43 +17,20 @@ export class HArray {
         return b
     }
 
-    /**
-     * Поворачиваем на 180 градусов
-     * @param a
-     * @returns
-     */
     static rotate180(a: any[]) {
         return HArray.rotate90(HArray.rotate90(a))
     }
 
-    /**
-     * Поворачиваем на 270 градусов
-     * @param a
-     * @returns
-     */
     static rotate270(a: any[]) {
         return HArray.rotate180(HArray.rotate90(a))
     }
 
-    /**
-     * Проверяет что все элементы массива равны значению
-     * из параметра equalsTo
-     * @param arr проверяемый массив
-     * @param equalsTo значение которому должны быть равны элементы
-     * @returns
-     */
     static isAllElementsEqualsTo(arr: any[], equalsTo: number): boolean {
         return arr.reduce((acc, item) => {
             return acc && item === equalsTo
         }, true)
     }
 
-    /**
-     * Создает двумерный массив заданной ширины и высоты
-     * @param width
-     * @param height
-     * @returns
-     */
     static createTwoDemGrid(width: number, height: number) {
         const newGrid = []
 
@@ -77,11 +45,6 @@ export class HArray {
         return newGrid
     }
 
-    /**
-     * Перемешивает массив в рандомном порядке,
-     * входной массив не изменяет, возвращает новый
-     * @param array
-     */
     static shuffle(array: any[]) {
         const result = HObjects.clone(array)
 
@@ -93,10 +56,6 @@ export class HArray {
         return result
     }
 
-    /**
-     * Создает пустую строку-массив шириной width
-     * @param width
-     */
     static createEmptyRow(width: number) {
         const newRow = []
 
