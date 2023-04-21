@@ -4,13 +4,13 @@
             {{ $services.lang.t('Controls') }}
         </b>
         <div class="keyhint__row">
-            <div ref="keyW" class="key">
+            <div ref="keyW" class="key key--w">
                 <span>W</span>
                 <em>up</em>
             </div>
         </div>
         <div class="keyhint__row">
-            <div ref="keyA" class="key">
+            <div ref="keyA" class="key key--a">
                 <span>A</span>
                 <em>left</em>
             </div>
@@ -18,7 +18,7 @@
                 <span>S</span>
                 <em>down</em>
             </div>
-            <div ref="keyD" class="key">
+            <div ref="keyD" class="key key--d">
                 <span>D</span>
                 <em>right</em>
             </div>
@@ -140,13 +140,26 @@ onMounted(() => {
 
     @include media648 {
         border-radius: 100%;
+        position: fixed;
+        bottom: 100px;
 
         span {
             font-size: 0;
         }
 
-        &#{$self}--s {
-            margin-top: 45px;
+        &#{$self}--s,
+        &#{$self}--a {
+            left: 10px;
+        }
+
+        &#{$self}--w,
+        &#{$self}--d {
+            right: 10px;
+        }
+
+        &#{$self}--a,
+        &#{$self}--w {
+            bottom: 160px;
         }
     }
 

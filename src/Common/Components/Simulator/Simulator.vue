@@ -96,6 +96,10 @@ onUnmounted(() => {
 .tetris {
     display: inline-block;
     position: relative;
+
+    @include media648 {
+        margin: 0 auto;
+    }
 }
 
 .button-wrapper {
