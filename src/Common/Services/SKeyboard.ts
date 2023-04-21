@@ -35,6 +35,7 @@ export class SKeyboard extends Observable<TKeyboardSubscriber> {
     }
 
     beginTriggerKeyPress(keyCode: string) {
+        console.log('begin touch')
         this.lastKeyCode = keyCode
         this.clearTriggerInterval()
         this.triggeringInterval = setInterval(() => {

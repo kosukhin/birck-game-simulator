@@ -5,9 +5,9 @@
         </b>
         <div class="keyhint__row">
             <div
+                v-touch:press="keyboard.beginTriggerKeyPress('KeyW')"
+                v-touch:release="keyboard.stopTriggerKeyPress()"
                 class="key"
-                @mouseup="keyboard.stopTriggerKeyPress()"
-                @mousedown="keyboard.beginTriggerKeyPress('KeyW')"
             >
                 <span>W</span>
                 <em>up</em>
@@ -15,25 +15,25 @@
         </div>
         <div class="keyhint__row">
             <div
+                v-touch:press="keyboard.beginTriggerKeyPress('KeyA')"
+                v-touch:release="keyboard.stopTriggerKeyPress()"
                 class="key"
-                @mouseup="keyboard.stopTriggerKeyPress()"
-                @mousedown="keyboard.beginTriggerKeyPress('KeyA')"
             >
                 <span>A</span>
                 <em>left</em>
             </div>
             <div
+                v-touch:press="keyboard.beginTriggerKeyPress('KeyS')"
+                v-touch:release="keyboard.stopTriggerKeyPress()"
                 class="key key--s"
-                @mouseup="keyboard.stopTriggerKeyPress()"
-                @mousedown="keyboard.beginTriggerKeyPress('KeyS')"
             >
                 <span>S</span>
                 <em>down</em>
             </div>
             <div
+                v-touch:press="keyboard.beginTriggerKeyPress('KeyD')"
+                v-touch:release="keyboard.stopTriggerKeyPress()"
                 class="key"
-                @mouseup="keyboard.stopTriggerKeyPress()"
-                @mousedown="keyboard.beginTriggerKeyPress('KeyD')"
             >
                 <span>D</span>
                 <em>right</em>
@@ -55,6 +55,9 @@ import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 
 const keyboard = useService<SKeyboard>('keyboard')
+const touchHandler = () => {
+    console.log('th')
+}
 </script>
 
 <style lang="scss">
