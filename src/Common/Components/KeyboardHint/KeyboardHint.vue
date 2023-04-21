@@ -157,7 +157,7 @@ onMounted(() => {
             right: 10px;
         }
 
-        &#{$self}--a,
+        &#{$self}--s,
         &#{$self}--w {
             bottom: 160px;
         }
