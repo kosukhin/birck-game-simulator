@@ -1,40 +1,24 @@
 <template>
-    <div class="keyhint">
+    <div ref="allTouches" class="keyhint">
         <b class="keyhint__text">
             {{ $services.lang.t('Controls') }}
         </b>
         <div class="keyhint__row">
-            <div
-                v-touch:press="keyboard.beginTriggerKeyPress('KeyW')"
-                v-touch:release="keyboard.stopTriggerKeyPress()"
-                class="key"
-            >
+            <div ref="keyW" class="key">
                 <span>W</span>
                 <em>up</em>
             </div>
         </div>
         <div class="keyhint__row">
-            <div
-                v-touch:press="keyboard.beginTriggerKeyPress('KeyA')"
-                v-touch:release="keyboard.stopTriggerKeyPress()"
-                class="key"
-            >
+            <div ref="keyA" class="key">
                 <span>A</span>
                 <em>left</em>
             </div>
-            <div
-                v-touch:press="keyboard.beginTriggerKeyPress('KeyS')"
-                v-touch:release="keyboard.stopTriggerKeyPress()"
-                class="key key--s"
-            >
+            <div ref="keyS" class="key key--s">
                 <span>S</span>
                 <em>down</em>
             </div>
-            <div
-                v-touch:press="keyboard.beginTriggerKeyPress('KeyD')"
-                v-touch:release="keyboard.stopTriggerKeyPress()"
-                class="key"
-            >
+            <div ref="keyD" class="key">
                 <span>D</span>
                 <em>right</em>
             </div>
@@ -51,13 +35,34 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 
 const keyboard = useService<SKeyboard>('keyboard')
-const touchHandler = () => {
-    console.log('th')
-}
+const keyW = ref()
+const keyA = ref()
+const keyS = ref()
+const keyD = ref()
+const allTouches = ref()
+
+onMounted(() => {
+    allTouches.value.addEventListener('touchend', () => {
+        keyboard.stopTriggerKeyPress()
+    })
+    keyW.value.addEventListener('touchstart', () =>
+        keyboard.beginTriggerKeyPress('KeyW')
+    )
+    keyA.value.addEventListener('touchstart', () =>
+        keyboard.beginTriggerKeyPress('KeyA')
+    )
+    keyS.value.addEventListener('touchstart', () =>
+        keyboard.beginTriggerKeyPress('KeyS')
+    )
+    keyD.value.addEventListener('touchstart', () =>
+        keyboard.beginTriggerKeyPress('KeyD')
+    )
+})
 </script>
 
 <style lang="scss">
