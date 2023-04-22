@@ -8,7 +8,7 @@ import { EKeyCode } from '~~/src/Common/Types/GameTypes'
 export class SKeyboard extends Observable<TKeyboardSubscriber> {
     private lastKeyCode!: string | null
     private triggeringInterval!: NodeJS.Timer
-    private triggeringFrequency = 100
+    private triggeringFrequency = 150
 
     afterInit(hooks: SHooks) {
         hooks.init.registerSubscriber(() => {

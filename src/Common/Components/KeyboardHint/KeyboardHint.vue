@@ -142,6 +142,9 @@ onMounted(() => {
         border-radius: 100%;
         position: fixed;
         bottom: 100px;
+        z-index: 99;
+        width: 50px;
+        height: 50px;
 
         span {
             font-size: 0;
@@ -157,9 +160,12 @@ onMounted(() => {
             right: 10px;
         }
 
-        &#{$self}--s,
         &#{$self}--w {
             bottom: 160px;
+        }
+
+        &#{$self}--s {
+            bottom: 40px;
         }
     }
 
