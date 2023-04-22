@@ -139,9 +139,10 @@ onMounted(() => {
     }
 
     @include media648 {
+        $baseBottom: 200px;
         border-radius: 100%;
         position: fixed;
-        bottom: 100px;
+        bottom: $baseBottom;
         z-index: 99;
         width: 50px;
         height: 50px;
@@ -161,11 +162,14 @@ onMounted(() => {
         }
 
         &#{$self}--w {
-            bottom: 160px;
+            bottom: calc($baseBottom + 60px);
         }
 
         &#{$self}--s {
-            bottom: 40px;
+            bottom: calc($baseBottom - 60px);
+            right: 10px;
+            left: auto;
+            margin: 0;
         }
     }
 
