@@ -1,21 +1,21 @@
 <template>
-    <div>
-        <el-drawer
-            v-for="(drawerValue, drawerName) in drawersHash"
-            :key="drawerName"
-            :model-value="drawerValue"
-            :direction="drawersHashNotReactive[drawerName].direction"
-            :size="$services.device.isMobile() ? '100%' : '30%'"
-            @closed="closed(drawerName)"
-        >
-            <div>
-                <component
-                    :is="drawersHashNotReactive[drawerName].component()"
-                    :options="drawersHashNotReactive[drawerName].options"
-                />
-            </div>
-        </el-drawer>
-    </div>
+  <div>
+    <el-drawer
+      v-for="(drawerValue, drawerName) in drawersHash"
+      :key="drawerName"
+      :model-value="drawerValue"
+      :direction="drawersHashNotReactive[drawerName].direction"
+      :size="$services.device.isMobile() ? '100%' : '30%'"
+      @closed="closed(drawerName)"
+    >
+      <div>
+        <component
+          :is="drawersHashNotReactive[drawerName].component()"
+          :options="drawersHashNotReactive[drawerName].options"
+        />
+      </div>
+    </el-drawer>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -28,19 +28,19 @@ const drawersHashNotReactive: Record<string, IDrawer> = {}
 const drawersHash: Ref<Record<string, boolean>> = ref({})
 const drawerService = useService<SDrawer>('drawer')
 const closed = (name: string) => {
-    drawerService.close(name)
+  drawerService.close(name)
 }
 
 drawerService.opening.registerSubscriber((drawer) => {
-    drawersHash.value[drawer.name] = true
-    drawersHashNotReactive[drawer.name] = drawer
+  drawersHash.value[drawer.name] = true
+  drawersHashNotReactive[drawer.name] = drawer
 })
 
 drawerService.closing.registerSubscriber((name) => {
-    drawersHash.value[name] = false
-    HApp.wait(300).then(() => {
-        delete drawersHash.value[name]
-        delete drawersHashNotReactive[name]
-    })
+  drawersHash.value[name] = false
+  HApp.wait(300).then(() => {
+    delete drawersHash.value[name]
+    delete drawersHashNotReactive[name]
+  })
 })
 </script>

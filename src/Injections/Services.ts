@@ -16,30 +16,30 @@ import { STetris } from '~~/src/Tetris/Services/STetris'
 
 const hooks = new SHooks()
 const services = {
-    hooks,
-    lang: new SLanguage(),
-    breadcrumbs: new SBreadcrumbs(),
-    keyboard: new SKeyboard(),
-    logger: new SLogger(),
-    connectors: new SConnectors(),
-    drawer: new SDrawer(),
-    cookies: new SCookies(),
-    device: new SDevice(),
-    advertisment: new SAdvertisment(),
-    config: new SConfig(),
+  hooks,
+  lang: new SLanguage(),
+  breadcrumbs: new SBreadcrumbs(),
+  keyboard: new SKeyboard(),
+  logger: new SLogger(),
+  connectors: new SConnectors(),
+  drawer: new SDrawer(),
+  cookies: new SCookies(),
+  device: new SDevice(),
+  advertisment: new SAdvertisment(),
+  config: new SConfig(),
 
-    // Игры
-    snake: new SSnake(),
-    tetris: new STetris(),
-    tanks: new STanks(),
-    blasteroid: new SBlasteroid(),
+  // Игры
+  snake: new SSnake(),
+  tetris: new STetris(),
+  tanks: new STanks(),
+  blasteroid: new SBlasteroid(),
 }
 
 Object.values(services).forEach((service) => {
-    if ('afterInit' in service) {
-        // Это позволяет в сервисах подписаться на хуки системы
-        ;(service as any).afterInit(hooks)
-    }
+  if ('afterInit' in service) {
+    // Это позволяет в сервисах подписаться на хуки системы
+    ;(service as any).afterInit(hooks)
+  }
 })
 
 export default services

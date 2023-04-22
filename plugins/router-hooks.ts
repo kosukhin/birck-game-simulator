@@ -1,6 +1,3 @@
-/**
- * Глобаные хуки роутера
- */
 export default defineNuxtPlugin(({ $router }) => {
     $router.beforeEach(() => {
         const nuxtElement = document.getElementById('__nuxt')

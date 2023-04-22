@@ -8,57 +8,57 @@ import { useService } from '~~/src/Common/Helpers/HService'
 import { SCookies } from '~~/src/Common/Services/SCookies'
 
 export class SLanguage {
-    private lang!: Ref<string>
+  private lang!: Ref<string>
 
-    afterInit(hooks: SHooks) {
-        hooks.init.registerSubscriber(() => {
-            const cookieService = useService<SCookies>('cookies')
-            const appStore = useApplicationStore()
-            const { lang } = storeToRefs(appStore)
-            const cookieLang = cookieService.get('lang')
-            this.lang = lang
+  afterInit(hooks: SHooks) {
+    hooks.init.registerSubscriber(() => {
+      const cookieService = useService<SCookies>('cookies')
+      const appStore = useApplicationStore()
+      const { lang } = storeToRefs(appStore)
+      const cookieLang = cookieService.get('lang')
+      this.lang = lang
 
-            if (cookieLang) {
-                appStore.setLang(cookieLang)
-            }
+      if (cookieLang) {
+        appStore.setLang(cookieLang)
+      }
 
-            // Вотчим изменение языка в сторе, и записываем куки
-            watch(lang, () => {
-                cookieService.set('lang', lang.value)
-            })
-        })
+      // Вотчим изменение языка в сторе, и записываем куки
+      watch(lang, () => {
+        cookieService.set('lang', lang.value)
+      })
+    })
+  }
+
+  /**
+   * Устанавливает значение языка
+   * @param lang
+   */
+  setLangValue(lang: string) {
+    if (!this.lang) {
+      this.lang = ref(lang)
     }
 
-    /**
-     * Устанавливает значение языка
-     * @param lang
-     */
-    setLangValue(lang: string) {
-        if (!this.lang) {
-            this.lang = ref(lang)
-        }
+    this.lang.value = lang
+  }
 
-        this.lang.value = lang
+  /**
+   * Переводит строку
+   * @param key
+   * @returns
+   */
+  t(key: string): string {
+    if (!this.lang) {
+      return key
     }
 
-    /**
-     * Переводит строку
-     * @param key
-     * @returns
-     */
-    t(key: string): string {
-        if (!this.lang) {
-            return key
-        }
-
-        if (!Translations.has(this.lang.value)) {
-            return key
-        }
-
-        if (!Translations.get(this.lang.value).has(key)) {
-            return key
-        }
-
-        return Translations.get(this.lang.value).get(key)
+    if (!Translations.has(this.lang.value)) {
+      return key
     }
+
+    if (!Translations.get(this.lang.value).has(key)) {
+      return key
+    }
+
+    return Translations.get(this.lang.value).get(key)
+  }
 }

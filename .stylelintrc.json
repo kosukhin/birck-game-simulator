@@ -2,7 +2,7 @@
     "processors": ["@mapbox/stylelint-processor-arbitrary-tags"],
     "extends": "stylelint-config-standard-scss",
     "rules": {
-        "indentation": 4,
+        "indentation": 2,
         "string-quotes": "single",
         "no-duplicate-selectors": true,
         "selector-combinator-space-after": "always",

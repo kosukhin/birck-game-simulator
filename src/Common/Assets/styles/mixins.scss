@@ -1,12 +1,11 @@
-
 @mixin media1024 {
-    @media (max-width:1024px) {
-        @content;
-    }
+  @media (max-width: 1024px) {
+    @content;
+  }
 }
 
 @mixin media648 {
-    @media (max-width:648px) {
-        @content;
-    }
+  @media (max-width: 648px) {
+    @content;
+  }
 }

@@ -1,17 +1,17 @@
 <template>
-    <el-breadcrumb
-        v-show="breadcrumbs.getLinks().length > 1"
-        :key="breadcrumbs.renderCounter.value"
-        class="breadcrumbs"
-        separator="/"
-    >
-        <el-breadcrumb-item
-            v-for="link in breadcrumbs.getLinks()"
-            :key="link.link"
-            :to="link.link"
-            >{{ link.text() }}</el-breadcrumb-item
-        >
-    </el-breadcrumb>
+  <el-breadcrumb
+    v-show="breadcrumbs.getLinks().length > 1"
+    :key="breadcrumbs.renderCounter.value"
+    class="breadcrumbs"
+    separator="/"
+  >
+    <el-breadcrumb-item
+      v-for="link in breadcrumbs.getLinks()"
+      :key="link.link"
+      :to="link.link"
+      >{{ link.text() }}
+    </el-breadcrumb-item>
+  </el-breadcrumb>
 </template>
 
 <script setup lang="ts">
@@ -23,6 +23,6 @@ const breadcrumbs = useService<SBreadcrumbs>('breadcrumbs')
 
 <style lang="scss" scoped>
 .breadcrumbs {
-    margin: 20px 0 40px;
+  margin: 20px 0 40px;
 }
 </style>

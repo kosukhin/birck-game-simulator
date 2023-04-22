@@ -1,20 +1,20 @@
 <template>
-    <div class="game screen">
-        <div v-if="game.isGameOver.value" class="game-over">
-            <el-result
-                icon="error"
-                :title="$services.lang.t('Game over')"
-                :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
-            />
-        </div>
-        <div class="grid-header">
-            {{ $services.lang.t('Score') }}: {{ game.score }},
-            {{ $services.lang.t('Speed') }}:
-            {{ game.speed }}
-        </div>
-        <CanvasView :grid="game.grid" :fps="10" />
-        <KeyboardHint @pause="onPaused" />
+  <div class="game screen">
+    <div v-if="game.isGameOver.value" class="game-over">
+      <el-result
+        icon="error"
+        :title="$services.lang.t('Game over')"
+        :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+      />
     </div>
+    <div class="grid-header">
+      {{ $services.lang.t('Score') }}: {{ game.score }},
+      {{ $services.lang.t('Speed') }}:
+      {{ game.speed }}
+    </div>
+    <CanvasView :grid="game.grid" :fps="10" />
+    <KeyboardHint @pause="onPaused" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -33,35 +33,35 @@ game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-    const shape = game.grid.getFirstShape()
+  const shape = game.grid.getFirstShape()
 
-    if (!shape) {
-        return
-    }
+  if (!shape) {
+    return
+  }
 
-    if (key === EKeyCode.W) {
-        game.rotateShape()
-    }
+  if (key === EKeyCode.W) {
+    game.rotateShape()
+  }
 
-    if (key === EKeyCode.S) {
-        game.moveShapeDown()
-    }
+  if (key === EKeyCode.S) {
+    game.moveShapeDown()
+  }
 
-    if (key === EKeyCode.A) {
-        game.moveShapeByX(-1)
-    }
+  if (key === EKeyCode.A) {
+    game.moveShapeByX(-1)
+  }
 
-    if (key === EKeyCode.D) {
-        game.moveShapeByX(1)
-    }
+  if (key === EKeyCode.D) {
+    game.moveShapeByX(1)
+  }
 })
 
 const emit = defineEmits(['grid'])
 onMounted(() => {
-    emit('grid', game.grid)
+  emit('grid', game.grid)
 })
 
 const onPaused = () => {
-    game.pause()
+  game.pause()
 }
 </script>

@@ -1,25 +1,22 @@
 <template>
-    <div class="tetris">
-        <component
-            :is="gamesList[action] ?? gamesList.nogame"
-            @grid="onSetGrid"
-        />
-        <div class="button-wrapper">
-            <el-button
-                :type="isTranslationStarted ? 'danger' : 'primary'"
-                :icon="Platform"
-                round
-                @click="beginTranslation"
-            >
-                <template v-if="isTranslationStarted">
-                    {{ $services.lang.t('End the broadcast') }}
-                </template>
-                <template v-else>
-                    {{ $services.lang.t('Start broadcasting') }}
-                </template>
-            </el-button>
-        </div>
+  <div class="tetris">
+    <component :is="gamesList[action] ?? gamesList.nogame" @grid="onSetGrid" />
+    <div class="button-wrapper">
+      <el-button
+        :type="isTranslationStarted ? 'danger' : 'primary'"
+        :icon="Platform"
+        round
+        @click="beginTranslation"
+      >
+        <template v-if="isTranslationStarted">
+          {{ $services.lang.t('End the broadcast') }}
+        </template>
+        <template v-else>
+          {{ $services.lang.t('Start broadcasting') }}
+        </template>
+      </el-button>
     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -33,7 +30,7 @@ import { MGrid } from '~~/src/Common/Models/MGrid'
 
 let grid: MGrid | undefined
 const gamesList = {
-    nogame: NoGame,
+  nogame: NoGame,
 }
 const configService = useService<SConfig>('config')
 let socketTimeInterval = null
@@ -43,67 +40,64 @@ const isTranslationStarted = ref(false)
 useService<SHooks>('hooks').gamesResolving.runSubscribers(gamesList)
 
 defineProps({
-    action: {
-        type: String,
-        default: '',
-    },
+  action: {
+    type: String,
+    default: '',
+  },
 })
 
 const onSetGrid = (newGrid) => {
-    grid = newGrid
+  grid = newGrid
 }
 
 const beginTranslation = () => {
-    if (isTranslationStarted.value) {
-        stopTranslation()
-        return
+  if (isTranslationStarted.value) {
+    stopTranslation()
+    return
+  }
+
+  isTranslationStarted.value = true
+  load(configService.config.socketHttpUrl + 'socket.io/socket.io.js', (err) => {
+    if (err) {
+      return
     }
 
-    isTranslationStarted.value = true
-    load(
-        configService.config.socketHttpUrl + 'socket.io/socket.io.js',
-        (err) => {
-            if (err) {
-                return
-            }
+    const socket = io(configService.config.socketWsUrl, {})
 
-            const socket = io(configService.config.socketWsUrl, {})
+    socketTimeInterval = setInterval(() => {
+      if (!grid) {
+        return
+      }
 
-            socketTimeInterval = setInterval(() => {
-                if (!grid) {
-                    return
-                }
-
-                socket.emit('sendMessage', {
-                    grid: grid.render(),
-                })
-            }, 300)
-        }
-    )
+      socket.emit('sendMessage', {
+        grid: grid.render(),
+      })
+    }, 300)
+  })
 }
 
 const stopTranslation = () => {
-    isTranslationStarted.value = false
-    socketTimeInterval && clearInterval(socketTimeInterval)
+  isTranslationStarted.value = false
+  socketTimeInterval && clearInterval(socketTimeInterval)
 }
 
 onUnmounted(() => {
-    socketTimeInterval && clearInterval(socketTimeInterval)
+  socketTimeInterval && clearInterval(socketTimeInterval)
 })
 </script>
 
 <style lang="scss" scoped>
 .tetris {
-    display: inline-block;
-    position: relative;
+  display: inline-block;
+  position: relative;
 
-    @include media648 {
-        margin: 0 auto;
-    }
+  @include media648 {
+    margin: 0 auto;
+  }
 }
 
 .button-wrapper {
-    padding-top: 20px;
-    text-align: center;
+  padding-top: 20px;
+  text-align: center;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div class="three-renderer">
-        <div ref="canvas" class="three-renderer__canvas-wrapper"></div>
-    </div>
+  <div class="three-renderer">
+    <div ref="canvas" class="three-renderer__canvas-wrapper"></div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -10,28 +10,28 @@ import { MGrid } from '~~/src/Common/Models/MGrid'
 import { ThreeJsRenderer } from '~~/src/Common/Library/ThreeJsRenderer'
 
 const props = defineProps({
-    grid: {
-        required: true,
-        type: Object as () => MGrid,
-    },
-    fps: {
-        required: true,
-        type: Number,
-        default: 5,
-    },
+  grid: {
+    required: true,
+    type: Object as () => MGrid,
+  },
+  fps: {
+    required: true,
+    type: Number,
+    default: 5,
+  },
 })
 
 const canvas = ref()
 
 onMounted(() => {
-    const renderer = new ThreeJsRenderer(props.grid, canvas.value)
-    renderer.render()
+  const renderer = new ThreeJsRenderer(props.grid, canvas.value)
+  renderer.render()
 })
 </script>
 
 <style lang="scss">
 canvas {
-    border: solid 1px $c_pixel;
-    background: $c_tetris_screen;
+  border: solid 1px $c_pixel;
+  background: $c_tetris_screen;
 }
 </style>

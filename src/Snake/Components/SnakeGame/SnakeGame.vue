@@ -1,20 +1,21 @@
 <template>
-    <div class="game screen">
-        <div v-if="game.isGameOver.value" class="game-over">
-            <el-result
-                icon="error"
-                :title="$services.lang.t('Game over')"
-                :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
-            />
-        </div>
-        <div class="grid-header">
-            {{ $services.lang.t('Score') }}: {{ game.score }},
-            {{ $services.lang.t('Speed') }}:
-            {{ game.speed }}
-        </div>
-        <CanvasView :grid="game.grid" :fps="10" />
-        <KeyboardHint @pause="onPaused" />
+  <div class="game screen">
+    <div v-if="game.isGameOver.value" class="game-over">
+      <el-result
+        icon="error"
+        :title="$services.lang.t('Game over')"
+        :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+      />
     </div>
+
+    <div class="grid-header">
+      {{ $services.lang.t('Score') }}: {{ game.score }},
+      {{ $services.lang.t('Speed') }}:
+      {{ game.speed }}
+    </div>
+    <CanvasView :grid="game.grid" :fps="10" />
+    <KeyboardHint @pause="onPaused" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -32,21 +33,21 @@ game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-    if (KeysToMoveMap[key] !== undefined) {
-        game.moveSnake(KeysToMoveMap[key])
-    }
+  if (KeysToMoveMap[key] !== undefined) {
+    game.moveSnake(KeysToMoveMap[key])
+  }
 })
 
 const onPaused = () => {
-    game.pause()
+  game.pause()
 }
 
 const emit = defineEmits(['grid'])
 onMounted(() => {
-    emit('grid', game.grid)
+  emit('grid', game.grid)
 })
 
 onUnmounted(() => {
-    game.setGameOver()
+  game.setGameOver()
 })
 </script>
