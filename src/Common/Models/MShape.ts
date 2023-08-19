@@ -102,7 +102,7 @@ export class MShape {
     this.#direction = direction
   }
 
-  setBitmap(bitmap) {
+  setBitmap(bitmap: TGrid) {
     this.#bitmap = bitmap
   }
 
@@ -139,7 +139,7 @@ export class MShape {
     return empty
   }
 
-  removePixel(x: number, y: number) {
+  removePixel(x: number, y: number): boolean {
     let result = false
 
     if (this.#bitmap[y][x] === 1) {

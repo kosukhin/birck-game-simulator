@@ -44,18 +44,18 @@ export class Snake {
     let prevPointPosition = [this.#leadPoint.x, this.#leadPoint.y]
 
     switch (this.#direction) {
-      case EMoveDirection.down:
-        this.#leadPoint.setPosition(this.#leadPoint.x, this.#leadPoint.y + 1)
-        break
-      case EMoveDirection.up:
-        this.#leadPoint.setPosition(this.#leadPoint.x, this.#leadPoint.y - 1)
-        break
-      case EMoveDirection.right:
-        this.#leadPoint.setPosition(this.#leadPoint.x + 1, this.#leadPoint.y)
-        break
-      case EMoveDirection.left:
-        this.#leadPoint.setPosition(this.#leadPoint.x - 1, this.#leadPoint.y)
-        break
+    case EMoveDirection.down:
+      this.#leadPoint.setPosition(this.#leadPoint.x, this.#leadPoint.y + 1)
+      break
+    case EMoveDirection.up:
+      this.#leadPoint.setPosition(this.#leadPoint.x, this.#leadPoint.y - 1)
+      break
+    case EMoveDirection.right:
+      this.#leadPoint.setPosition(this.#leadPoint.x + 1, this.#leadPoint.y)
+      break
+    case EMoveDirection.left:
+      this.#leadPoint.setPosition(this.#leadPoint.x - 1, this.#leadPoint.y)
+      break
     }
 
     this.#points.forEach((point) => {
@@ -77,7 +77,7 @@ export class Snake {
     const bitmap = HArray.createTwoDemGrid(
       this.#shape.width,
       this.#shape.height
-    )
+    ) as Array<Array<number>>
     const points = [this.#leadPoint, ...this.#points]
 
     points.forEach((point) => {

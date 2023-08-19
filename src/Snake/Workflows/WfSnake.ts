@@ -8,7 +8,11 @@ import { useService } from '~~/src/Common/Helpers/HService'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { MShape } from '~~/src/Common/Models/MShape'
 import { SConnectors } from '~~/src/Common/Services/SConnectors'
-import { EMoveDirection, IGameWorkflow } from '~~/src/Common/Types/GameTypes'
+import {
+  EMoveDirection,
+  IGameWorkflow,
+  IPoint,
+} from '~~/src/Common/Types/GameTypes'
 import { Snake } from '~~/src/Snake/Library/Snake'
 
 export class WfSnake implements IGameWorkflow {
@@ -124,7 +128,7 @@ export class WfSnake implements IGameWorkflow {
 
   findRandomEmptyCoordinate(): { x: number; y: number } {
     const gridBitmap = this.#grid.render()
-    const emptyCoordinates = []
+    const emptyCoordinates: Array<IPoint> = []
     const minOffset = 2
 
     gridBitmap.forEach((row, y) => {

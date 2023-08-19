@@ -48,8 +48,8 @@ export class MGrid {
   }
 
   render() {
-    const grid = HObjects.clone(this.#bgBitmap)
-    const copyShapeToGrid = (shape) => {
+    const grid = HObjects.clone(this.#bgBitmap) as TGrid
+    const copyShapeToGrid = (shape: MShape) => {
       // Копируем фигуру на грид
       for (const i in shape.bitmap) {
         let x = Number(shape.x)
@@ -120,7 +120,7 @@ export class MGrid {
     this.#shapes = [...this.#shapes, shape]
   }
 
-  removeShapeById(id) {
+  removeShapeById(id: string | number) {
     const index = this.#shapes.findIndex((shape) => shape.id === id)
 
     if (index !== -1) {
@@ -140,7 +140,7 @@ export class MGrid {
     return this.#shapes.includes(shape)
   }
 
-  hasShapeById(id) {
+  hasShapeById(id: number) {
     return this.#shapes.findIndex((shape) => shape.id === id) !== -1
   }
 
