@@ -7,7 +7,6 @@
         :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
       />
     </div>
-
     <div class="grid-header">
       {{ $services.lang.t('Score') }}: {{ game.score }},
       {{ $services.lang.t('Speed') }}:
@@ -16,6 +15,7 @@
     <CanvasView :grid="game.grid" :fps="10" />
     <KeyboardHint @pause="onPaused" />
   </div>
+  <ThreeDRenderer />
 </template>
 
 <script setup lang="ts">
@@ -26,6 +26,7 @@ import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { KeysToMoveMap, EKeyCode } from '~~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import ThreeDRenderer from '~~/src/Common/Library/ThreeD/Components/ThreeDRenderer.vue'
 
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfSnake()
