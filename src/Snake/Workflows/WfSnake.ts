@@ -100,6 +100,10 @@ export class WfSnake implements IGameWorkflow {
         this.#speed.value -= 10
       }
 
+      if (this.#afterNextFrame) {
+        this.#afterNextFrame()
+      }
+
       if (this.#snake.isSnakeOutOfBounds()) {
         this.#isGameOver.value = true
         return
@@ -108,10 +112,6 @@ export class WfSnake implements IGameWorkflow {
       if (this.#snake.isSnakeAteItSelf()) {
         this.#isGameOver.value = true
         return
-      }
-
-      if (this.#afterNextFrame) {
-        this.#afterNextFrame()
       }
 
       !this.#isGameOver.value && this.renderNextFrame()
