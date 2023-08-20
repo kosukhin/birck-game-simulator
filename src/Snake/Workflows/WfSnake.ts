@@ -62,6 +62,10 @@ export class WfSnake implements IGameWorkflow {
     return this.#isGameOver
   }
 
+  get isPaused() {
+    return this.#isPaused
+  }
+
   async run() {
     this.addTargetDot()
     await this.renderNextFrame()
