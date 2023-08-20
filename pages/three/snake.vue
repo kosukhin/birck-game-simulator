@@ -1,5 +1,6 @@
 <template>
   <div>
+    <RouterLink to="/simulator/snake/">Классическая змейка</RouterLink>
     <h1>Змейка 3Д</h1>
     <div
       ref="canvasWrapper"
