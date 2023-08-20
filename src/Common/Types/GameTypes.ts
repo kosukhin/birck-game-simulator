@@ -26,7 +26,7 @@ export const ReverseDirections = {
   [EMoveDirection.left]: EMoveDirection.right,
 }
 
-export const KeysToMoveMap = {
+export const KeysToMoveMap: Record<EKeyCode, EMoveDirection> = {
   [EKeyCode.W]: EMoveDirection.up,
   [EKeyCode.S]: EMoveDirection.down,
   [EKeyCode.A]: EMoveDirection.left,

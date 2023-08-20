@@ -1,14 +1,16 @@
 import * as THREE from 'three'
-import { Cube } from '~~/src/Common/Library/ThreeD/Entities/Cube'
 
 export class RenderService {
-  #cubes: Record<string, Cube> = {}
+  #cubes: Record<string, THREE.Mesh> = {}
+  #geometry!: THREE.BoxGeometry
+  #material!: THREE.MeshPhongMaterial
+  #scene!: THREE.Scene
 
   render(canvasWrapper: HTMLElement) {
     const width = 400
     const height = 400
     const baseSize = 10
-    const scene = new THREE.Scene()
+    this.#scene = new THREE.Scene()
     const camera = new THREE.OrthographicCamera(
       width / -2,
       width / 2,
@@ -26,27 +28,46 @@ export class RenderService {
 
     const spotLight = new THREE.SpotLight(0xeeeece)
     spotLight.position.set(1000, 1000, 1000)
-    scene.add(spotLight)
+    this.#scene.add(spotLight)
 
-    const geometry = new THREE.BoxGeometry(baseSize, baseSize, baseSize)
-
-    const material = new THREE.MeshPhongMaterial({
+    this.#geometry = new THREE.BoxGeometry(baseSize, baseSize, baseSize)
+    this.#material = new THREE.MeshPhongMaterial({
       color: 0x666666,
     })
-    material.flatShading = false
-
-    const cube = new THREE.Mesh(geometry, material)
-    scene.add(cube)
+    this.#material.flatShading = false
 
     const animate = () => {
       requestAnimationFrame(animate)
-      renderer.render(scene, camera)
+      renderer.render(this.#scene, camera)
     }
     animate()
   }
 
   createCube(id: string, x: number, y: number) {
-    this.#cubes[id] = new Cube(x, y)
+    const cube = new THREE.Mesh(this.#geometry, this.#material)
+    this.#scene.add(cube)
+    cube.position.x = x
+    cube.position.y = y
+    this.#cubes[id] = cube
+  }
+
+  manageCube(id: string, x: number, y: number) {
+    if (this.hasCube(id)) {
+      this.updateCube(id, x, y)
+    } else {
+      this.createCube(id, x, y)
+    }
+  }
+
+  getPosition(id: string) {
+    if (!this.hasCube(id)) {
+      return { x: 0, y: 0 }
+    }
+    const cube = this.#cubes[id]
+    return {
+      x: cube.position.x,
+      y: cube.position.y,
+    }
   }
 
   hasCube(id: string) {
@@ -57,7 +78,8 @@ export class RenderService {
     const cube = this.#cubes[id]
 
     if (cube) {
-      cube.setPosition(x, y)
+      cube.position.x = x
+      cube.position.y = y
     }
   }
 }

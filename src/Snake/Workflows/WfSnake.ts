@@ -23,6 +23,7 @@ export class WfSnake implements IGameWorkflow {
   #score: Ref<number>
   #speed: Ref<number>
   #isPaused!: boolean
+  #afterNextFrame?: Function
 
   constructor() {
     this.#grid = new MGrid({
@@ -66,6 +67,10 @@ export class WfSnake implements IGameWorkflow {
     await this.renderNextFrame()
   }
 
+  afterNextFrame(cb: Function) {
+    this.#afterNextFrame = cb
+  }
+
   pause() {
     if (this.#isPaused) {
       this.#isPaused = false
@@ -103,6 +108,10 @@ export class WfSnake implements IGameWorkflow {
       if (this.#snake.isSnakeAteItSelf()) {
         this.#isGameOver.value = true
         return
+      }
+
+      if (this.#afterNextFrame) {
+        this.#afterNextFrame()
       }
 
       !this.#isGameOver.value && this.renderNextFrame()

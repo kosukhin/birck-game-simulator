@@ -1,1 +1,3 @@
-export type TKeyboardSubscriber = (key: string) => void
+import { EKeyCode } from '~~/src/Common/Types/GameTypes'
+
+export type TKeyboardSubscriber = (key: EKeyCode) => void
