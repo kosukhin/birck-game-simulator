@@ -13,6 +13,9 @@ export class RenderService {
   #leadId!: string
   #cameraPointId!: string
   #leadDirection!: EMoveDirection
+  #lastUpdateTime!: number = 0
+  #gameSpeed!: number = 0
+  #afterAnimate!: Function
 
   render(canvasWrapper: HTMLElement) {
     const width = 400
@@ -39,6 +42,12 @@ export class RenderService {
 
     const animate = () => {
       requestAnimationFrame(animate)
+      if (this.#afterAnimate) {
+        const delta = new Date().getTime() - this.#lastUpdateTime
+        const speed = this.#gameSpeed
+        const additional = (100 * delta) / speed / 100
+        this.#afterAnimate.call(null, additional)
+      }
       this.calculateCameraPosition()
       renderer.render(this.#scene, this.#camera)
     }
@@ -81,7 +90,7 @@ export class RenderService {
     const cameraPoint = this.#cubes[this.#cameraPointId]
     const temp = new THREE.Vector3()
     temp.setFromMatrixPosition(cameraPoint.matrixWorld)
-    this.#camera.position.lerp(temp, 0.5)
+    this.#camera.position.lerp(temp, 0.2)
     this.#camera.position.z += 8
     this.#camera.lookAt(leadPoint.position)
   }
@@ -152,5 +161,17 @@ export class RenderService {
 
   setLeadDirection(leadDirection: EMoveDirection) {
     this.#leadDirection = leadDirection
+  }
+
+  setLastUpdateTime(lastUpdate: number) {
+    this.#lastUpdateTime = lastUpdate
+  }
+
+  setGameSpeed(speed: number) {
+    this.#gameSpeed = speed
+  }
+
+  setAfterAnimate(afterAnimate: Function) {
+    this.#afterAnimate = afterAnimate
   }
 }

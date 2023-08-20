@@ -70,6 +70,8 @@ game.afterNextFrame(() => {
   )
 
   rserv.setCameraPointId(game.snake.points[game.snake.points.length - 1].id)
+  rserv.setLastUpdateTime(new Date().getTime())
+  rserv.setGameSpeed(game.speed.value)
   game.snake.points.forEach((point: any) => {
     rserv.manageCube(
       point.id,
@@ -78,8 +80,37 @@ game.afterNextFrame(() => {
       0x8888ff
     )
   })
+})
 
-  rserv.calculateCameraPosition()
+rserv.setAfterAnimate((additional: number) => {
+  if (additional > 1) {
+    return
+  }
+
+  let xMul = 1
+  let yMul = 1
+  const direction = game.snake.direction
+
+  if (direction === EMoveDirection.down) {
+    yMul = -1
+    xMul = 0
+  }
+
+  if (direction === EMoveDirection.up) {
+    xMul = 0
+  }
+
+  if (direction === EMoveDirection.right) {
+    yMul = 0
+    xMul = 1
+  }
+
+  if (direction === EMoveDirection.left) {
+    yMul = 0
+    xMul = -1
+  }
+
+  // TODO сделать векторы для камеры отдельно чтобы она не дергалась
 })
 
 onMounted(() => {
