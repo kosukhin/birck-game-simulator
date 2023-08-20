@@ -53,7 +53,7 @@ export class ThreeJsRenderer {
     })
     material.flatShading = false
 
-    const cubesGrid = []
+    const cubesGrid: any = []
     let topOffset = -1 * (this.#baseSize + this.#spaceBetween)
     let leftOffset = 0
 
