@@ -26,11 +26,30 @@ export const ReverseDirections = {
   [EMoveDirection.left]: EMoveDirection.right,
 }
 
-export const KeysToMoveMap: Record<EKeyCode, EMoveDirection> = {
+export const KeysToMoveMap: any = {
   [EKeyCode.W]: EMoveDirection.up,
   [EKeyCode.S]: EMoveDirection.down,
   [EKeyCode.A]: EMoveDirection.left,
   [EKeyCode.D]: EMoveDirection.right,
+}
+
+export const KeysToMoveCamera3: any = {
+  [EMoveDirection.up]: {
+    [EKeyCode.A]: EMoveDirection.left,
+    [EKeyCode.D]: EMoveDirection.right,
+  },
+  [EMoveDirection.down]: {
+    [EKeyCode.A]: EMoveDirection.right,
+    [EKeyCode.D]: EMoveDirection.left,
+  },
+  [EMoveDirection.right]: {
+    [EKeyCode.A]: EMoveDirection.up,
+    [EKeyCode.D]: EMoveDirection.down,
+  },
+  [EMoveDirection.left]: {
+    [EKeyCode.A]: EMoveDirection.down,
+    [EKeyCode.D]: EMoveDirection.up,
+  },
 }
 
 export interface IPoint {

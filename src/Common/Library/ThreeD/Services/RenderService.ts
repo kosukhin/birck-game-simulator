@@ -11,6 +11,7 @@ export class RenderService {
   #width = 400
   #height = 400
   #leadId!: string
+  #cameraPointId!: string
   #leadDirection!: EMoveDirection
 
   render(canvasWrapper: HTMLElement) {
@@ -38,6 +39,7 @@ export class RenderService {
 
     const animate = () => {
       requestAnimationFrame(animate)
+      this.calculateCameraPosition()
       renderer.render(this.#scene, this.#camera)
     }
     animate()
@@ -61,13 +63,9 @@ export class RenderService {
     this.#cameraType = 1
   }
 
-  camera3(fav = 75, rotationX = 0, rotationY = 0, z = 30) {
-    console.log(rotationX, rotationY)
-
+  camera3(fav = 75, z = 30) {
     const camera = new THREE.PerspectiveCamera(fav, 1, 0.1, 1000)
     camera.position.z = z
-    camera.rotation.x = rotationX
-    camera.rotation.y = rotationY
 
     this.#camera = camera
     this.#cameraType = 3
@@ -79,31 +77,13 @@ export class RenderService {
       return
     }
 
-    const k = 0.9
     const leadPoint = this.#cubes[this.#leadId]
-    this.#camera.position.x = leadPoint.position.x * k
-    this.#camera.position.y = leadPoint.position.y * k
-    const rk = 0.9
-
-    if (this.#leadDirection === EMoveDirection.down) {
-      this.#camera.lookAt(
-        new THREE.Vector3(leadPoint.position.x, -this.#height, 2)
-      )
-    }
-
-    if (this.#leadDirection === EMoveDirection.up) {
-      this.#camera.lookAt(new THREE.Vector3(leadPoint.position.x, 0, 2))
-    }
-
-    if (this.#leadDirection === EMoveDirection.left) {
-      this.#camera.lookAt(new THREE.Vector3(0, -leadPoint.position.y, 2))
-    }
-
-    if (this.#leadDirection === EMoveDirection.right) {
-      this.#camera.lookAt(
-        new THREE.Vector3(this.#width, -leadPoint.position.y, 2)
-      )
-    }
+    const cameraPoint = this.#cubes[this.#cameraPointId]
+    const temp = new THREE.Vector3()
+    temp.setFromMatrixPosition(cameraPoint.matrixWorld)
+    this.#camera.position.lerp(temp, 0.5)
+    this.#camera.position.z += 8
+    this.#camera.lookAt(leadPoint.position)
   }
 
   camera2() {
@@ -164,6 +144,10 @@ export class RenderService {
 
   setLeadId(leadId: string) {
     this.#leadId = leadId
+  }
+
+  setCameraPointId(cameraPId: string) {
+    this.#cameraPointId = cameraPId
   }
 
   setLeadDirection(leadDirection: EMoveDirection) {
