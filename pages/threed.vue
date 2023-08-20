@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+import * as THREE from 'three'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
@@ -69,7 +70,7 @@ game.afterNextFrame(() => {
     0xaa0000
   )
 
-  rserv.setCameraPointId(game.snake.points[game.snake.points.length - 1].id)
+  rserv.setCameraPointId(game.snake.points[1].id)
   rserv.setLastUpdateTime(new Date().getTime())
   rserv.setGameSpeed(game.speed.value)
   game.snake.points.forEach((point: any) => {
@@ -83,6 +84,10 @@ game.afterNextFrame(() => {
 })
 
 rserv.setAfterAnimate((additional: number) => {
+  if (rserv.cameraType !== 3) {
+    return
+  }
+
   if (additional > 1) {
     return
   }
@@ -110,7 +115,19 @@ rserv.setAfterAnimate((additional: number) => {
     xMul = -1
   }
 
-  // TODO сделать векторы для камеры отдельно чтобы она не дергалась
+  const cameraPoint = rserv.cubes[rserv.cameraPointId]
+  const temp = new THREE.Vector3()
+  rserv.camera.position.lerp(temp, 0.7)
+  rserv.camera.position.z = 28
+  rserv.camera.position.x =
+    cameraPoint.position.x + additional * baseSize * xMul
+  rserv.camera.position.y =
+    cameraPoint.position.y + additional * baseSize * yMul
+  const leadPoint = rserv.cubes[rserv.leadId]
+  const pointVector = new THREE.Vector3()
+  pointVector.x += leadPoint.position.x + additional * baseSize * xMul
+  pointVector.y += leadPoint.position.y + additional * baseSize * yMul
+  rserv.camera.lookAt(pointVector)
 })
 
 onMounted(() => {

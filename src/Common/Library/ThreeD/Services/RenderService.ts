@@ -48,7 +48,6 @@ export class RenderService {
         const additional = (100 * delta) / speed / 100
         this.#afterAnimate.call(null, additional)
       }
-      this.calculateCameraPosition()
       renderer.render(this.#scene, this.#camera)
     }
     animate()
@@ -60,6 +59,18 @@ export class RenderService {
 
   get cameraType() {
     return this.#cameraType
+  }
+
+  get cubes() {
+    return this.#cubes
+  }
+
+  get leadId() {
+    return this.#leadId
+  }
+
+  get cameraPointId() {
+    return this.#cameraPointId
   }
 
   camera1() {
@@ -78,7 +89,6 @@ export class RenderService {
 
     this.#camera = camera
     this.#cameraType = 3
-    this.calculateCameraPosition()
   }
 
   calculateCameraPosition() {
