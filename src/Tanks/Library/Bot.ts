@@ -28,6 +28,7 @@ export class Bot {
   #runTimeInterval: any
   /** Последний выстрел */
   #lastShoot: Shoot
+  #shoots: Shoot[] = []
   /** Бот отсновлен */
   #isPaused: boolean = false
 
@@ -121,6 +122,10 @@ export class Bot {
     return this.#id
   }
 
+  get shoots() {
+    return this.#shoots
+  }
+
   /**
    * Выстрел бота
    */
@@ -131,6 +136,7 @@ export class Bot {
       grid: this.#grid,
       position: [this.#tank.midX, this.#tank.midY],
     })
+    this.#shoots.push(this.#lastShoot)
   }
 
   /**

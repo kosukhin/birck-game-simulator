@@ -24,8 +24,12 @@ export class Shoot {
   #shapeMover: ShapeMover = new ShapeMover()
   #byPixel: boolean
   hitTheTarget: Observable<(target: MShape) => void>
+  #id: string
+  #x!: number
+  #y!: number
 
   constructor(params: IShootParam) {
+    this.#id = HApp.uniqueId()
     this.#grid = params.grid
     this.#position = params.position
     this.#direction = params.direction
@@ -33,6 +37,18 @@ export class Shoot {
     this.#byPixel = params.byPixel
     this.hitTheTarget = new Observable()
     this.run()
+  }
+
+  get id() {
+    return this.#id
+  }
+
+  get x() {
+    return this.#x ?? this.#position[0]
+  }
+
+  get y() {
+    return this.#y ?? this.#position[1]
   }
 
   run() {
@@ -48,6 +64,8 @@ export class Shoot {
 
     const shootRenderHandler = setInterval(() => {
       this.#shapeMover.move(shoot, direction)
+      this.#x = shoot.x
+      this.#y = shoot.y
 
       // Промах
       if (this.#grid.isShapeOutOfBounds(shoot)) {

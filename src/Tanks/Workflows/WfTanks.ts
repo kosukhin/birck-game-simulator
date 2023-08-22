@@ -32,7 +32,8 @@ export class WfTanks implements IGameWorkflow {
   #shapeMover: ShapeMover = new ShapeMover()
   /** Флаг остановлена игра или нет */
   #isPaused: boolean = false
-  #afterNextFrame: Function
+  #afterNextFrame!: Function
+  #shoots: Shoot[] = []
 
   constructor() {
     this.#grid = new MGrid({
@@ -176,6 +177,10 @@ export class WfTanks implements IGameWorkflow {
     this.#isGameOver.value = !isTankAlive
   }
 
+  get shoots() {
+    return this.#shoots
+  }
+
   /**
    * Стреляет танк
    */
@@ -190,6 +195,8 @@ export class WfTanks implements IGameWorkflow {
       grid: this.#grid,
       position: [this.#tank.midX, this.#tank.midY],
     })
+
+    this.#shoots.push(shoot)
 
     // Подписываемся на попадание
     shoot.hitTheTarget.registerSubscriber((target) => {

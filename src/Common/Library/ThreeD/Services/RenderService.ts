@@ -53,6 +53,11 @@ export class RenderService {
     animate()
   }
 
+  removeCube(mesh: THREE.Mesh) {
+    this.#scene.remove(mesh)
+    mesh.geometry.dispose()
+  }
+
   get camera() {
     return this.#camera
   }
