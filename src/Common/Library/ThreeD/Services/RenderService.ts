@@ -75,7 +75,7 @@ export class RenderService {
 
   camera1() {
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
-    camera.position.z = 150
+    camera.position.z = 250
     const k = 0.9
     camera.position.x = (camera.position.z / 2) * k
     camera.position.y = (-camera.position.z / 2) * k

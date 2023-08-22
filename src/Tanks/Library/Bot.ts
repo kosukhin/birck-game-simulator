@@ -4,6 +4,7 @@ import { MShape } from '~~/src/Common/Models/MShape'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { Shapes } from '~~/src/Tanks/Data/Shapes'
 import { Shoot } from '~~/src/Common/Library/Shoot'
+import { HApp } from '~~/src/Common/Helpers/HApp'
 
 interface IBotParams {
   grid: MGrid
@@ -16,6 +17,7 @@ interface IBotParams {
  * Представление бота
  */
 export class Bot {
+  #id: string
   /** Сетка игры, чтобы видеть игрока */
   #grid: MGrid
   /** Объект фигуры игрока */
@@ -30,6 +32,7 @@ export class Bot {
   #isPaused: boolean = false
 
   constructor(params: IBotParams) {
+    this.#id = HApp.uniqueId()
     this.#grid = params.grid
     this.#enemy = params.enemy
     this.#tank = new MShape({
@@ -108,6 +111,14 @@ export class Bot {
         }
       }
     }, 200)
+  }
+
+  get tank() {
+    return this.#tank
+  }
+
+  get id() {
+    return this.#id
   }
 
   /**

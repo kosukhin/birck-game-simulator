@@ -32,6 +32,7 @@ export class WfTanks implements IGameWorkflow {
   #shapeMover: ShapeMover = new ShapeMover()
   /** Флаг остановлена игра или нет */
   #isPaused: boolean = false
+  #afterNextFrame: Function
 
   constructor() {
     this.#grid = new MGrid({
@@ -71,6 +72,10 @@ export class WfTanks implements IGameWorkflow {
 
   get tank() {
     return this.#tank
+  }
+
+  get bots() {
+    return this.#bots
   }
 
   /**
@@ -122,7 +127,12 @@ export class WfTanks implements IGameWorkflow {
 
       this.checkGameOver()
       !this.#isGameOver.value && this.run()
+      this.#afterNextFrame && this.#afterNextFrame()
     })
+  }
+
+  afterNextFrame(cb: Function) {
+    this.#afterNextFrame = cb
   }
 
   /**
