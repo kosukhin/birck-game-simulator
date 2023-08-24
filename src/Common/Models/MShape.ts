@@ -18,6 +18,7 @@ export class MShape {
   #y: number
   static #shapeIdCounter = 0
   #direction: EMoveDirection = EMoveDirection.up
+  #prevDirection: EMoveDirection = EMoveDirection.up
 
   constructor(params: IShapeParams) {
     const { x = 0, y = 0, bitmap = [] } = params
@@ -52,6 +53,10 @@ export class MShape {
 
   get direction() {
     return this.#direction
+  }
+
+  get prevDirection() {
+    return this.#prevDirection
   }
 
   get position(): TShapePosition {
@@ -99,6 +104,7 @@ export class MShape {
   }
 
   setDirection(direction: EMoveDirection) {
+    this.#prevDirection = this.#direction
     this.#direction = direction
   }
 

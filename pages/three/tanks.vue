@@ -1,6 +1,9 @@
 <template>
   <div>
     <h1>Танки 3Д</h1>
+    <input v-model="rotateX" step="0.1" type="number" />
+    <input v-model="rotateY" step="0.1" type="number" />
+    <input v-model="rotateZ" step="0.1" type="number" />
     <div
       ref="canvasWrapper"
       :class="'type-' + cameraType + ' direction-' + direction"
@@ -19,11 +22,13 @@ import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import {
   EKeyCode,
   EMoveDirection,
+  KeysToMoveCamera3Tanks,
   KeysToMoveMap,
 } from '~~/src/Common/Types/GameTypes'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
 
 const cameraType = ref('camera1')
+const direction = ref(EMoveDirection.down)
 const canvasWrapper = ref()
 const rserv = new RenderService()
 const game = new WfTanks()
@@ -32,7 +37,17 @@ const keyboard = useService<SKeyboard>('keyboard')
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
-    game.moveTank(KeysToMoveMap[key])
+    let newDirection = KeysToMoveMap[key]
+
+    if (cameraType.value === 'camera3') {
+      if (key === EKeyCode.S) {
+        return
+      }
+
+      newDirection = KeysToMoveCamera3Tanks[game.tank.direction][key]
+    }
+
+    game.moveTank(newDirection)
   }
 
   if (key === EKeyCode.SPC) {
@@ -42,14 +57,22 @@ keyboard.registerSubscriber((key: EKeyCode) => {
 
 game.run()
 
-let counter = 0
 const baseSize = 10
 rserv.setLeadId('tank_1_0')
 rserv.setCameraPointId('tank_1_1')
+rserv.setGameSpeed(100)
 game.afterNextFrame(() => {
-  counter++
-
+  rserv.setLastUpdateTime(new Date().getTime())
+  direction.value = game.tank.direction
   game.shoots.forEach((shoot) => {
+    const id = `shoot_${shoot.id}`
+    const cube = rserv.cubes[id]
+
+    if (shoot.isDone && cube) {
+      cube.visible = false
+      return
+    }
+
     rserv.manageCube(
       `shoot_${shoot.id}`,
       shoot.x * baseSize,
@@ -59,86 +82,119 @@ game.afterNextFrame(() => {
   })
 
   game.tank.bitmap.forEach((row, rowIndex) => {
-    row.forEach((cell, cellIndex) => {
-      if (cell) {
+    row.forEach((isFilled, cellIndex) => {
+      const id = `tank_${cellIndex}_${rowIndex}`
+      const cube = rserv.cubes?.[id]
+      const cubeExists = rserv.hasCube(id)
+      if (isFilled) {
         rserv.manageCube(
-          `tank_${cellIndex}_${rowIndex}`,
+          id,
           (game.tank.x + cellIndex) * baseSize,
           (-game.tank.y - rowIndex) * baseSize,
           0xaa0000
         )
+        cube && (cube.visible = true)
+      } else if (cubeExists) {
+        cube.visible = false
       }
     })
   })
 
   game.bots.forEach((bot) => {
     bot.shoots.forEach((shoot) => {
-      rserv.manageCube(
-        `bot_shoot_${shoot.id}`,
-        shoot.x * baseSize,
-        -shoot.y * baseSize,
-        0x0000aa
-      )
+      const id = `bot_shoot_${shoot.id}`
+      const cube = rserv.cubes[id]
+      if (shoot.isDone && cube) {
+        cube.visible = false
+        return
+      }
+      rserv.manageCube(id, shoot.x * baseSize, -shoot.y * baseSize, 0x0000aa)
     })
 
     bot.tank.bitmap.forEach((row, rowIndex) => {
-      row.forEach((cell, cellIndex) => {
-        if (cell) {
+      row.forEach((isFilled, cellIndex) => {
+        const id = `bot_${bot.type}_${cellIndex}_${rowIndex}`
+        const cube = rserv.cubes?.[id]
+        const cubeExists = rserv.hasCube(id)
+
+        if (isFilled) {
           rserv.manageCube(
-            `bot_${bot.id}_${cellIndex}_${rowIndex}`,
+            id,
             (bot.tank.x + cellIndex) * baseSize,
             (-bot.tank.y - rowIndex) * baseSize,
             0xaa0000
           )
+          cubeExists && (cube.visible = true)
+        } else if (cubeExists) {
+          cube.visible = false
         }
       })
     })
   })
+})
 
-  rserv.setAfterAnimate((additional: number) => {
-    if (rserv.cameraType !== 3) {
-      return
-    }
+const k = -50
+const rotateY = ref(0)
+const rotateX = ref(0)
+const rotateZ = ref(0)
+rserv.setAfterAnimate((additional: number) => {
+  if (rserv.cameraType !== 3) {
+    return
+  }
 
-    let xMul = 1
-    let yMul = 1
-    const direction = game.tank.direction
+  let xMul = 1
+  let yMul = 1
+  const direction = game.tank.direction
 
-    if (direction === EMoveDirection.down) {
-      yMul = -1
-      xMul = 0
-    }
+  rotateX.value = 0
+  rotateY.value = 0
+  rotateZ.value = 0
 
-    if (direction === EMoveDirection.up) {
-      xMul = 0
-    }
+  if (direction === EMoveDirection.down) {
+    yMul = -1
+    xMul = 0
+    rotateZ.value = 3.15
+  }
 
-    if (direction === EMoveDirection.right) {
-      yMul = 0
-      xMul = 1
-    }
+  if (direction === EMoveDirection.up) {
+    xMul = 0
+    rotateX.value = 0
+    rotateY.value = 0
+  }
 
-    if (direction === EMoveDirection.left) {
-      yMul = 0
-      xMul = -1
-    }
+  if (direction === EMoveDirection.right) {
+    yMul = 0.5
+    xMul = 1
+    rotateX.value = 1.6
+    rotateY.value = -0.8
+    rotateZ.value = 0
+  }
 
-    const cameraPoint = rserv.cubes[rserv.cameraPointId]
+  if (direction === EMoveDirection.left) {
+    yMul = 0.5
+    xMul = -1
+    rotateX.value = 1.6
+    rotateY.value = 0.8
+    rotateZ.value = 0
+  }
 
-    const temp = new THREE.Vector3()
-    rserv.camera.position.lerp(temp, 0.7)
-    rserv.camera.position.z = 328
-    rserv.camera.position.x =
-      cameraPoint.position.x + additional * baseSize * xMul
-    rserv.camera.position.y =
-      cameraPoint.position.y + additional * baseSize * yMul
-    const leadPoint = rserv.cubes[rserv.leadId]
+  const leadPoint = rserv.cubes[rserv.leadId]
 
-    const pointVector = new THREE.Vector3()
-    pointVector.x += leadPoint.position.x + additional * baseSize * xMul
-    pointVector.y += leadPoint.position.y + additional * baseSize * yMul
-    rserv.camera.lookAt(pointVector)
-  })
+  const temp = new THREE.Vector3()
+  rserv.camera.position.lerp(temp, 0.7)
+  rserv.camera.position.z = 40
+  rserv.camera.position.x = leadPoint.position.x + k * xMul
+  rserv.camera.position.y = leadPoint.position.y + k * yMul
+
+  const bot = rserv.cubes.bot_1_0_1
+  const pointVector = new THREE.Vector3()
+  pointVector.z = 0
+  pointVector.x += leadPoint.position.x
+  pointVector.y += leadPoint.position.y
+  rserv.camera.lookAt(pointVector)
+  rserv.camera.rotation.x += Number(rotateX.value)
+  rserv.camera.rotation.y += Number(rotateY.value)
+  rserv.camera.rotation.z += Number(rotateZ.value)
 })
 
 onMounted(() => {

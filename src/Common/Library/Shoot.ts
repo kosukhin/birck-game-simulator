@@ -27,6 +27,7 @@ export class Shoot {
   #id: string
   #x!: number
   #y!: number
+  #isDone = false
 
   constructor(params: IShootParam) {
     this.#id = HApp.uniqueId()
@@ -51,6 +52,10 @@ export class Shoot {
     return this.#y ?? this.#position[1]
   }
 
+  get isDone() {
+    return this.#isDone
+  }
+
   run() {
     const direction = this.#direction
     const shootId = HApp.uniqueId('shoot')
@@ -71,6 +76,7 @@ export class Shoot {
       if (this.#grid.isShapeOutOfBounds(shoot)) {
         this.#grid.removeShapeById(shootId)
         clearInterval(shootRenderHandler)
+        this.#isDone = true
       }
 
       const intersectedShape =
@@ -82,6 +88,7 @@ export class Shoot {
         intersectedShape !== this.#fromShape &&
         intersectedShape !== shoot
       ) {
+        this.#isDone = true
         // Разрушаем фигуру по пикселям
         if (this.#byPixel) {
           const shapeInX = shoot.x - intersectedShape.x

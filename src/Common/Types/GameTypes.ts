@@ -51,6 +51,28 @@ export const KeysToMoveCamera3: any = {
     [EKeyCode.D]: EMoveDirection.up,
   },
 }
+export const KeysToMoveCamera3Tanks: any = {
+  [EMoveDirection.up]: {
+    [EKeyCode.W]: EMoveDirection.up,
+    [EKeyCode.A]: EMoveDirection.left,
+    [EKeyCode.D]: EMoveDirection.right,
+  },
+  [EMoveDirection.down]: {
+    [EKeyCode.W]: EMoveDirection.down,
+    [EKeyCode.A]: EMoveDirection.right,
+    [EKeyCode.D]: EMoveDirection.left,
+  },
+  [EMoveDirection.right]: {
+    [EKeyCode.W]: EMoveDirection.right,
+    [EKeyCode.A]: EMoveDirection.up,
+    [EKeyCode.D]: EMoveDirection.down,
+  },
+  [EMoveDirection.left]: {
+    [EKeyCode.W]: EMoveDirection.left,
+    [EKeyCode.A]: EMoveDirection.down,
+    [EKeyCode.D]: EMoveDirection.up,
+  },
+}
 
 export interface IPoint {
   x?: number

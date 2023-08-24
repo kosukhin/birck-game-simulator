@@ -11,6 +11,7 @@ interface IBotParams {
   enemy: MShape
   position: [number, number]
   direction: EMoveDirection
+  type?: number
 }
 
 /**
@@ -31,6 +32,7 @@ export class Bot {
   #shoots: Shoot[] = []
   /** Бот отсновлен */
   #isPaused: boolean = false
+  #type = 1
 
   constructor(params: IBotParams) {
     this.#id = HApp.uniqueId()
@@ -42,6 +44,9 @@ export class Bot {
       y: params.position[1],
       direction: params.direction,
     })
+    if (params.type) {
+      this.#type = params.type
+    }
     this.#grid.addShape(this.#tank)
     this.run()
   }
@@ -112,6 +117,10 @@ export class Bot {
         }
       }
     }, 200)
+  }
+
+  get type() {
+    return this.#type
   }
 
   get tank() {

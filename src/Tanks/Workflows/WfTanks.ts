@@ -97,6 +97,7 @@ export class WfTanks implements IGameWorkflow {
             enemy: this.#tank,
             position: [this.#grid.maxX, this.calculateMaxHeight()],
             direction: EMoveDirection.up,
+            type: 1,
           })
         )
 
@@ -110,6 +111,7 @@ export class WfTanks implements IGameWorkflow {
                 this.calculateMaxHeight(),
               ],
               direction: EMoveDirection.up,
+              type: 2,
             })
           )
         }
@@ -121,6 +123,7 @@ export class WfTanks implements IGameWorkflow {
               enemy: this.#tank,
               position: [0, this.calculateMaxHeight()],
               direction: EMoveDirection.up,
+              type: 3,
             })
           )
         }
