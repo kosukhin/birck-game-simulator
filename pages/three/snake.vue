@@ -149,6 +149,10 @@ onMounted(() => {
     rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, green)
     rserv.createCube('right' + i, width * baseSize, -i * baseSize, blue)
   }
+
+  setTimeout(() => {
+    onChangeCamera('camera3')
+  })
 })
 
 const onChangeCamera = (type: string) => {

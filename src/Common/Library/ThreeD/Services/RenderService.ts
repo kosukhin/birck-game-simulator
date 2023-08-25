@@ -13,8 +13,8 @@ export class RenderService {
   #leadId!: string
   #cameraPointId!: string
   #leadDirection!: EMoveDirection
-  #lastUpdateTime!: number = 0
-  #gameSpeed!: number = 0
+  #lastUpdateTime: number = 0
+  #gameSpeed: number = 0
   #afterAnimate!: Function
 
   render(canvasWrapper: HTMLElement) {
@@ -31,7 +31,7 @@ export class RenderService {
     canvasWrapper.appendChild(renderer.domElement)
 
     const spotLight = new THREE.SpotLight(0xeeeece)
-    spotLight.position.set(1000, 1000, 1000)
+    spotLight.position.set(10, 10, 400)
     this.#scene.add(spotLight)
 
     this.#geometry = new THREE.BoxGeometry(baseSize, baseSize, baseSize)

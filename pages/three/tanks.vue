@@ -1,13 +1,40 @@
 <template>
   <div>
     <h1>Танки 3Д</h1>
-    <input v-model="rotateX" step="0.1" type="number" />
-    <input v-model="rotateY" step="0.1" type="number" />
-    <input v-model="rotateZ" step="0.1" type="number" />
-    <div
-      ref="canvasWrapper"
-      :class="'type-' + cameraType + ' direction-' + direction"
-    ></div>
+    <div>
+      <label>
+        <input v-model="useCustomRotation" type="checkbox" />
+        Кастомизировать камеру
+      </label>
+    </div>
+    <div class="row">
+      <div style="display: flex; flex-direction: column">
+        <div class="row">
+          <span>rot-x</span>
+          <input v-model="rotateX" step="0.1" type="number" />
+        </div>
+        <div class="row">
+          <span>rot-y</span>
+          <input v-model="rotateY" step="0.1" type="number" />
+        </div>
+        <div class="row">
+          <span>rot-z</span>
+          <input v-model="rotateZ" step="0.1" type="number" />
+        </div>
+        <div class="row">
+          <span>pos-z</span>
+          <input v-model="positionZ" type="number" />
+        </div>
+        <div class="row">
+          <span>pos-k</span>
+          <input v-model="posK" type="number" />
+        </div>
+      </div>
+      <div
+        ref="canvasWrapper"
+        :class="'type-' + cameraType + ' direction-' + direction"
+      ></div>
+    </div>
     <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
     <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
     <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
@@ -91,7 +118,7 @@ game.afterNextFrame(() => {
           id,
           (game.tank.x + cellIndex) * baseSize,
           (-game.tank.y - rowIndex) * baseSize,
-          0xaa0000
+          0x00ffff
         )
         cube && (cube.visible = true)
       } else if (cubeExists) {
@@ -137,7 +164,23 @@ const k = -50
 const rotateY = ref(0)
 const rotateX = ref(0)
 const rotateZ = ref(0)
-rserv.setAfterAnimate((additional: number) => {
+const useCustomRotation = ref(false)
+const positionZ = ref(40)
+const posK = ref(k)
+
+const setRotation = ({ x, y, z, pz = 40, pk = -50 }: any) => {
+  if (useCustomRotation.value) {
+    return
+  }
+
+  rotateZ.value = z
+  rotateX.value = x
+  rotateY.value = y
+  positionZ.value = pz
+  posK.value = pk
+}
+
+rserv.setAfterAnimate(() => {
   if (rserv.cameraType !== 3) {
     return
   }
@@ -146,47 +189,38 @@ rserv.setAfterAnimate((additional: number) => {
   let yMul = 1
   const direction = game.tank.direction
 
-  rotateX.value = 0
-  rotateY.value = 0
-  rotateZ.value = 0
+  setRotation({ x: 0, y: 0, z: 0 })
 
   if (direction === EMoveDirection.down) {
     yMul = -1
     xMul = 0
-    rotateZ.value = 3.15
+    setRotation({ x: 0, y: 0, z: 3.15 })
   }
 
   if (direction === EMoveDirection.up) {
     xMul = 0
-    rotateX.value = 0
-    rotateY.value = 0
   }
 
   if (direction === EMoveDirection.right) {
-    yMul = 0.5
+    yMul = 0
     xMul = 1
-    rotateX.value = 1.6
-    rotateY.value = -0.8
-    rotateZ.value = 0
+    setRotation({ x: 1.5, y: -0.55, z: 0, pk: -85 })
   }
 
   if (direction === EMoveDirection.left) {
-    yMul = 0.5
+    yMul = 0
     xMul = -1
-    rotateX.value = 1.6
-    rotateY.value = 0.8
-    rotateZ.value = 0
+    setRotation({ x: 1.5, y: 0.55, z: 0, pk: -85 })
   }
 
   const leadPoint = rserv.cubes[rserv.leadId]
 
   const temp = new THREE.Vector3()
   rserv.camera.position.lerp(temp, 0.7)
-  rserv.camera.position.z = 40
-  rserv.camera.position.x = leadPoint.position.x + k * xMul
-  rserv.camera.position.y = leadPoint.position.y + k * yMul
+  rserv.camera.position.z = positionZ.value
+  rserv.camera.position.x = leadPoint.position.x + posK.value * xMul
+  rserv.camera.position.y = leadPoint.position.y + posK.value * yMul
 
-  const bot = rserv.cubes.bot_1_0_1
   const pointVector = new THREE.Vector3()
   pointVector.z = 0
   pointVector.x += leadPoint.position.x
@@ -213,6 +247,10 @@ onMounted(() => {
     rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, white)
     rserv.createCube('right' + i, width * baseSize, -i * baseSize, white)
   }
+
+  setTimeout(() => {
+    onChangeCamera('camera3')
+  })
 })
 
 const onChangeCamera = (type: string) => {
@@ -222,3 +260,14 @@ const onChangeCamera = (type: string) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.row {
+  display: flex;
+  flex-direction: row;
+
+  input {
+    flex-grow: 1;
+  }
+}
+</style>
