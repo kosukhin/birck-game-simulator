@@ -26,6 +26,7 @@ export class RenderService {
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
+      antialias: true,
     })
     renderer.setSize(width, height)
     canvasWrapper.appendChild(renderer.domElement)
