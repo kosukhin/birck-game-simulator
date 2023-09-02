@@ -32,8 +32,10 @@ export class RenderService {
     canvasWrapper.appendChild(renderer.domElement)
 
     const spotLight = new THREE.SpotLight(0xeeeece)
-    spotLight.position.set(10, 10, 400)
+    spotLight.position.set(50, 50, 400)
     this.#scene.add(spotLight)
+    const ambientLight = new THREE.AmbientLight('white', 0.5)
+    this.#scene.add(ambientLight)
 
     this.#geometry = new THREE.BoxGeometry(baseSize, baseSize, baseSize)
     this.#material = new THREE.MeshPhongMaterial({
