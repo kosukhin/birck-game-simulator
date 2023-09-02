@@ -11,15 +11,15 @@
       <div style="display: flex; flex-direction: column">
         <div class="row">
           <span>rot-x</span>
-          <input v-model="rotateX" step="0.1" type="number" />
+          <input v-model="rotateX" step="5" type="number" />
         </div>
         <div class="row">
           <span>rot-y</span>
-          <input v-model="rotateY" step="0.1" type="number" />
+          <input v-model="rotateY" step="5" type="number" />
         </div>
         <div class="row">
           <span>rot-z</span>
-          <input v-model="rotateZ" step="0.1" type="number" />
+          <input v-model="rotateZ" step="5" type="number" />
         </div>
         <div class="row">
           <span>pos-z</span>
@@ -28,6 +28,10 @@
         <div class="row">
           <span>pos-k</span>
           <input v-model="posK" type="number" />
+        </div>
+        <div class="row">
+          <span>cam-angle</span>
+          <input v-model="cameraAngle" type="number" />
         </div>
       </div>
       <div
@@ -43,6 +47,7 @@
 
 <script lang="ts" setup>
 import * as THREE from 'three'
+import { MathUtils } from 'three'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
@@ -160,15 +165,16 @@ game.afterNextFrame(() => {
   })
 })
 
-const k = -50
+const k = 50
 const rotateY = ref(0)
 const rotateX = ref(0)
 const rotateZ = ref(0)
 const useCustomRotation = ref(false)
-const positionZ = ref(40)
+const positionZ = ref(90)
 const posK = ref(k)
+const cameraAngle = ref(0)
 
-const setRotation = ({ x, y, z, pz = 40, pk = -50 }: any) => {
+const setRotation = ({ x, y, z }: any) => {
   if (useCustomRotation.value) {
     return
   }
@@ -176,8 +182,6 @@ const setRotation = ({ x, y, z, pz = 40, pk = -50 }: any) => {
   rotateZ.value = z
   rotateX.value = x
   rotateY.value = y
-  positionZ.value = pz
-  posK.value = pk
 }
 
 rserv.setAfterAnimate(() => {
@@ -185,50 +189,48 @@ rserv.setAfterAnimate(() => {
     return
   }
 
-  let xMul = 1
-  let yMul = 1
   const direction = game.tank.direction
+  const leadPoint = rserv.cubes[rserv.leadId]
+
+  if (!leadPoint) {
+    return
+  }
+
+  let x = leadPoint.position.x
+  let y = leadPoint.position.y
 
   setRotation({ x: 0, y: 0, z: 0 })
 
   if (direction === EMoveDirection.down) {
-    yMul = -1
-    xMul = 0
-    setRotation({ x: 0, y: 0, z: 3.15 })
+    y += k
+    setRotation({ x: -45, y: 0, z: 180 })
   }
 
   if (direction === EMoveDirection.up) {
-    xMul = 0
+    y -= k
+    setRotation({ x: 45, y: 0, z: 0 })
   }
 
   if (direction === EMoveDirection.right) {
-    yMul = 0
-    xMul = 1
-    setRotation({ x: 1.5, y: -0.55, z: 0, pk: -85 })
+    x -= k
+    setRotation({ x: 0, y: -45, z: -90 })
   }
 
   if (direction === EMoveDirection.left) {
-    yMul = 0
-    xMul = -1
-    setRotation({ x: 1.5, y: 0.55, z: 0, pk: -85 })
+    x += k
+    setRotation({ x: 0, y: 45, z: 90 })
   }
-
-  const leadPoint = rserv.cubes[rserv.leadId]
 
   const temp = new THREE.Vector3()
   rserv.camera.position.lerp(temp, 0.7)
   rserv.camera.position.z = positionZ.value
-  rserv.camera.position.x = leadPoint.position.x + posK.value * xMul
-  rserv.camera.position.y = leadPoint.position.y + posK.value * yMul
+  rserv.camera.position.x = x
+  rserv.camera.position.y = y
 
-  const pointVector = new THREE.Vector3()
-  pointVector.z = 0
-  pointVector.x += leadPoint.position.x
-  pointVector.y += leadPoint.position.y
-  rserv.camera.lookAt(pointVector)
-  rserv.camera.rotation.x += Number(rotateX.value)
-  rserv.camera.rotation.y += Number(rotateY.value)
-  rserv.camera.rotation.z += Number(rotateZ.value)
+  rserv.camera.lookAt(leadPoint.position)
+  rserv.camera.rotation.x = MathUtils.degToRad(rotateX.value)
+  rserv.camera.rotation.y = MathUtils.degToRad(rotateY.value)
+  rserv.camera.rotation.z = MathUtils.degToRad(rotateZ.value)
 })
 
 onMounted(() => {
