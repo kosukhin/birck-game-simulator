@@ -24,6 +24,7 @@ export class WfSnake implements IGameWorkflow {
   #speed: Ref<number>
   #isPaused!: boolean
   #afterNextFrame?: Function
+  #events: Record<string, Function> = {}
 
   constructor() {
     this.#grid = new MGrid({
@@ -69,6 +70,7 @@ export class WfSnake implements IGameWorkflow {
   async run() {
     this.addTargetDot()
     await this.renderNextFrame()
+    this.#events.afterStart && this.#events.afterStart()
   }
 
   afterNextFrame(cb: Function) {
@@ -102,6 +104,7 @@ export class WfSnake implements IGameWorkflow {
         this.#snake.addPointToEnd()
         this.#score.value++
         this.#speed.value -= 10
+        this.#events.afterEated && this.#events.afterEated()
       }
 
       if (this.#afterNextFrame) {
@@ -110,11 +113,13 @@ export class WfSnake implements IGameWorkflow {
 
       if (this.#snake.isSnakeOutOfBounds()) {
         this.#isGameOver.value = true
+        this.#events.gameover && this.#events.gameover()
         return
       }
 
       if (this.#snake.isSnakeAteItSelf()) {
         this.#isGameOver.value = true
+        this.#events.gameover && this.#events.gameover()
         return
       }
 
@@ -158,5 +163,9 @@ export class WfSnake implements IGameWorkflow {
     return emptyCoordinates.length
       ? HArray.shuffle(emptyCoordinates)[0]
       : { x: 0, y: 0 }
+  }
+
+  addEvent(name: string, cb: Function) {
+    this.#events[name] = cb
   }
 }

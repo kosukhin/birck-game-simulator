@@ -7,3 +7,6 @@
 
 ## Web Workers
 - https://www.npmjs.com/package/vue-worker
+
+## Звуки
+- https://mixkit.co/free-sound-effects/game/

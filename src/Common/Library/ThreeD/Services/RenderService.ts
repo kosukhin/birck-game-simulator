@@ -7,6 +7,8 @@ export class RenderService {
   #material!: THREE.MeshPhongMaterial
   #scene!: THREE.Scene
   #camera!: THREE.Camera
+  #soundListener!: THREE.AudioListener
+  #sounds: Record<string, THREE.Audio> = {}
   #cameraType = 1
   #width = 400
   #height = 400
@@ -42,6 +44,8 @@ export class RenderService {
       color: 0x666666,
     })
     this.#material.flatShading = false
+
+    this.#soundListener = new THREE.AudioListener()
 
     const animate = () => {
       requestAnimationFrame(animate)
@@ -191,5 +195,22 @@ export class RenderService {
 
   setAfterAnimate(afterAnimate: Function) {
     this.#afterAnimate = afterAnimate
+  }
+
+  sound(key: string, path: string): Promise<THREE.Audio> {
+    return new Promise((resolve) => {
+      if (!this.#sounds[key]) {
+        const sound = new THREE.Audio(this.#soundListener)
+        const audioLoader = new THREE.AudioLoader()
+        audioLoader.load(path, function (buffer) {
+          sound.setBuffer(buffer)
+          sound.setLoop(false)
+          sound.setVolume(0.1)
+        })
+        this.#sounds[key] = sound
+      }
+
+      resolve(this.#sounds[key])
+    })
   }
 }

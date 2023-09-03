@@ -51,7 +51,25 @@ keyboard.registerSubscriber((key: EKeyCode) => {
   }
 })
 
-game.run()
+const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
+const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
+
+game.addEvent('afterEated', async () => {
+  const sound = await eatSound()
+  sound.play()
+  setTimeout(() => {
+    sound.stop()
+  }, 1500)
+})
+
+game.addEvent('gameover', async () => {
+  const sound = await explodeSound()
+  sound.play()
+  setTimeout(() => {
+    sound.stop()
+  }, 1500)
+})
+
 const baseSize = 10
 rserv.setLeadId('leadPoint')
 game.afterNextFrame(() => {
@@ -149,6 +167,11 @@ rserv.setAfterAnimate((additional: number) => {
 
 onMounted(() => {
   rserv.render(canvasWrapper.value)
+
+  Promise.all([eatSound(), explodeSound()]).then(() => {
+    game.run()
+  })
+
   const width = game.grid.width
   const height = game.grid.height
   const red = 0xff0000
