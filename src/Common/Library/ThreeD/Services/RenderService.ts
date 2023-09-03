@@ -203,6 +203,7 @@ export class RenderService {
       if (!this.#sounds[key]) {
         const sound = new THREE.Audio(this.#soundListener)
         const audioLoader = new THREE.AudioLoader()
+        // TODO переделать на loadAsync
         audioLoader.load(path, function (buffer) {
           sound.setBuffer(buffer)
           sound.setLoop(false)
