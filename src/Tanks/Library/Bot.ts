@@ -28,11 +28,12 @@ export class Bot {
   /** Интервал обновления логики бота */
   #runTimeInterval: any
   /** Последний выстрел */
-  #lastShoot: Shoot
+  #lastShoot?: Shoot
   #shoots: Shoot[] = []
   /** Бот отсновлен */
   #isPaused: boolean = false
   #type = 1
+  #afterShoot?: Function
 
   constructor(params: IBotParams) {
     this.#id = HApp.uniqueId()
@@ -119,6 +120,10 @@ export class Bot {
     }, 200)
   }
 
+  get hasAfterShoot() {
+    return !!this.#afterShoot
+  }
+
   get type() {
     return this.#type
   }
@@ -146,6 +151,7 @@ export class Bot {
       position: [this.#tank.midX, this.#tank.midY],
     })
     this.#shoots.push(this.#lastShoot)
+    this.#afterShoot && this.#afterShoot()
   }
 
   /**
@@ -166,5 +172,9 @@ export class Bot {
     } else {
       this.stop()
     }
+  }
+
+  afterShoot(cb: Function) {
+    this.#afterShoot = cb
   }
 }

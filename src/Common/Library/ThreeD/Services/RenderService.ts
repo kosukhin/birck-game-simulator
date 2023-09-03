@@ -46,6 +46,7 @@ export class RenderService {
     this.#material.flatShading = false
 
     this.#soundListener = new THREE.AudioListener()
+    this.#camera.add(this.#soundListener)
 
     const animate = () => {
       requestAnimationFrame(animate)
@@ -197,7 +198,7 @@ export class RenderService {
     this.#afterAnimate = afterAnimate
   }
 
-  sound(key: string, path: string): Promise<THREE.Audio> {
+  sound(key: string, path: string, forceNew = false): Promise<THREE.Audio> {
     return new Promise((resolve) => {
       if (!this.#sounds[key]) {
         const sound = new THREE.Audio(this.#soundListener)
@@ -210,7 +211,16 @@ export class RenderService {
         this.#sounds[key] = sound
       }
 
-      resolve(this.#sounds[key])
+      const cachedSound = this.#sounds[key]
+
+      if (forceNew && cachedSound.buffer) {
+        const sound = new THREE.Audio(this.#soundListener)
+        sound.setBuffer(cachedSound.buffer)
+        resolve(sound)
+        return
+      }
+
+      resolve(cachedSound)
     })
   }
 }

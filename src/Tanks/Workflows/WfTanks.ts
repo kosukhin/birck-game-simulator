@@ -34,6 +34,7 @@ export class WfTanks implements IGameWorkflow {
   #isPaused: boolean = false
   #afterNextFrame!: Function
   #shoots: Shoot[] = []
+  #events: Record<string, Function> = {}
 
   constructor() {
     this.#grid = new MGrid({
@@ -129,6 +130,14 @@ export class WfTanks implements IGameWorkflow {
         }
       }
 
+      this.#bots.forEach((bot) => {
+        if (!bot.hasAfterShoot) {
+          bot.afterShoot(() => {
+            this.#events.afterShoot && this.#events.afterShoot()
+          })
+        }
+      })
+
       this.checkGameOver()
       !this.#isGameOver.value && this.run()
       this.#afterNextFrame && this.#afterNextFrame()
@@ -178,6 +187,9 @@ export class WfTanks implements IGameWorkflow {
   checkGameOver() {
     const isTankAlive = this.#grid.hasShape(this.#tank)
     this.#isGameOver.value = !isTankAlive
+    if (this.#isGameOver.value) {
+      this.#events.hit && this.#events.hit()
+    }
   }
 
   get shoots() {
@@ -200,11 +212,13 @@ export class WfTanks implements IGameWorkflow {
     })
 
     this.#shoots.push(shoot)
+    this.#events.afterShoot && this.#events.afterShoot()
 
     // Подписываемся на попадание
     shoot.hitTheTarget.registerSubscriber((target) => {
       if (target !== this.#tank) {
         this.increaseScore()
+        this.#events.hit && this.#events.hit()
       }
     })
   }
@@ -222,5 +236,9 @@ export class WfTanks implements IGameWorkflow {
    */
   calculateMaxHeight() {
     return this.#grid.maxY - this.#tank.height + 1
+  }
+
+  addEvent(name: string, cb: Function) {
+    this.#events[name] = cb
   }
 }

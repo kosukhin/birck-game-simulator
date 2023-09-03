@@ -66,6 +66,26 @@ const rserv = new RenderService()
 const game = new WfTanks()
 const keyboard = useService<SKeyboard>('keyboard')
 
+const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
+const shootSound = () => rserv.sound('shoot', '/sounds/shoot.wav', true)
+
+game.addEvent('afterShoot', async () => {
+  const sound = await shootSound()
+  sound.play()
+  sound.setVolume(0.01)
+  setTimeout(() => {
+    sound.remove()
+  }, 300)
+})
+
+game.addEvent('hit', async () => {
+  const sound = await explodeSound()
+  sound.play()
+  setTimeout(() => {
+    sound.stop()
+  }, 500)
+})
+
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
@@ -86,8 +106,6 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     game.shoot()
   }
 })
-
-game.run()
 
 const baseSize = 10
 rserv.setLeadId('tank_1_0')
@@ -235,6 +253,9 @@ rserv.setAfterAnimate(() => {
 
 onMounted(() => {
   rserv.render(canvasWrapper.value)
+  Promise.all([explodeSound(), shootSound()]).then(() => {
+    game.run()
+  })
 
   const width = game.grid.width
   const height = game.grid.height
