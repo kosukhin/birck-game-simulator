@@ -24,6 +24,7 @@ export class RenderService {
     const height = 400
     const baseSize = 10
     this.#scene = new THREE.Scene()
+    this.#afterScene && this.#afterScene()
     this.camera1()
 
     const renderer = new THREE.WebGLRenderer({
@@ -61,6 +62,11 @@ export class RenderService {
     animate()
   }
 
+  #afterScene?: Function
+  afterScene(cb: Function) {
+    this.#afterScene = cb
+  }
+
   removeCube(mesh: THREE.Mesh) {
     this.#scene.remove(mesh)
     mesh.geometry.dispose()
@@ -82,8 +88,16 @@ export class RenderService {
     return this.#leadId
   }
 
+  get material() {
+    return this.#material
+  }
+
   get cameraPointId() {
     return this.#cameraPointId
+  }
+
+  get scene() {
+    return this.#scene
   }
 
   camera1() {
@@ -142,7 +156,7 @@ export class RenderService {
     this.#cubes[id] = cube
   }
 
-  manageCube(id: string, x: number, y: number, color?: number) {
+  manageCube(id: string, x: number, y: number, color?: any) {
     if (this.hasCube(id)) {
       this.updateCube(id, x, y)
     } else {

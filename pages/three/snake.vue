@@ -31,6 +31,22 @@ const canvasWrapper = ref()
 const game = new WfSnake()
 const keyboard = useService<SKeyboard>('keyboard')
 
+rserv.afterScene(async () => {
+  rserv.scene.background = new THREE.Color('skyblue')
+  const textureLoader = new THREE.TextureLoader()
+  const texture = await textureLoader.loadAsync('/images/textures/grass2.jpg')
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  texture.offset.set(0, 0)
+  texture.repeat.set(20, 20)
+  const floorGeometry = new THREE.PlaneGeometry(2400, 2400, 100, 1)
+  const floorMaterial = new THREE.MeshStandardMaterial({
+    map: texture,
+  })
+  const floor = new THREE.Mesh(floorGeometry, floorMaterial)
+  floor.position.set(100, -100, -4)
+  rserv.scene.add(floor)
+})
+
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
@@ -102,6 +118,8 @@ game.afterNextFrame(() => {
 
 const k = 50
 
+const rotationAnimation = { x: 0, y: 0, z: 0 }
+
 rserv.setAfterAnimate((additional: number) => {
   if (rserv.cameraType !== 3) {
     return
@@ -125,30 +143,30 @@ rserv.setAfterAnimate((additional: number) => {
     yMul = -1
     xMul = 0
     y += k
-    rotateX = -45
-    rotateZ = 180
+    rotateX = MathUtils.degToRad(-45)
+    rotateZ = MathUtils.degToRad(180)
   }
 
   if (direction === EMoveDirection.up) {
     xMul = 0
     y -= k
-    rotateX = 45
+    rotateX = MathUtils.degToRad(45)
   }
 
   if (direction === EMoveDirection.right) {
     yMul = 0
     xMul = 1
     x -= k
-    rotateY = -45
-    rotateZ = -90
+    rotateY = MathUtils.degToRad(-45)
+    rotateZ = MathUtils.degToRad(-90)
   }
 
   if (direction === EMoveDirection.left) {
     yMul = 0
     xMul = -1
     x += k
-    rotateY = 45
-    rotateZ = 90
+    rotateY = MathUtils.degToRad(45)
+    rotateZ = MathUtils.degToRad(90)
   }
 
   const temp = new THREE.Vector3()
@@ -160,9 +178,9 @@ rserv.setAfterAnimate((additional: number) => {
   pointVector.x += leadPoint.position.x + additional * baseSize * xMul
   pointVector.y += leadPoint.position.y + additional * baseSize * yMul
   rserv.camera.lookAt(pointVector)
-  rserv.camera.rotation.x = MathUtils.degToRad(rotateX)
-  rserv.camera.rotation.y = MathUtils.degToRad(rotateY)
-  rserv.camera.rotation.z = MathUtils.degToRad(rotateZ)
+  rserv.camera.rotation.x = rotateX
+  rserv.camera.rotation.y = rotateY
+  rserv.camera.rotation.z = rotateZ
 })
 
 onMounted(() => {
@@ -174,10 +192,11 @@ onMounted(() => {
 
   const width = game.grid.width
   const height = game.grid.height
-  const red = 0xff0000
-  const green = 0x00ff00
-  const blue = 0x0000ff
-  const white = 0xffffff
+  const common = 0x2b241d
+  const red = common
+  const green = common
+  const blue = common
+  const white = common
 
   for (let i = 0; i < width; i++) {
     rserv.createCube('top' + i, i * baseSize, 1 * baseSize, red)

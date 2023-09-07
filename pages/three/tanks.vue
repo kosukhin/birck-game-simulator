@@ -1,44 +1,10 @@
 <template>
   <div>
     <h1>Танки 3Д</h1>
-    <div>
-      <label>
-        <input v-model="useCustomRotation" type="checkbox" />
-        Кастомизировать камеру
-      </label>
-    </div>
-    <div class="row">
-      <div style="display: flex; flex-direction: column">
-        <div class="row">
-          <span>rot-x</span>
-          <input v-model="rotateX" step="5" type="number" />
-        </div>
-        <div class="row">
-          <span>rot-y</span>
-          <input v-model="rotateY" step="5" type="number" />
-        </div>
-        <div class="row">
-          <span>rot-z</span>
-          <input v-model="rotateZ" step="5" type="number" />
-        </div>
-        <div class="row">
-          <span>pos-z</span>
-          <input v-model="positionZ" type="number" />
-        </div>
-        <div class="row">
-          <span>pos-k</span>
-          <input v-model="posK" type="number" />
-        </div>
-        <div class="row">
-          <span>cam-angle</span>
-          <input v-model="cameraAngle" type="number" />
-        </div>
-      </div>
-      <div
-        ref="canvasWrapper"
-        :class="'type-' + cameraType + ' direction-' + direction"
-      ></div>
-    </div>
+    <div
+      ref="canvasWrapper"
+      :class="'type-' + cameraType + ' direction-' + direction"
+    ></div>
     <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
     <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
     <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
@@ -65,6 +31,22 @@ const canvasWrapper = ref()
 const rserv = new RenderService()
 const game = new WfTanks()
 const keyboard = useService<SKeyboard>('keyboard')
+
+rserv.afterScene(async () => {
+  rserv.scene.background = new THREE.Color('skyblue')
+  const textureLoader = new THREE.TextureLoader()
+  const texture = await textureLoader.loadAsync('/images/textures/grass.jpg')
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  texture.offset.set(0, 0)
+  texture.repeat.set(15, 50)
+  const floorGeometry = new THREE.PlaneGeometry(2400, 2400, 100, 1)
+  const floorMaterial = new THREE.MeshStandardMaterial({
+    map: texture,
+  })
+  const floor = new THREE.Mesh(floorGeometry, floorMaterial)
+  floor.position.set(100, -100, -10)
+  rserv.scene.add(floor)
+})
 
 const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
 const shootSound = () => rserv.sound('shoot', '/sounds/shoot.wav', true)
@@ -127,7 +109,7 @@ game.afterNextFrame(() => {
       `shoot_${shoot.id}`,
       shoot.x * baseSize,
       -shoot.y * baseSize,
-      0x00aa00
+      new THREE.Color('darkorange')
     )
   })
 
@@ -141,7 +123,7 @@ game.afterNextFrame(() => {
           id,
           (game.tank.x + cellIndex) * baseSize,
           (-game.tank.y - rowIndex) * baseSize,
-          0x00ffff
+          0x111111
         )
         cube && (cube.visible = true)
       } else if (cubeExists) {
