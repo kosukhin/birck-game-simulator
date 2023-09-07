@@ -63,6 +63,10 @@ export class WfBlasteroid implements IGameWorkflow {
     return this.#blasteroid
   }
 
+  get target() {
+    return this.#target
+  }
+
   async run() {
     if (this.#isPaused) {
       return
@@ -80,6 +84,7 @@ export class WfBlasteroid implements IGameWorkflow {
         }
 
         const randomShape = HObjects.clone(
+          // @ts-ignore
           Shapes.get('shapes')[HMath.random(0, Shapes.get('shapes').length - 1)]
         )
         this.#target = new MShape({
@@ -100,6 +105,7 @@ export class WfBlasteroid implements IGameWorkflow {
         this.#isGameOver.value = true
       }
 
+      this.#afterNextFrame && this.#afterNextFrame()
       !this.#isGameOver.value && this.run()
     })
   }
@@ -156,5 +162,10 @@ export class WfBlasteroid implements IGameWorkflow {
     if (this.#score.value % 10 === 0) {
       this.#speed.value -= 10
     }
+  }
+
+  #afterNextFrame?: Function
+  afterNextFrame(cb: Function) {
+    this.#afterNextFrame = cb
   }
 }
