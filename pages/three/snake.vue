@@ -2,10 +2,22 @@
   <div>
     <RouterLink to="/simulator/snake/">Классическая змейка</RouterLink>
     <h1>Змейка 3Д</h1>
-    <div ref="canvasWrapper" :class="'type-' + cameraType"></div>
+    <div class="row">
+      <CameraControls
+        v-model:rx="cameraControls.rx"
+        v-model:ry="cameraControls.ry"
+        v-model:rz="cameraControls.rz"
+      />
+      <div>
+        <div ref="canvasWrapper" :class="'type-' + cameraType"></div>
+      </div>
+    </div>
     <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
     <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
     <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
+    <div>
+      <el-button @click="game.pause()">Пауза</el-button>
+    </div>
   </div>
 </template>
 
@@ -22,13 +34,14 @@ import {
   KeysToMoveCamera3,
 } from '~~/src/Common/Types/GameTypes'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
+import CameraControls from '~/pages/three/CameraControls.vue'
 
 const cameraType = ref('camera1')
 const direction = ref(EMoveDirection.right)
 const rserv = new RenderService()
 const canvasWrapper = ref()
 
-const game = new WfSnake()
+const game = new WfSnake(15, 15)
 const keyboard = useService<SKeyboard>('keyboard')
 
 rserv.afterScene(async () => {
@@ -118,7 +131,23 @@ game.afterNextFrame(() => {
 
 const k = 50
 
-const rotationAnimation = { x: 0, y: 0, z: 0 }
+const cameraControls = reactive({
+  rx: 0,
+  ry: 0,
+  rz: 0,
+})
+const newRotation = new THREE.Euler(0, 0, 0)
+
+function isEulersEquals(one: THREE.Euler, two: THREE.Euler) {
+  return one.x === two.x && one.y === two.y && one.z === two.z
+}
+
+function setRotationOrDefault(key: string, defVal: number) {
+  // @ts-ignore
+  return cameraControls[key] === 0
+    ? defVal
+    : MathUtils.degToRad(Number(cameraControls[key]))
+}
 
 rserv.setAfterAnimate((additional: number) => {
   if (rserv.cameraType !== 3) {
@@ -126,47 +155,53 @@ rserv.setAfterAnimate((additional: number) => {
   }
 
   if (additional > 1) {
-    return
+    additional = 1
   }
 
   let xMul = 1
   let yMul = 1
-  let rotateX = 0
-  let rotateY = 0
-  let rotateZ = 0
   const direction = game.snake.direction
   const leadPoint = rserv.cubes[rserv.leadId]
   let x = leadPoint.position.x
   let y = leadPoint.position.y
 
+  newRotation.x = setRotationOrDefault('rx', newRotation.x)
+  newRotation.y = setRotationOrDefault('ry', newRotation.y)
+  newRotation.z = setRotationOrDefault('rz', newRotation.z)
+
   if (direction === EMoveDirection.down) {
     yMul = -1
     xMul = 0
     y += k
-    rotateX = MathUtils.degToRad(-45)
-    rotateZ = MathUtils.degToRad(180)
+    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(320))
+    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(0))
+    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(180))
   }
 
   if (direction === EMoveDirection.up) {
     xMul = 0
     y -= k
-    rotateX = MathUtils.degToRad(45)
+    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(30))
+    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(0))
+    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(0))
   }
 
   if (direction === EMoveDirection.right) {
     yMul = 0
     xMul = 1
     x -= k
-    rotateY = MathUtils.degToRad(-45)
-    rotateZ = MathUtils.degToRad(-90)
+    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(0))
+    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(-30))
+    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(270))
   }
 
   if (direction === EMoveDirection.left) {
     yMul = 0
     xMul = -1
     x += k
-    rotateY = MathUtils.degToRad(45)
-    rotateZ = MathUtils.degToRad(90)
+    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(0))
+    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(30))
+    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(90))
   }
 
   const temp = new THREE.Vector3()
@@ -177,10 +212,9 @@ rserv.setAfterAnimate((additional: number) => {
   const pointVector = new THREE.Vector3()
   pointVector.x += leadPoint.position.x + additional * baseSize * xMul
   pointVector.y += leadPoint.position.y + additional * baseSize * yMul
-  rserv.camera.lookAt(pointVector)
-  rserv.camera.rotation.x = rotateX
-  rserv.camera.rotation.y = rotateY
-  rserv.camera.rotation.z = rotateZ
+  rserv.camera.rotation.x = newRotation.x
+  rserv.camera.rotation.y = newRotation.y
+  rserv.camera.rotation.z = newRotation.z
 })
 
 onMounted(() => {
@@ -220,3 +254,10 @@ const onChangeCamera = (type: string) => {
   }
 }
 </script>
+
+<style lang="scss">
+.row {
+  display: flex;
+  flex-direction: row;
+}
+</style>

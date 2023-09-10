@@ -26,10 +26,10 @@ export class WfSnake implements IGameWorkflow {
   #afterNextFrame?: Function
   #events: Record<string, Function> = {}
 
-  constructor() {
+  constructor(width = 15, height = 15) {
     this.#grid = new MGrid({
-      height: 15,
-      width: 15,
+      height,
+      width,
     })
     this.#grid.createEmptyGrid()
     this.#snake = new Snake(this.#grid)

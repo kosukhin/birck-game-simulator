@@ -3,6 +3,8 @@ export enum EKeyCode {
   A = 'KeyA',
   S = 'KeyS',
   D = 'KeyD',
+  Q = 'KeyQ',
+  E = 'KeyE',
   SPC = 'Space',
 }
 

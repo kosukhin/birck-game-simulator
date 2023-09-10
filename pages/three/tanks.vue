@@ -70,6 +70,26 @@ game.addEvent('hit', async () => {
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
+  if (key === EKeyCode.SPC) {
+    game.shoot()
+  }
+
+  if (cameraType.value === 'camera3') {
+    if (key === EKeyCode.Q) {
+      const newDirection =
+        KeysToMoveCamera3Tanks[game.tank.direction][EKeyCode.A]
+      game.moveTank(newDirection, false)
+      return
+    }
+
+    if (key === EKeyCode.E) {
+      const newDirection =
+        KeysToMoveCamera3Tanks[game.tank.direction][EKeyCode.D]
+      game.moveTank(newDirection, false)
+      return
+    }
+  }
+
   if (KeysToMoveMap[key] !== undefined) {
     let newDirection = KeysToMoveMap[key]
 
@@ -82,10 +102,6 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     }
 
     game.moveTank(newDirection)
-  }
-
-  if (key === EKeyCode.SPC) {
-    game.shoot()
   }
 })
 

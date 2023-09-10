@@ -168,16 +168,20 @@ export class WfTanks implements IGameWorkflow {
    * Обеспечивает передвижение танка
    * @param direction
    */
-  moveTank(direction: EMoveDirection) {
+  moveTank(direction: EMoveDirection, confirmDirection = true) {
     if (this.#isPaused) {
       return
     }
 
-    if (this.#tank.direction === direction) {
+    if (confirmDirection) {
+      if (this.#tank.direction === direction) {
+        this.#shapeMover.move(this.#tank, direction)
+      }
+
+      this.#tank.setDirection(direction)
+    } else {
       this.#shapeMover.move(this.#tank, direction)
     }
-
-    this.#tank.setDirection(direction)
   }
 
   /**
