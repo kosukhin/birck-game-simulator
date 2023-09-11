@@ -18,6 +18,7 @@ export class RenderService {
   #lastUpdateTime: number = 0
   #gameSpeed: number = 0
   #afterAnimate!: Function
+  additional: number = 1
 
   render(canvasWrapper: HTMLElement) {
     const width = 400
@@ -55,6 +56,7 @@ export class RenderService {
         const delta = new Date().getTime() - this.#lastUpdateTime
         const speed = this.#gameSpeed
         const additional = (100 * delta) / speed / 100
+        this.additional = additional > 1 ? 1 : additional
         this.#afterAnimate.call(null, additional)
       }
       renderer.render(this.#scene, this.#camera)

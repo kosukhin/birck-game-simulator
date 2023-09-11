@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import * as THREE from 'three'
-import { MathUtils } from 'three'
+import { Euler, MathUtils, Vector3 } from 'three'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
@@ -60,6 +60,10 @@ rserv.afterScene(async () => {
   rserv.scene.add(floor)
 })
 
+const startForwardPosition = new Vector3()
+const startPosition = new Vector3()
+const startRotation = new Euler()
+
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
@@ -77,8 +81,37 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     direction.value = newDirection
     game.moveSnake(newDirection)
     rserv.setLeadDirection(newDirection)
+    startPosition.set(
+      rserv.camera.position.x,
+      rserv.camera.position.y,
+      rserv.camera.position.z
+    )
+    startRotation.set(
+      rserv.camera.rotation.x,
+      rserv.camera.rotation.y,
+      rserv.camera.rotation.z
+    )
   }
 })
+
+type D3 = { x: number; y: number; z: number }
+
+function calcAnimatePosition(
+  additional: number,
+  newPosition: D3,
+  newRotation: D3
+) {
+  const xsize = newPosition.x - rserv.camera.position.x
+  const ysize = newPosition.y - rserv.camera.position.y
+
+  rserv.camera.position.x += xsize * additional
+  rserv.camera.position.y += ysize * additional
+  rserv.camera.position.z = newPosition.z
+
+  rserv.camera.rotation.x = newRotation.x
+  rserv.camera.rotation.y = newRotation.y
+  rserv.camera.rotation.z = newRotation.z
+}
 
 const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
 const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
@@ -102,6 +135,11 @@ game.addEvent('gameover', async () => {
 const baseSize = 10
 rserv.setLeadId('leadPoint')
 game.afterNextFrame(() => {
+  startForwardPosition.set(
+    rserv.camera.position.x,
+    rserv.camera.position.y,
+    rserv.camera.position.z
+  )
   rserv.manageCube(
     game.target.id,
     game.target.x * baseSize,
@@ -137,10 +175,6 @@ const cameraControls = reactive({
   rz: 0,
 })
 const newRotation = new THREE.Euler(0, 0, 0)
-
-function isEulersEquals(one: THREE.Euler, two: THREE.Euler) {
-  return one.x === two.x && one.y === two.y && one.z === two.z
-}
 
 function setRotationOrDefault(key: string, defVal: number) {
   // @ts-ignore
@@ -204,17 +238,19 @@ rserv.setAfterAnimate((additional: number) => {
     newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(90))
   }
 
-  const temp = new THREE.Vector3()
-  rserv.camera.position.lerp(temp, 0.7)
-  rserv.camera.position.z = 60
-  rserv.camera.position.x = x + additional * baseSize * xMul
-  rserv.camera.position.y = y + additional * baseSize * yMul
-  const pointVector = new THREE.Vector3()
-  pointVector.x += leadPoint.position.x + additional * baseSize * xMul
-  pointVector.y += leadPoint.position.y + additional * baseSize * yMul
-  rserv.camera.rotation.x = newRotation.x
-  rserv.camera.rotation.y = newRotation.y
-  rserv.camera.rotation.z = newRotation.z
+  calcAnimatePosition(
+    additional,
+    {
+      x: x + baseSize * xMul,
+      y: y + baseSize * yMul,
+      z: 60,
+    },
+    {
+      x: newRotation.x,
+      y: newRotation.y,
+      z: newRotation.z,
+    }
+  )
 })
 
 onMounted(() => {
