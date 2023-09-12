@@ -99,14 +99,23 @@ type D3 = { x: number; y: number; z: number }
 function calcAnimatePosition(
   additional: number,
   newPosition: D3,
-  newRotation: D3
+  newRotation: D3,
+  leadPoint: { x: number; y: number }
 ) {
-  const xsize = newPosition.x - rserv.camera.position.x
-  const ysize = newPosition.y - rserv.camera.position.y
+  let xsize = newPosition.x - rserv.camera.position.x
+  let ysize = newPosition.y - rserv.camera.position.y
 
-  rserv.camera.position.x += xsize * additional
-  rserv.camera.position.y += ysize * additional
-  rserv.camera.position.z = newPosition.z
+  if (Math.abs(xsize) >= baseSize || Math.abs(ysize) >= baseSize) {
+    rserv.camera.position.x += xsize * additional
+    rserv.camera.position.y += ysize * additional
+    rserv.camera.position.z = newPosition.z
+  } else {
+    xsize = newPosition.x - leadPoint.x
+    ysize = newPosition.y - leadPoint.y
+    rserv.camera.position.x = leadPoint.x + xsize * additional
+    rserv.camera.position.y = leadPoint.y + ysize * additional
+    rserv.camera.position.z = newPosition.z
+  }
 
   rserv.camera.rotation.x = newRotation.x
   rserv.camera.rotation.y = newRotation.y
@@ -249,6 +258,10 @@ rserv.setAfterAnimate((additional: number) => {
       x: newRotation.x,
       y: newRotation.y,
       z: newRotation.z,
+    },
+    {
+      x,
+      y,
     }
   )
 })
