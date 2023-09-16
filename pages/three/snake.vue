@@ -3,18 +3,15 @@
     <RouterLink to="/simulator/snake/">Классическая змейка</RouterLink>
     <h1>Змейка 3Д</h1>
     <div class="row">
-      <CameraControls
-        v-model:rx="cameraControls.rx"
-        v-model:ry="cameraControls.ry"
-        v-model:rz="cameraControls.rz"
-      />
       <div>
         <div ref="canvasWrapper" :class="'type-' + cameraType"></div>
       </div>
     </div>
-    <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
-    <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
-    <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
+    <div>
+      <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
+      <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
+      <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
+    </div>
     <div>
       <el-button @click="game.pause()">Пауза</el-button>
     </div>

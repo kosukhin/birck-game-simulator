@@ -20,6 +20,7 @@ export class WfBlasteroid implements IGameWorkflow {
   #score: Ref<number>
   #speed: Ref<number>
   #isPaused: boolean
+  #shoots: Record<string, Shoot> = {}
 
   constructor() {
     this.#grid = new MGrid({
@@ -65,6 +66,10 @@ export class WfBlasteroid implements IGameWorkflow {
 
   get target() {
     return this.#target
+  }
+
+  get shoots() {
+    return this.#shoots
   }
 
   async run() {
@@ -144,7 +149,10 @@ export class WfBlasteroid implements IGameWorkflow {
       position: [this.#blasteroid.x, this.#blasteroid.midY],
       byPixel: true,
     })
-    shoot1.hitTheTarget.registerSubscriber(this.targetShooted.bind(this))
+    shoot1.hitTheTarget.registerSubscriber(
+      this.targetShooted.bind(this, shoot1)
+    )
+    this.#shoots[shoot1.id] = shoot1
 
     const shoot2 = new Shoot({
       direction: EMoveDirection.up,
@@ -153,15 +161,23 @@ export class WfBlasteroid implements IGameWorkflow {
       position: [this.#blasteroid.maxX, this.#blasteroid.midY],
       byPixel: true,
     })
-    shoot2.hitTheTarget.registerSubscriber(this.targetShooted.bind(this))
+    shoot2.hitTheTarget.registerSubscriber(
+      this.targetShooted.bind(this, shoot2)
+    )
+    this.#shoots[shoot2.id] = shoot2
   }
 
-  targetShooted() {
+  targetShooted(shoot: Shoot) {
     this.#score.value++
 
     if (this.#score.value % 10 === 0) {
       this.#speed.value -= 10
     }
+
+    shoot.willBeRemoved = true
+    setTimeout(() => {
+      delete this.#shoots[shoot.id]
+    })
   }
 
   #afterNextFrame?: Function

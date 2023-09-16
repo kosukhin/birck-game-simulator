@@ -28,6 +28,7 @@ export class Shoot {
   #x!: number
   #y!: number
   #isDone = false
+  #willBeRemoved = false
 
   constructor(params: IShootParam) {
     this.#id = HApp.uniqueId()
@@ -54,6 +55,14 @@ export class Shoot {
 
   get isDone() {
     return this.#isDone
+  }
+
+  get willBeRemoved() {
+    return this.#willBeRemoved
+  }
+
+  set willBeRemoved(willBe) {
+    this.#willBeRemoved = willBe
   }
 
   run() {

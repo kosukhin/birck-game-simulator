@@ -53,6 +53,13 @@ game.afterNextFrame(() => {
     })
   })
 
+  Object.values(game.shoots).forEach((shoot) => {
+    const id = `shoot_${shoot.id}`
+    const cube = rserv.cubes?.[id]
+    rserv.manageCube(id, shoot.x * baseSize, -shoot.y * baseSize, 0x00ffff)
+    cube && (cube.visible = true)
+  })
+
   game.blasteroid.bitmap.forEach((row, rowIndex) => {
     row.forEach((isFilled, cellIndex) => {
       const id = `blasteroid_${cellIndex}_${rowIndex}`
@@ -73,7 +80,33 @@ game.afterNextFrame(() => {
   })
 })
 
+rserv.setAfterAnimate(() => {
+  Object.values(game.shoots).forEach((shoot) => {
+    const id = `shoot_${shoot.id}`
+    const cube = rserv.cubes?.[id]
+    if (shoot.willBeRemoved) {
+      cube.visible = false
+      return
+    }
+    rserv.manageCube(id, shoot.x * baseSize, -shoot.y * baseSize, 0x00ffff)
+    cube && (cube.visible = true)
+  })
+})
+
 onMounted(() => {
   rserv.render(canvasWrapper.value)
+  const width = game.grid.width
+  const height = game.grid.height
+  const white = 0xffffff
+
+  for (let i = 0; i < width; i++) {
+    rserv.createCube('top' + i, i * baseSize, 1 * baseSize, white)
+    rserv.createCube('bottom' + i, i * baseSize, -height * baseSize, white)
+  }
+
+  for (let i = 0; i < height; i++) {
+    rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, white)
+    rserv.createCube('right' + i, width * baseSize, -i * baseSize, white)
+  }
 })
 </script>
