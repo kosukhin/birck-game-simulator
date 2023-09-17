@@ -14,7 +14,7 @@
   </el-breadcrumb>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
 

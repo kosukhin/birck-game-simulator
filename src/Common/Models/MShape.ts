@@ -12,11 +12,11 @@ interface IShapeParams {
 }
 
 export class MShape {
+  static #shapeIdCounter = 0
   #id: any = MShape.getNewShapeId()
   #bitmap: TGrid
   #x: number
   #y: number
-  static #shapeIdCounter = 0
   #direction: EMoveDirection = EMoveDirection.up
   #prevDirection: EMoveDirection = EMoveDirection.up
 
@@ -103,6 +103,12 @@ export class MShape {
     return this.#bitmap.length
   }
 
+  static getNewShapeId() {
+    MShape.#shapeIdCounter = MShape.#shapeIdCounter + 1
+
+    return MShape.#shapeIdCounter
+  }
+
   setDirection(direction: EMoveDirection) {
     this.#prevDirection = this.#direction
     this.#direction = direction
@@ -166,11 +172,5 @@ export class MShape {
         this.#bitmap.splice(index, 1)
       }
     })
-  }
-
-  static getNewShapeId() {
-    MShape.#shapeIdCounter = MShape.#shapeIdCounter + 1
-
-    return MShape.#shapeIdCounter
   }
 }

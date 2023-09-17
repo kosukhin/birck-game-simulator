@@ -2,15 +2,15 @@
   <div class="game screen">
     <div v-if="game.isGameOver.value" class="game-over">
       <el-result
-        icon="error"
-        :title="$services.lang.t('Game over')"
         :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+        :title="$services.lang.t('Game over')"
+        icon="error"
       />
     </div>
     <div class="grid-header">
       {{ $services.lang.t('Score') }}: {{ game.score }}
     </div>
-    <CanvasView :grid="game.grid" :fps="20" />
+    <CanvasView :fps="20" :grid="game.grid" />
     <KeyboardHint @pause="onPaused">
       <SpaceHint />
       <br />
@@ -18,13 +18,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { onMounted } from 'vue'
 import SpaceHint from '../../../Common/Components/KeyboardHint/SpaceHint.vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
-import { KeysToMoveMap, EKeyCode } from '~~/src/Common/Types/GameTypes'
+import { EKeyCode, KeysToMoveMap } from '~~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 

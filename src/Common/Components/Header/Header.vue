@@ -3,7 +3,7 @@
     <div class="middle header-inner">
       <nuxt-link class="logo" to="/">
         <el-avatar :size="32" class="mr-3">
-          <img src="/images/logo.jpg" alt="" />
+          <img alt="" src="/images/logo.jpg" />
         </el-avatar>
         BrickGame
       </nuxt-link>

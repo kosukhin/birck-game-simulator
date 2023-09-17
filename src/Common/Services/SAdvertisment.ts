@@ -18,20 +18,20 @@ export class SAdvertisment {
       this.advertisments = {
         tetris: {
           title: lang.t('Tetris'),
-          message: lang.t('Dmitry scored 100 points')
+          message: lang.t('Dmitry scored 100 points'),
         },
         blasteroid: {
           title: lang.t('Blasteroid'),
-          message: lang.t('Vladimir earned 40 points')
+          message: lang.t('Vladimir earned 40 points'),
         },
         snake: {
           title: lang.t('Snake'),
-          message: lang.t('Evgeny scored 30 points')
+          message: lang.t('Evgeny scored 30 points'),
         },
         tanks: {
           title: lang.t('Tanks'),
-          message: lang.t('Vladislav destroyed 50 tanks')
-        }
+          message: lang.t('Vladislav destroyed 50 tanks'),
+        },
       }
 
       const worker = new WebWorker(() => {
@@ -54,7 +54,7 @@ export class SAdvertisment {
 
         ElNotification({
           ...this.advertisments[data],
-          position: 'bottom-right'
+          position: 'bottom-right',
         })
       })
     })

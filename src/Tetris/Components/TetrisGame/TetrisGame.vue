@@ -2,9 +2,9 @@
   <div class="game screen">
     <div v-if="game.isGameOver.value" class="game-over">
       <el-result
-        icon="error"
-        :title="$services.lang.t('Game over')"
         :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+        :title="$services.lang.t('Game over')"
+        icon="error"
       />
     </div>
     <div class="grid-header">
@@ -12,17 +12,16 @@
       {{ $services.lang.t('Speed') }}:
       {{ game.speed }}
     </div>
-    <CanvasView :grid="game.grid" :fps="10" />
+    <CanvasView :fps="10" :grid="game.grid" />
     <KeyboardHint @pause="onPaused" />
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { onMounted } from 'vue'
 import { WfTetris } from '~~/src/Tetris/Workflows/WfTetris'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
-import { HArray } from '~~/src/Common/Helpers/HArray'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import { EKeyCode } from '~~/src/Common/Types/GameTypes'

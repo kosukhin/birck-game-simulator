@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 
 export class RenderService {
+  additional: number = 1
   #cubes: Record<string, THREE.Mesh> = {}
   #geometry!: THREE.BoxGeometry
   #material!: THREE.MeshPhongMaterial
@@ -18,7 +19,35 @@ export class RenderService {
   #lastUpdateTime: number = 0
   #gameSpeed: number = 0
   #afterAnimate!: Function
-  additional: number = 1
+  #afterScene?: Function
+
+  get camera() {
+    return this.#camera
+  }
+
+  get cameraType() {
+    return this.#cameraType
+  }
+
+  get cubes() {
+    return this.#cubes
+  }
+
+  get leadId() {
+    return this.#leadId
+  }
+
+  get material() {
+    return this.#material
+  }
+
+  get cameraPointId() {
+    return this.#cameraPointId
+  }
+
+  get scene() {
+    return this.#scene
+  }
 
   render(canvasWrapper: HTMLElement) {
     const width = 400
@@ -64,7 +93,6 @@ export class RenderService {
     animate()
   }
 
-  #afterScene?: Function
   afterScene(cb: Function) {
     this.#afterScene = cb
   }
@@ -72,34 +100,6 @@ export class RenderService {
   removeCube(mesh: THREE.Mesh) {
     this.#scene.remove(mesh)
     mesh.geometry.dispose()
-  }
-
-  get camera() {
-    return this.#camera
-  }
-
-  get cameraType() {
-    return this.#cameraType
-  }
-
-  get cubes() {
-    return this.#cubes
-  }
-
-  get leadId() {
-    return this.#leadId
-  }
-
-  get material() {
-    return this.#material
-  }
-
-  get cameraPointId() {
-    return this.#cameraPointId
-  }
-
-  get scene() {
-    return this.#scene
   }
 
   camera1() {

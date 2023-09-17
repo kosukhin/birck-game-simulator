@@ -31,7 +31,6 @@ import {
   KeysToMoveCamera3,
 } from '~~/src/Common/Types/GameTypes'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
-import CameraControls from '~/pages/three/CameraControls.vue'
 
 const cameraType = ref('camera1')
 const direction = ref(EMoveDirection.right)

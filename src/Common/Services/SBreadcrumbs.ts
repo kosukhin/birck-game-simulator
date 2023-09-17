@@ -18,6 +18,10 @@ export class SBreadcrumbs {
     this.breadcrumbsRenderCounter = ref(1)
   }
 
+  get renderCounter() {
+    return this.breadcrumbsRenderCounter
+  }
+
   afterInit(hooks: SHooks) {
     hooks.init.registerSubscriber(() => {
       const app = useNuxtApp()
@@ -65,10 +69,6 @@ export class SBreadcrumbs {
 
   addBreadcrumbsConfig(config) {
     this.breadcrumbs = HObjects.merge(this.breadcrumbs, config)
-  }
-
-  get renderCounter() {
-    return this.breadcrumbsRenderCounter
   }
 
   getLinks(): IBreadcrumbLink[] {

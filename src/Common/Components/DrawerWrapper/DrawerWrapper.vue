@@ -3,8 +3,8 @@
     <el-drawer
       v-for="(drawerValue, drawerName) in drawersHash"
       :key="drawerName"
-      :model-value="drawerValue"
       :direction="drawersHashNotReactive[drawerName].direction"
+      :model-value="drawerValue"
       :size="$services.device.isMobile() ? '100%' : '30%'"
       @closed="closed(drawerName)"
     >
@@ -18,11 +18,11 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Ref } from 'vue'
 import { HApp } from '~~/src/Common/Helpers/HApp'
 import { useService } from '~~/src/Common/Helpers/HService'
-import { SDrawer, IDrawer } from '~~/src/Common/Services/SDrawer'
+import { IDrawer, SDrawer } from '~~/src/Common/Services/SDrawer'
 
 const drawersHashNotReactive: Record<string, IDrawer> = {}
 const drawersHash: Ref<Record<string, boolean>> = ref({})

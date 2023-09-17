@@ -80,6 +80,10 @@ export class WfTanks implements IGameWorkflow {
     return this.#bots
   }
 
+  get shoots() {
+    return this.#shoots
+  }
+
   /**
    * Запускает игру танки
    */
@@ -194,10 +198,6 @@ export class WfTanks implements IGameWorkflow {
     if (this.#isGameOver.value) {
       this.#events.hit && this.#events.hit()
     }
-  }
-
-  get shoots() {
-    return this.#shoots
   }
 
   /**

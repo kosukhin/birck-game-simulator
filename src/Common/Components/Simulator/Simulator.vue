@@ -3,8 +3,8 @@
     <component :is="gamesList[action] ?? gamesList.nogame" @grid="onSetGrid" />
     <div class="button-wrapper">
       <el-button
-        :type="isTranslationStarted ? 'danger' : 'primary'"
         :icon="Platform"
+        :type="isTranslationStarted ? 'danger' : 'primary'"
         round
         @click="beginTranslation"
       >

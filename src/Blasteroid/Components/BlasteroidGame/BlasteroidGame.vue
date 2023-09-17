@@ -2,9 +2,9 @@
   <div class="game screen">
     <div v-if="game.isGameOver.value" class="game-over">
       <el-result
-        icon="error"
-        :title="$services.lang.t('Game over')"
         :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+        :title="$services.lang.t('Game over')"
+        icon="error"
       />
     </div>
     <div class="grid-header">
@@ -12,7 +12,7 @@
       {{ $services.lang.t('Speed') }}:
       {{ game.speed }}
     </div>
-    <CanvasView :grid="game.grid" :fps="20" />
+    <CanvasView :fps="20" :grid="game.grid" />
     <KeyboardHint @pause="onPaused">
       <SpaceHint />
       <br />
@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { onMounted } from 'vue'
 import SpaceHint from '../../../Common/Components/KeyboardHint/SpaceHint.vue'
 import { WfBlasteroid } from '~~/src/Blasteroid/Workflows/WfBlasteroid'

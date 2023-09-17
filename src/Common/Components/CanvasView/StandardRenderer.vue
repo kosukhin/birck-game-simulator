@@ -1,9 +1,9 @@
 <template>
-  <canvas ref="canvas" width="0" height="0"></canvas>
+  <canvas ref="canvas" height="0" width="0"></canvas>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { CanvasRenderer } from '~~/src/Common/Library/CanvasRenderer'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 
@@ -31,7 +31,7 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 canvas {
   border: solid 1px $c_pixel;
 }

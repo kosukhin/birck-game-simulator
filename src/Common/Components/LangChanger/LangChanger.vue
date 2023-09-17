@@ -5,9 +5,9 @@
     @click.prevent="changeLang('en')"
   >
     <img
+      :alt="$services.lang.t('Switch to') + ' en'"
       class="flag"
       src="/images/flags/en.svg"
-      :alt="$services.lang.t('Switch to') + ' en'"
     />
     {{ $services.lang.t('English') }}
   </a>
@@ -17,15 +17,15 @@
     @click.prevent="changeLang('ru')"
   >
     <img
+      :alt="$services.lang.t('Switch to') + ' ru'"
       class="flag"
       src="/images/flags/ru.svg"
-      :alt="$services.lang.t('Switch to') + ' ru'"
     />
     {{ $services.lang.t('Russian') }}
   </a>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useApplicationStore } from '~~/stores/application'
 
 const appStore = useApplicationStore()

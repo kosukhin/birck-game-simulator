@@ -2,9 +2,9 @@
   <div class="game screen">
     <div v-if="game.isGameOver.value" class="game-over">
       <el-result
-        icon="error"
-        :title="$services.lang.t('Game over')"
         :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+        :title="$services.lang.t('Game over')"
+        icon="error"
       />
     </div>
     <div class="grid-header">
@@ -12,18 +12,18 @@
       {{ $services.lang.t('Speed') }}:
       {{ game.speed }}
     </div>
-    <CanvasView :grid="game.grid" :fps="10" />
+    <CanvasView :fps="10" :grid="game.grid" />
     <KeyboardHint @pause="onPaused" />
-    <RouterLink to="/three/snake"> Змейка 3д </RouterLink>
+    <RouterLink to="/three/snake"> Змейка 3д</RouterLink>
   </div>
 </template>
 
-<script setup lang="ts">
-import { onUnmounted, onMounted } from 'vue'
+<script lang="ts" setup>
+import { onMounted, onUnmounted } from 'vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
-import { KeysToMoveMap, EKeyCode } from '~~/src/Common/Types/GameTypes'
+import { EKeyCode, KeysToMoveMap } from '~~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 

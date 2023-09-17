@@ -17,13 +17,13 @@ interface IShootParam {
 }
 
 export class Shoot {
+  hitTheTarget: Observable<(target: MShape) => void>
   #grid: MGrid
   #position: TShapePosition
   #direction: EMoveDirection
   #fromShape: MShape
   #shapeMover: ShapeMover = new ShapeMover()
   #byPixel: boolean
-  hitTheTarget: Observable<(target: MShape) => void>
   #id: string
   #x!: number
   #y!: number

@@ -21,6 +21,8 @@ export class WfBlasteroid implements IGameWorkflow {
   #speed: Ref<number>
   #isPaused: boolean
   #shoots: Record<string, Shoot> = {}
+  #afterNextFrame?: Function
+  #afterTargetBeated?: Function
 
   constructor() {
     this.#grid = new MGrid({
@@ -178,12 +180,10 @@ export class WfBlasteroid implements IGameWorkflow {
     shoot.willBeRemoved = true
   }
 
-  #afterNextFrame?: Function
   afterNextFrame(cb: Function) {
     this.#afterNextFrame = cb
   }
 
-  #afterTargetBeated?: Function
   afterTargetBeated(cb: Function) {
     this.#afterTargetBeated = cb
   }

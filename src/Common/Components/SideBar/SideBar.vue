@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { StarFilled } from '@element-plus/icons-vue'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SDrawer } from '~~/src/Common/Services/SDrawer'

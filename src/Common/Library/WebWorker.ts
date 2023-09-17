@@ -1,10 +1,10 @@
 import { Observable } from '~~/src/Common/Library/Observable'
 
 export class WebWorker {
-  #objectUrl: string
-  #worker: Worker
   onmessage = new Observable<(event) => void>()
   onerror = new Observable<(event) => void>()
+  #objectUrl: string
+  #worker: Worker
 
   constructor(work) {
     this.createWorker(work)
@@ -12,7 +12,7 @@ export class WebWorker {
 
   createWorker(work) {
     const URL = window.URL || window.webkitURL
-    const blob = new Blob([`(${work})()`], { type: 'application/javascript' }) // eslint-disable-line
+    const blob = new Blob([`(${work})()`], {type: 'application/javascript'}) // eslint-disable-line
     this.#objectUrl = URL.createObjectURL(blob)
     this.#worker = new Worker(this.#objectUrl) // eslint-disable-line
 

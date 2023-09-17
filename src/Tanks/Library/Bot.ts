@@ -52,6 +52,26 @@ export class Bot {
     this.run()
   }
 
+  get hasAfterShoot() {
+    return !!this.#afterShoot
+  }
+
+  get type() {
+    return this.#type
+  }
+
+  get tank() {
+    return this.#tank
+  }
+
+  get id() {
+    return this.#id
+  }
+
+  get shoots() {
+    return this.#shoots
+  }
+
   /**
    * Запускает логику работы бота
    */
@@ -118,26 +138,6 @@ export class Bot {
         }
       }
     }, 200)
-  }
-
-  get hasAfterShoot() {
-    return !!this.#afterShoot
-  }
-
-  get type() {
-    return this.#type
-  }
-
-  get tank() {
-    return this.#tank
-  }
-
-  get id() {
-    return this.#id
-  }
-
-  get shoots() {
-    return this.#shoots
   }
 
   /**

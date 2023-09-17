@@ -4,4 +4,4 @@
 
 <script lang="ts" setup></script>
 
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

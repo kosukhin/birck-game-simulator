@@ -1,8 +1,8 @@
 <template>
-  <nuxt-link class="game-card-wrapper" :to="game.link">
+  <nuxt-link :to="game.link" class="game-card-wrapper">
     <article class="game-card">
       <div class="game-card__photo">
-        <nuxt-img :src="game.photo" :alt="game.title" width="200" />
+        <nuxt-img :alt="game.title" :src="game.photo" width="200" />
       </div>
       <div class="game-card__content">
         <div class="game-card__title">
@@ -16,7 +16,7 @@
   </nuxt-link>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { IGame } from '~~/src/Common/Data/Games'
 
 defineProps({
