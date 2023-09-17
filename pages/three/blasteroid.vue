@@ -124,6 +124,16 @@ rserv.afterScene(async () => {
   rserv.scene.add(floor)
 })
 
+const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
+
+game.afterTargetBeated(async () => {
+  const sound = await explodeSound()
+  sound.play()
+  setTimeout(() => {
+    sound.stop()
+  }, 500)
+})
+
 onMounted(() => {
   rserv.render(canvasWrapper.value)
   const width = game.grid.width

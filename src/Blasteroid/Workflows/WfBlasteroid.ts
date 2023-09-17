@@ -102,6 +102,7 @@ export class WfBlasteroid implements IGameWorkflow {
         )
 
         this.#grid.addShape(this.#target)
+        this.#afterTargetBeated?.()
       }
 
       this.#target.moveY(1)
@@ -180,5 +181,10 @@ export class WfBlasteroid implements IGameWorkflow {
   #afterNextFrame?: Function
   afterNextFrame(cb: Function) {
     this.#afterNextFrame = cb
+  }
+
+  #afterTargetBeated?: Function
+  afterTargetBeated(cb: Function) {
+    this.#afterTargetBeated = cb
   }
 }
