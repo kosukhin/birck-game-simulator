@@ -175,9 +175,6 @@ export class WfBlasteroid implements IGameWorkflow {
     }
 
     shoot.willBeRemoved = true
-    setTimeout(() => {
-      delete this.#shoots[shoot.id]
-    })
   }
 
   #afterNextFrame?: Function
