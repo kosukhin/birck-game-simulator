@@ -26,7 +26,7 @@ export class WfTetris implements IGameWorkflow {
   /** Условия игры */
   #conditions: WfTetrisConditions
   /** Флаг остановлена игра или нет */
-  #isPaused: boolean
+  #isPaused: boolean = false
 
   constructor() {
     this.#grid = new MGrid({})
@@ -117,6 +117,8 @@ export class WfTetris implements IGameWorkflow {
     if (shape && canMove) {
       shape.moveY()
     }
+
+    this.#afterNextFrame?.()
   }
 
   /**
@@ -150,7 +152,7 @@ export class WfTetris implements IGameWorkflow {
     }
 
     const shape = this.grid.getFirstShape()
-    shape.moveX(xOffset)
+    shape?.moveX(xOffset)
   }
 
   rotateShape() {
@@ -159,7 +161,7 @@ export class WfTetris implements IGameWorkflow {
     }
 
     const shape = this.grid.getFirstShape()
-    shape.setBitmap(HArray.rotate90(shape.bitmap))
+    shape?.setBitmap(HArray.rotate90(shape.bitmap))
   }
 
   /**
@@ -175,6 +177,11 @@ export class WfTetris implements IGameWorkflow {
     }
 
     const shape = this.grid.getFirstShape()
-    shape.moveY(1)
+    shape?.moveY(1)
+  }
+
+  #afterNextFrame?: Function
+  afterNextFrame(cb: Function) {
+    this.#afterNextFrame = cb
   }
 }

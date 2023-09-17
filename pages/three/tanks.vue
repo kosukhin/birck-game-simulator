@@ -1,10 +1,7 @@
 <template>
   <div>
     <h1>Танки 3Д</h1>
-    <div
-      ref="canvasWrapper"
-      :class="'type-' + cameraType + ' direction-' + direction"
-    ></div>
+    <div ref="canvasWrapper"></div>
     <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
     <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
     <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
@@ -187,8 +184,6 @@ const rotateX = ref(0)
 const rotateZ = ref(0)
 const useCustomRotation = ref(false)
 const positionZ = ref(90)
-const posK = ref(k)
-const cameraAngle = ref(0)
 
 const setRotation = ({ x, y, z }: any) => {
   if (useCustomRotation.value) {

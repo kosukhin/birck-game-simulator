@@ -47,6 +47,10 @@ export class MGrid {
     return this.height - 1
   }
 
+  get shapes() {
+    return this.#shapes
+  }
+
   render() {
     const grid = HObjects.clone(this.#bgBitmap) as TGrid
     const copyShapeToGrid = (shape: MShape) => {
