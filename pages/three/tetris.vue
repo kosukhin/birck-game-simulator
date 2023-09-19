@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts" setup>
+import { MathUtils } from 'three'
 import { useService } from '~/src/Common/Helpers/HService'
 import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { WfTetris } from '~/src/Tetris/Workflows/WfTetris'
@@ -28,19 +29,19 @@ keyboard.registerSubscriber((key: EKeyCode) => {
   }
 
   if (key === EKeyCode.W) {
-    game.rotateShape()
-  }
-
-  if (key === EKeyCode.S) {
     game.moveShapeDown()
   }
 
+  if (key === EKeyCode.S) {
+    game.rotateShape()
+  }
+
   if (key === EKeyCode.A) {
-    game.moveShapeByX(-1)
+    game.moveShapeByX(1)
   }
 
   if (key === EKeyCode.D) {
-    game.moveShapeByX(1)
+    game.moveShapeByX(-1)
   }
 })
 
@@ -53,6 +54,14 @@ game.afterNextFrame(() => {
 
   const shape = game.grid.getFirstShape()
   if (shape) {
+    rserv.camera.position.z = 80
+    rserv.camera.position.x = shape.x * baseSize
+    rserv.camera.position.y = -shape.y * baseSize + 70
+
+    rserv.camera.rotation.x = MathUtils.degToRad(-45)
+    rserv.camera.rotation.y = MathUtils.degToRad(0)
+    rserv.camera.rotation.z = MathUtils.degToRad(180)
+
     shape.bitmap.forEach((row, rowIndex) => {
       row.forEach((isFilled, cellIndex) => {
         const id = `target_${cellIndex}_${rowIndex}`
@@ -95,8 +104,14 @@ game.afterNextFrame(() => {
   })
 })
 
+rserv.setAfterAnimate(() => {})
+
 onMounted(() => {
   rserv.render(canvasWrapper.value)
+
+  setTimeout(() => {
+    rserv.camera3()
+  })
 
   const width = game.grid.width
   const height = game.grid.height
