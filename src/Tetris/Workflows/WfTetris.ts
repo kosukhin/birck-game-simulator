@@ -95,6 +95,7 @@ export class WfTetris implements IGameWorkflow {
     if (!shape) {
       this.addRandomShapeToGrid()
       shape = this.#grid.getFirstShape()
+      this.#afterNewShape?.()
     }
 
     const canMove = this.#conditions.canShapeMoveNext()
@@ -183,5 +184,10 @@ export class WfTetris implements IGameWorkflow {
   #afterNextFrame?: Function
   afterNextFrame(cb: Function) {
     this.#afterNextFrame = cb
+  }
+
+  #afterNewShape?: Function
+  afterNewShape(cb: Function) {
+    this.#afterNewShape = cb
   }
 }

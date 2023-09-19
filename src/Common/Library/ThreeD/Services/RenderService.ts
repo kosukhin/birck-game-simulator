@@ -148,9 +148,21 @@ export class RenderService {
     this.#cameraType = 2
   }
 
-  createCube(id: string, x: number, y: number, color = 0x666666) {
-    const material = this.#material.clone()
-    material.color = new THREE.Color(color)
+  createCube(
+    id: string,
+    x: number,
+    y: number,
+    color = 0x666666,
+    texture?: any
+  ) {
+    let material: any = this.#material.clone()
+    if (texture) {
+      material = new THREE.MeshStandardMaterial({
+        map: texture,
+      })
+    } else {
+      material.color = new THREE.Color(color)
+    }
     const cube = new THREE.Mesh(this.#geometry, material)
     this.#scene.add(cube)
     cube.position.x = x
@@ -158,11 +170,11 @@ export class RenderService {
     this.#cubes[id] = cube
   }
 
-  manageCube(id: string, x: number, y: number, color?: any) {
+  manageCube(id: string, x: number, y: number, color?: any, texture?: any) {
     if (this.hasCube(id)) {
       this.updateCube(id, x, y)
     } else {
-      this.createCube(id, x, y, color)
+      this.createCube(id, x, y, color, texture)
     }
   }
 

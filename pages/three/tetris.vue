@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
 import { MathUtils } from 'three'
+import * as THREE from 'three'
 import { useService } from '~/src/Common/Helpers/HService'
 import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { WfTetris } from '~/src/Tetris/Workflows/WfTetris'
@@ -29,11 +30,11 @@ keyboard.registerSubscriber((key: EKeyCode) => {
   }
 
   if (key === EKeyCode.W) {
-    game.moveShapeDown()
+    game.rotateShape()
   }
 
   if (key === EKeyCode.S) {
-    game.rotateShape()
+    game.moveShapeDown()
   }
 
   if (key === EKeyCode.A) {
@@ -45,7 +46,43 @@ keyboard.registerSubscriber((key: EKeyCode) => {
   }
 })
 
+const textureLoader = new THREE.TextureLoader()
+let bricksTexture: any = null
+textureLoader.load('/images/textures/bricks.png', (texture) => {
+  bricksTexture = texture
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  texture.offset.set(Math.random() * 100, Math.random() * 100)
+  texture.repeat.set(0.1, 0.1)
+
+  console.log('loaded')
+})
+
+game.afterNewShape(() => {
+  bricksTexture = bricksTexture.clone()
+  bricksTexture.offset.set(Math.random() * 100, Math.random() * 100)
+})
+
+rserv.afterScene(async () => {
+  rserv.scene.background = new THREE.Color('skyblue')
+  const textureLoader = new THREE.TextureLoader()
+  const texture = await textureLoader.loadAsync('/images/textures/grass2.jpg')
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  texture.offset.set(0, 0)
+  texture.repeat.set(20, 20)
+  const floorGeometry = new THREE.PlaneGeometry(2400, 2400, 100, 1)
+  const floorMaterial = new THREE.MeshStandardMaterial({
+    map: texture,
+  })
+  const floor = new THREE.Mesh(floorGeometry, floorMaterial)
+  floor.position.set(100, -100, -4)
+  rserv.scene.add(floor)
+})
+
 game.afterNextFrame(() => {
+  if (!bricksTexture) {
+    return
+  }
+
   Object.entries(rserv.cubes).forEach(([id, cube]) => {
     if (id.indexOf('target_') === 0 || id.indexOf('bg_') === 0) {
       cube.visible = false
@@ -73,7 +110,8 @@ game.afterNextFrame(() => {
             id,
             (shape.x + cellIndex) * baseSize,
             (-shape.y - rowIndex) * baseSize,
-            0xaa0000
+            0xaa0000,
+            bricksTexture
           )
           cubeExists && (cube.visible = true)
         } else if (cubeExists) {
@@ -94,7 +132,8 @@ game.afterNextFrame(() => {
           id,
           cellIndex * baseSize,
           -rowIndex * baseSize,
-          0xaa0000
+          0xaa0000,
+          bricksTexture
         )
         cubeExists && (cube.visible = true)
       } else if (cubeExists) {
