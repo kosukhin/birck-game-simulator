@@ -111,6 +111,7 @@ export class WfTetris implements IGameWorkflow {
           this.#grid.addRowToTop(HArray.createEmptyRow(this.#grid.width))
           this.#score.value += 1
           this.#speed.value -= 10
+          this.#afterLineFired && this.#afterLineFired()
         }
       }
     }
@@ -120,6 +121,11 @@ export class WfTetris implements IGameWorkflow {
     }
 
     this.#afterNextFrame?.()
+  }
+
+  #afterLineFired?: Function
+  afterLineFired(cb: Function) {
+    this.#afterLineFired = cb
   }
 
   /**

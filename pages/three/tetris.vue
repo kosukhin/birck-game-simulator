@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MathUtils } from 'three'
+import { MathUtils, Vector3 } from 'three'
 import * as THREE from 'three'
 import { useService } from '~/src/Common/Helpers/HService'
 import { SKeyboard } from '~/src/Common/Services/SKeyboard'
@@ -19,7 +19,6 @@ const canvasWrapper = ref()
 const keyboard = useService<SKeyboard>('keyboard')
 const game = new WfTetris()
 const rserv = new RenderService()
-game.run()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
@@ -53,8 +52,6 @@ textureLoader.load('/images/textures/bricks.png', (texture) => {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(Math.random() * 100, Math.random() * 100)
   texture.repeat.set(0.1, 0.1)
-
-  console.log('loaded')
 })
 
 game.afterNewShape(() => {
@@ -78,10 +75,13 @@ rserv.afterScene(async () => {
   rserv.scene.add(floor)
 })
 
+const newPosition = new Vector3()
 game.afterNextFrame(() => {
   if (!bricksTexture) {
     return
   }
+  rserv.setLastUpdateTime(new Date().getTime())
+  rserv.setGameSpeed(game.speed.value)
 
   Object.entries(rserv.cubes).forEach(([id, cube]) => {
     if (id.indexOf('target_') === 0 || id.indexOf('bg_') === 0) {
@@ -91,9 +91,9 @@ game.afterNextFrame(() => {
 
   const shape = game.grid.getFirstShape()
   if (shape) {
-    rserv.camera.position.z = 80
-    rserv.camera.position.x = shape.x * baseSize
-    rserv.camera.position.y = -shape.y * baseSize + 70
+    newPosition.z = 80
+    newPosition.x = shape.x * baseSize
+    newPosition.y = -shape.y * baseSize + 70
 
     rserv.camera.rotation.x = MathUtils.degToRad(-45)
     rserv.camera.rotation.y = MathUtils.degToRad(0)
@@ -143,10 +143,36 @@ game.afterNextFrame(() => {
   })
 })
 
-rserv.setAfterAnimate(() => {})
+rserv.setAfterAnimate((additional: number) => {
+  if (additional > 1) {
+    additional = 1
+  }
+
+  const xsize = newPosition.x - rserv.camera.position.x
+  const ysize = newPosition.y - rserv.camera.position.y
+
+  rserv.camera.position.x += xsize * additional
+  rserv.camera.position.y += ysize * additional
+  rserv.camera.position.z = newPosition.z
+})
+
+const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
+
+game.afterLineFired(async () => {
+  console.log('sound')
+  const sound = await eatSound()
+  sound.play()
+  setTimeout(() => {
+    sound.stop()
+  }, 1500)
+})
 
 onMounted(() => {
   rserv.render(canvasWrapper.value)
+
+  Promise.all([eatSound()]).then(() => {
+    game.run()
+  })
 
   setTimeout(() => {
     rserv.camera3()
