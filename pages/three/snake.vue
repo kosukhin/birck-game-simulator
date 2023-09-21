@@ -7,14 +7,7 @@
         <div ref="canvasWrapper" :class="'type-' + cameraType"></div>
       </div>
     </div>
-    <div>
-      <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
-      <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
-      <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
-    </div>
-    <div>
-      <el-button @click="game.pause()">Пауза</el-button>
-    </div>
+    <KeyboardHint @pause="game.pause()" />
   </div>
 </template>
 
@@ -31,6 +24,7 @@ import {
   KeysToMoveCamera3,
 } from '~~/src/Common/Types/GameTypes'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
+import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 
 const cameraType = ref('camera1')
 const direction = ref(EMoveDirection.right)

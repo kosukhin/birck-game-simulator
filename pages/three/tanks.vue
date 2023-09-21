@@ -2,9 +2,10 @@
   <div>
     <h1>Танки 3Д</h1>
     <div ref="canvasWrapper"></div>
-    <el-button @click="onChangeCamera('camera1')">Камера 1</el-button>
-    <el-button @click="onChangeCamera('camera2')">Камера 2</el-button>
-    <el-button @click="onChangeCamera('camera3')">Камера 3</el-button>
+    <KeyboardHint @pause="onPaused">
+      <SpaceHint />
+      <br />
+    </KeyboardHint>
   </div>
 </template>
 
@@ -21,6 +22,8 @@ import {
   KeysToMoveMap,
 } from '~~/src/Common/Types/GameTypes'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
+import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import SpaceHint from '~/src/Common/Components/KeyboardHint/SpaceHint.vue'
 
 const cameraType = ref('camera1')
 const direction = ref(EMoveDirection.down)

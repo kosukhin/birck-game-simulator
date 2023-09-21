@@ -2,6 +2,7 @@
   <div>
     <h1>Тетрис 3д</h1>
     <div ref="canvasWrapper"></div>
+    <KeyboardHint @pause="game.pause()" />
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { WfTetris } from '~/src/Tetris/Workflows/WfTetris'
 import { EKeyCode } from '~/src/Common/Types/GameTypes'
 import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
+import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 
 const baseSize = 10
 const canvasWrapper = ref()
@@ -159,7 +161,6 @@ rserv.setAfterAnimate((additional: number) => {
 const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
 
 game.afterLineFired(async () => {
-  console.log('sound')
   const sound = await eatSound()
   sound.play()
   setTimeout(() => {

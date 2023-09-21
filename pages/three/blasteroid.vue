@@ -2,6 +2,10 @@
   <div>
     <h1>Бластероид</h1>
     <div ref="canvasWrapper"></div>
+    <KeyboardHint @pause="onPaused">
+      <SpaceHint />
+      <br />
+    </KeyboardHint>
   </div>
 </template>
 
@@ -17,6 +21,8 @@ import {
   KeysToMoveMap,
 } from '~/src/Common/Types/GameTypes'
 import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
+import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import SpaceHint from '~/src/Common/Components/KeyboardHint/SpaceHint.vue'
 
 const canvasWrapper = ref()
 
