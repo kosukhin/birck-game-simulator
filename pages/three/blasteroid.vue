@@ -10,8 +10,8 @@
 </template>
 
 <script lang="ts" setup>
-import { MathUtils, Vector3 } from 'three'
 import * as THREE from 'three'
+import { MathUtils } from 'three'
 import { useService } from '~/src/Common/Helpers/HService'
 import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { WfBlasteroid } from '~/src/Blasteroid/Workflows/WfBlasteroid'
@@ -23,6 +23,8 @@ import {
 import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import SpaceHint from '~/src/Common/Components/KeyboardHint/SpaceHint.vue'
+import { cubesGroupExtract } from '~/src/Common/Functions/cubesGroupExtract'
+import { cubesToInvisible } from '~/src/Common/Functions/cubesToInvisible'
 
 const canvasWrapper = ref()
 
@@ -31,6 +33,7 @@ const game = new WfBlasteroid()
 game.run()
 
 keyboard.clearSubscribers()
+// set keyboard handler
 keyboard.registerSubscriber((key: EKeyCode) => {
   game.move(KeysToMoveMap[key] ?? EMoveDirection.up)
 
@@ -39,15 +42,13 @@ keyboard.registerSubscriber((key: EKeyCode) => {
   }
 })
 
+// set canvas constants
 const baseSize = 10
 const rserv = new RenderService()
 game.afterNextFrame(() => {
-  Object.entries(rserv.cubes).forEach(([id, cube]) => {
-    if (id.indexOf('target_') === 0) {
-      cube.visible = false
-    }
-  })
+  cubesGroupExtract(rserv.cubes, 'target_').forEach(cubesToInvisible)
 
+  // отображение битмапа цели на кубы сервиса
   game.target.bitmap.forEach((row, rowIndex) => {
     row.forEach((isFilled, cellIndex) => {
       const id = `target_${cellIndex}_${rowIndex}`
@@ -68,6 +69,7 @@ game.afterNextFrame(() => {
     })
   })
 
+  // отображение бластероида на кубы
   game.blasteroid.bitmap.forEach((row, rowIndex) => {
     row.forEach((isFilled, cellIndex) => {
       const id = `blasteroid_${cellIndex}_${rowIndex}`
@@ -89,6 +91,7 @@ game.afterNextFrame(() => {
 })
 
 rserv.setAfterAnimate(() => {
+  // Отображение куба выстрела
   Object.values(game.shoots).forEach((shoot) => {
     const id = `shoot_${shoot.id}`
     const cube = rserv.cubes?.[id]
@@ -105,6 +108,7 @@ rserv.setAfterAnimate(() => {
     cube && (cube.visible = true)
   })
 
+  // Настройка камеры
   rserv.camera.position.z = 80
   rserv.camera.position.x = (game.blasteroid.x - 3) * baseSize + 40
   rserv.camera.position.y = -game.blasteroid.y * baseSize - 60
@@ -115,6 +119,7 @@ rserv.setAfterAnimate(() => {
 })
 
 rserv.afterScene(async () => {
+  // Рендеринг пола
   rserv.scene.background = new THREE.Color('skyblue')
   const textureLoader = new THREE.TextureLoader()
   const texture = await textureLoader.loadAsync('/images/textures/space.jpeg')
@@ -130,6 +135,7 @@ rserv.afterScene(async () => {
   rserv.scene.add(floor)
 })
 
+// Привязка звука выстрела
 const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
 
 game.afterTargetBeated(async () => {
@@ -142,15 +148,15 @@ game.afterTargetBeated(async () => {
 
 onMounted(() => {
   rserv.render(canvasWrapper.value)
+
+  // множество границ рендеринг
   const width = game.grid.width
   const height = game.grid.height
   const white = 0xffffff
-
   for (let i = 0; i < width; i++) {
     rserv.createCube('top' + i, i * baseSize, 1 * baseSize, white)
     rserv.createCube('bottom' + i, i * baseSize, -height * baseSize, white)
   }
-
   for (let i = 0; i < height; i++) {
     rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, white)
     rserv.createCube('right' + i, width * baseSize, -i * baseSize, white)
