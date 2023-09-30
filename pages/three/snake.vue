@@ -37,10 +37,10 @@ import {
   threeVectorSetFrom,
 } from '~~/src/Common/Tools/Three'
 import { baseSize } from '~~/src/Common/Constants/Three'
-import { abs, subtr } from '~~/src/Common/Tools/Math'
+import { useSnakeCameraAnimation } from '~~/src/Snake/Modules/useSnakeCameraAnimation'
+import { mul } from '~~/src/Common/Tools/Math'
 
 const rserv = new RenderService()
-
 const game = new WfSnake(15, 15)
 const keyboard = useService<SKeyboard>('keyboard')
 
@@ -68,8 +68,10 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     let newDirection = KeysToMoveMap[key]
 
     thenIf(camera3Check(rserv.cameraType), () => {
-      const camera3Direction = camera3KeyMapper(game.snake.direction, key)
-      newDirection = passNotNullishValue(camera3Direction, newDirection)
+      newDirection = passNotNullishValue(
+        camera3KeyMapper(game.snake.direction, key),
+        newDirection
+      )
     })
 
     game.moveSnake(newDirection)
@@ -78,31 +80,6 @@ keyboard.registerSubscriber((key: EKeyCode) => {
     threeEulerSetFrom(rserv.camera.rotation, startRotation)
   })
 })
-
-type D3 = { x: number; y: number; z: number }
-function calcAnimatePosition(
-  additional: number,
-  newPosition: D3,
-  newRotation: D3,
-  leadPoint: { x: number; y: number }
-) {
-  let xsize = subtr(newPosition.x, rserv.camera.position.x)
-  let ysize = subtr(newPosition.y, rserv.camera.position.y)
-
-  if (abs(xsize) >= baseSize || abs(ysize) >= baseSize) {
-    rserv.camera.position.x += xsize * additional
-    rserv.camera.position.y += ysize * additional
-    rserv.camera.position.z = newPosition.z
-  } else {
-    xsize = newPosition.x - leadPoint.x
-    ysize = newPosition.y - leadPoint.y
-    rserv.camera.position.x = leadPoint.x + xsize * additional
-    rserv.camera.position.y = leadPoint.y + ysize * additional
-    rserv.camera.position.z = newPosition.z
-  }
-
-  threeEulerSetFrom(newRotation as THREE.Euler, rserv.camera.rotation)
-}
 
 const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
 game.addEvent('afterEated', async () => {
@@ -116,20 +93,22 @@ game.addEvent('gameover', async () => {
   threeAudioPlay(sound)
 })
 
+const toBaseSize = mul.bind(null, baseSize)
+
 rserv.setLeadId('leadPoint')
 game.afterNextFrame(() => {
   threeVectorSetFrom(rserv.camera.position, startForwardPosition)
   rserv.manageCube(
     game.target.id,
-    game.target.x * baseSize,
-    -game.target.y * baseSize,
+    toBaseSize(game.target.x),
+    toBaseSize(-game.target.y),
     0x00aa00
   )
 
   rserv.manageCube(
     'leadPoint',
-    game.snake.leadPoint.x * baseSize,
-    -game.snake.leadPoint.y * baseSize,
+    toBaseSize(game.snake.leadPoint.x),
+    toBaseSize(-game.snake.leadPoint.y),
     0xaa0000
   )
 
@@ -139,8 +118,8 @@ game.afterNextFrame(() => {
   game.snake.points.forEach((point: any) => {
     rserv.manageCube(
       point.id,
-      point.x * baseSize,
-      -point.y * baseSize,
+      toBaseSize(point.x),
+      toBaseSize(-point.y),
       0x8888ff
     )
   })
@@ -161,7 +140,9 @@ function setRotationOrDefault(key: string, defVal: number) {
     : MathUtils.degToRad(Number(cameraControls[key]))
 }
 
+const { cameraPositionTick, camera } = useSnakeCameraAnimation()
 rserv.setAfterAnimate((additional: number) => {
+  camera.value = rserv.camera
   if (rserv.cameraType !== 3) {
     return
   }
@@ -172,19 +153,14 @@ rserv.setAfterAnimate((additional: number) => {
 
   let xMul = 1
   let yMul = 1
-  const direction = game.snake.direction
+  const { direction } = game.snake
   const leadPoint = rserv.cubes[rserv.leadId]
 
   if (!leadPoint) {
     return
   }
 
-  let x = leadPoint.position.x
-  let y = leadPoint.position.y
-
-  newRotation.x = setRotationOrDefault('rx', newRotation.x)
-  newRotation.y = setRotationOrDefault('ry', newRotation.y)
-  newRotation.z = setRotationOrDefault('rz', newRotation.z)
+  let { x, y } = leadPoint.position
 
   if (direction === EMoveDirection.down) {
     yMul = -1
@@ -221,18 +197,14 @@ rserv.setAfterAnimate((additional: number) => {
     newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(90))
   }
 
-  calcAnimatePosition(
+  cameraPositionTick(
     additional,
     {
-      x: x + baseSize * xMul,
-      y: y + baseSize * yMul,
+      x: x + toBaseSize(xMul),
+      y: y + toBaseSize(yMul),
       z: 60,
     },
-    {
-      x: newRotation.x,
-      y: newRotation.y,
-      z: newRotation.z,
-    },
+    newRotation,
     {
       x,
       y,
@@ -252,18 +224,23 @@ onMounted(() => {
   const borderColor = 0x2b241d
 
   iterate((i) => {
-    rserv.createCube(`top${i}`, i * baseSize, 1 * baseSize, borderColor)
+    rserv.createCube(`top${i}`, toBaseSize(i), baseSize, borderColor)
     rserv.createCube(
       `bottom${i}`,
-      i * baseSize,
-      -height * baseSize,
+      toBaseSize(i),
+      toBaseSize(-height),
       borderColor
     )
   }, width)
 
   iterate((i) => {
-    rserv.createCube(`left${i}`, -1 * baseSize, -i * baseSize, borderColor)
-    rserv.createCube(`right${i}`, width * baseSize, -i * baseSize, borderColor)
+    rserv.createCube(`left${i}`, -baseSize, toBaseSize(-i), borderColor)
+    rserv.createCube(
+      `right${i}`,
+      toBaseSize(width),
+      toBaseSize(-i),
+      borderColor
+    )
   }, height)
 
   setTimeout(() => {
