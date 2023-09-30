@@ -25,6 +25,7 @@ import {
 } from '~~/src/Common/Types/GameTypes'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import { Floor } from '~~/src/Common/Library/ThreeD/Entities/Floor'
 
 const cameraType = ref('camera1')
 const direction = ref(EMoveDirection.right)
@@ -36,17 +37,17 @@ const keyboard = useService<SKeyboard>('keyboard')
 
 rserv.afterScene(async () => {
   rserv.scene.background = new THREE.Color('skyblue')
-  const textureLoader = new THREE.TextureLoader()
-  const texture = await textureLoader.loadAsync('/images/textures/grass2.jpg')
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-  texture.offset.set(0, 0)
-  texture.repeat.set(20, 20)
-  const floorGeometry = new THREE.PlaneGeometry(2400, 2400, 100, 1)
-  const floorMaterial = new THREE.MeshStandardMaterial({
-    map: texture,
-  })
-  const floor = new THREE.Mesh(floorGeometry, floorMaterial)
-  floor.position.set(100, -100, -4)
+  const floor = (
+    await new Floor(
+      '/images/textures/grass2.jpg',
+      [0, 0],
+      [20, 20],
+      2400,
+      2400,
+      100,
+      1
+    ).build()
+  ).mesh()
   rserv.scene.add(floor)
 })
 
@@ -195,6 +196,11 @@ rserv.setAfterAnimate((additional: number) => {
   let yMul = 1
   const direction = game.snake.direction
   const leadPoint = rserv.cubes[rserv.leadId]
+
+  if (!leadPoint) {
+    return
+  }
+
   let x = leadPoint.position.x
   let y = leadPoint.position.y
 

@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "cz": "git add . && git cz",
     "start": "nuxt start",
     "build": "nuxt build",
     "dev": "nuxt dev",
