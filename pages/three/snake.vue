@@ -25,18 +25,21 @@ import {
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import { floor } from '~~/src/Common/Library/ThreeD/Entities/Floor'
-import { camera3KeyMapper } from '~~/src/Common/Tools/Camera'
-import { passNotNullishValue, thenIf } from '~~/src/Common/Tools/LogicFlow'
+import { camera3Check, camera3KeyMapper } from '~~/src/Common/Tools/Camera'
+import {
+  iterate,
+  passNotNullishValue,
+  thenIf,
+} from '~~/src/Common/Tools/LogicFlow'
 import {
   threeAudioPlay,
   threeEulerSetFrom,
   threeVectorSetFrom,
 } from '~~/src/Common/Tools/Three'
 import { baseSize } from '~~/src/Common/Constants/Three'
+import { abs, subtr } from '~~/src/Common/Tools/Math'
 
-const direction = ref(EMoveDirection.right)
 const rserv = new RenderService()
-const canvasWrapper = ref()
 
 const game = new WfSnake(15, 15)
 const keyboard = useService<SKeyboard>('keyboard')
@@ -61,15 +64,14 @@ const startRotation = new Euler()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-  thenIf(KeysToMoveMap[key] !== undefined, () => {
+  thenIf(KeysToMoveMap[key], () => {
     let newDirection = KeysToMoveMap[key]
 
-    thenIf(rserv.cameraType === 3, () => {
+    thenIf(camera3Check(rserv.cameraType), () => {
       const camera3Direction = camera3KeyMapper(game.snake.direction, key)
       newDirection = passNotNullishValue(camera3Direction, newDirection)
     })
 
-    direction.value = newDirection
     game.moveSnake(newDirection)
     rserv.setLeadDirection(newDirection)
     threeVectorSetFrom(rserv.camera.position, startPosition)
@@ -84,10 +86,10 @@ function calcAnimatePosition(
   newRotation: D3,
   leadPoint: { x: number; y: number }
 ) {
-  let xsize = newPosition.x - rserv.camera.position.x
-  let ysize = newPosition.y - rserv.camera.position.y
+  let xsize = subtr(newPosition.x, rserv.camera.position.x)
+  let ysize = subtr(newPosition.y, rserv.camera.position.y)
 
-  if (Math.abs(xsize) >= baseSize || Math.abs(ysize) >= baseSize) {
+  if (abs(xsize) >= baseSize || abs(ysize) >= baseSize) {
     rserv.camera.position.x += xsize * additional
     rserv.camera.position.y += ysize * additional
     rserv.camera.position.z = newPosition.z
@@ -146,7 +148,7 @@ game.afterNextFrame(() => {
 
 const k = 50
 
-const cameraControls = reactive({
+const cameraControls = reactive<Record<string, number>>({
   rx: 0,
   ry: 0,
   rz: 0,
@@ -154,7 +156,6 @@ const cameraControls = reactive({
 const newRotation = new THREE.Euler(0, 0, 0)
 
 function setRotationOrDefault(key: string, defVal: number) {
-  // @ts-ignore
   return cameraControls[key] === 0
     ? defVal
     : MathUtils.degToRad(Number(cameraControls[key]))
@@ -239,6 +240,7 @@ rserv.setAfterAnimate((additional: number) => {
   )
 })
 
+const canvasWrapper = ref()
 onMounted(() => {
   rserv.render(canvasWrapper.value)
 
@@ -246,23 +248,23 @@ onMounted(() => {
     game.run()
   })
 
-  const width = game.grid.width
-  const height = game.grid.height
-  const common = 0x2b241d
-  const red = common
-  const green = common
-  const blue = common
-  const white = common
+  const { width, height } = game.grid
+  const borderColor = 0x2b241d
 
-  for (let i = 0; i < width; i++) {
-    rserv.createCube('top' + i, i * baseSize, 1 * baseSize, red)
-    rserv.createCube('bottom' + i, i * baseSize, -height * baseSize, white)
-  }
+  iterate((i) => {
+    rserv.createCube(`top${i}`, i * baseSize, 1 * baseSize, borderColor)
+    rserv.createCube(
+      `bottom${i}`,
+      i * baseSize,
+      -height * baseSize,
+      borderColor
+    )
+  }, width)
 
-  for (let i = 0; i < height; i++) {
-    rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, green)
-    rserv.createCube('right' + i, width * baseSize, -i * baseSize, blue)
-  }
+  iterate((i) => {
+    rserv.createCube(`left${i}`, -1 * baseSize, -i * baseSize, borderColor)
+    rserv.createCube(`right${i}`, width * baseSize, -i * baseSize, borderColor)
+  }, height)
 
   setTimeout(() => {
     rserv.camera3()

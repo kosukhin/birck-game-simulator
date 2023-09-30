@@ -14,3 +14,7 @@ export function camera3KeyMapper(
 
   return KeysToMoveCamera3[currentDirection][key]
 }
+
+export function camera3Check(cameraType: unknown) {
+  return cameraType === 3
+}
