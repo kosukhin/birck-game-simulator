@@ -1,41 +1,39 @@
 import * as THREE from 'three'
 import { TShapePosition } from '~~/src/Common/Types/GridTypes'
 
-export class Floor {
-  private floorMesh?: THREE.Mesh
+export function floor(
+  texturePath: string,
+  offset: TShapePosition,
+  repeat: TShapePosition,
+  width?: number,
+  height?: number,
+  widthSegments?: number,
+  heightSegments?: number
+) {
+  let floorMesh: THREE.Mesh | undefined
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(
-    readonly texturePath: string,
-    readonly offset: TShapePosition,
-    readonly repeat: TShapePosition,
-    readonly width?: number,
-    readonly height?: number,
-    readonly widthSegments?: number,
-    readonly heightSegments?: number
-  ) {}
-
-  async build() {
+  const build = async () => {
     const textureLoader = new THREE.TextureLoader()
-    const texture = await textureLoader.loadAsync(this.texturePath)
+    const texture = await textureLoader.loadAsync(texturePath)
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-    texture.offset.set(...this.offset)
-    texture.repeat.set(...this.repeat)
+    texture.offset.set(...offset)
+    texture.repeat.set(...repeat)
     const floorGeometry = new THREE.PlaneGeometry(
-      this.width,
-      this.height,
-      this.widthSegments,
-      this.heightSegments
+      width,
+      height,
+      widthSegments,
+      heightSegments
     )
     const floorMaterial = new THREE.MeshStandardMaterial({
       map: texture,
     })
-    this.floorMesh = new THREE.Mesh(floorGeometry, floorMaterial)
-    this.floorMesh.position.set(100, -100, -4)
-    return this
+    floorMesh = new THREE.Mesh(floorGeometry, floorMaterial)
+    floorMesh.position.set(100, -100, -4)
+    return floorMesh
   }
 
-  mesh(): THREE.Mesh {
-    return this.floorMesh as THREE.Mesh
+  return {
+    floorMesh,
+    build,
   }
 }

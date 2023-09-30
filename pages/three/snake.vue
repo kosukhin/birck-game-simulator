@@ -25,7 +25,7 @@ import {
 } from '~~/src/Common/Types/GameTypes'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { Floor } from '~~/src/Common/Library/ThreeD/Entities/Floor'
+import { floor } from '~~/src/Common/Library/ThreeD/Entities/Floor'
 
 const cameraType = ref('camera1')
 const direction = ref(EMoveDirection.right)
@@ -37,18 +37,16 @@ const keyboard = useService<SKeyboard>('keyboard')
 
 rserv.afterScene(async () => {
   rserv.scene.background = new THREE.Color('skyblue')
-  const floor = (
-    await new Floor(
-      '/images/textures/grass2.jpg',
-      [0, 0],
-      [20, 20],
-      2400,
-      2400,
-      100,
-      1
-    ).build()
-  ).mesh()
-  rserv.scene.add(floor)
+  const floorMesh = await floor(
+    '/images/textures/grass2.jpg',
+    [0, 0],
+    [20, 20],
+    2400,
+    2400,
+    100,
+    1
+  ).build()
+  rserv.scene.add(floorMesh)
 })
 
 const startForwardPosition = new Vector3()
