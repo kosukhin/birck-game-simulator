@@ -4,7 +4,7 @@
     <h1>Змейка 3Д</h1>
     <div class="row">
       <div>
-        <div ref="canvasWrapper" :class="'type-' + cameraType"></div>
+        <div ref="canvasWrapper"></div>
       </div>
     </div>
     <KeyboardHint @pause="game.pause()" />
@@ -21,13 +21,19 @@ import {
   EMoveDirection,
   EKeyCode,
   KeysToMoveMap,
-  KeysToMoveCamera3,
 } from '~~/src/Common/Types/GameTypes'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import { floor } from '~~/src/Common/Library/ThreeD/Entities/Floor'
+import { camera3KeyMapper } from '~~/src/Common/Tools/Camera'
+import { passNotNullishValue, thenIf } from '~~/src/Common/Tools/LogicFlow'
+import {
+  threeAudioPlay,
+  threeEulerSetFrom,
+  threeVectorSetFrom,
+} from '~~/src/Common/Tools/Three'
+import { baseSize } from '~~/src/Common/Constants/Three'
 
-const cameraType = ref('camera1')
 const direction = ref(EMoveDirection.right)
 const rserv = new RenderService()
 const canvasWrapper = ref()
@@ -55,36 +61,23 @@ const startRotation = new Euler()
 
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-  if (KeysToMoveMap[key] !== undefined) {
+  thenIf(KeysToMoveMap[key] !== undefined, () => {
     let newDirection = KeysToMoveMap[key]
 
-    if (cameraType.value === 'camera3') {
-      if (key === EKeyCode.W || key === EKeyCode.S) {
-        return
-      }
-
-      const currentDirection = game.snake.direction
-      newDirection = KeysToMoveCamera3[currentDirection][key]
-    }
+    thenIf(rserv.cameraType === 3, () => {
+      const camera3Direction = camera3KeyMapper(game.snake.direction, key)
+      newDirection = passNotNullishValue(camera3Direction, newDirection)
+    })
 
     direction.value = newDirection
     game.moveSnake(newDirection)
     rserv.setLeadDirection(newDirection)
-    startPosition.set(
-      rserv.camera.position.x,
-      rserv.camera.position.y,
-      rserv.camera.position.z
-    )
-    startRotation.set(
-      rserv.camera.rotation.x,
-      rserv.camera.rotation.y,
-      rserv.camera.rotation.z
-    )
-  }
+    threeVectorSetFrom(rserv.camera.position, startPosition)
+    threeEulerSetFrom(rserv.camera.rotation, startRotation)
+  })
 })
 
 type D3 = { x: number; y: number; z: number }
-
 function calcAnimatePosition(
   additional: number,
   newPosition: D3,
@@ -106,38 +99,24 @@ function calcAnimatePosition(
     rserv.camera.position.z = newPosition.z
   }
 
-  rserv.camera.rotation.x = newRotation.x
-  rserv.camera.rotation.y = newRotation.y
-  rserv.camera.rotation.z = newRotation.z
+  threeEulerSetFrom(newRotation as THREE.Euler, rserv.camera.rotation)
 }
 
 const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
-const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
-
 game.addEvent('afterEated', async () => {
   const sound = await eatSound()
-  sound.play()
-  setTimeout(() => {
-    sound.stop()
-  }, 1500)
+  threeAudioPlay(sound)
 })
 
+const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
 game.addEvent('gameover', async () => {
   const sound = await explodeSound()
-  sound.play()
-  setTimeout(() => {
-    sound.stop()
-  }, 1500)
+  threeAudioPlay(sound)
 })
 
-const baseSize = 10
 rserv.setLeadId('leadPoint')
 game.afterNextFrame(() => {
-  startForwardPosition.set(
-    rserv.camera.position.x,
-    rserv.camera.position.y,
-    rserv.camera.position.z
-  )
+  threeVectorSetFrom(rserv.camera.position, startForwardPosition)
   rserv.manageCube(
     game.target.id,
     game.target.x * baseSize,
@@ -286,21 +265,7 @@ onMounted(() => {
   }
 
   setTimeout(() => {
-    onChangeCamera('camera3')
+    rserv.camera3()
   })
 })
-
-const onChangeCamera = (type: string) => {
-  cameraType.value = type
-  if (type in rserv) {
-    ;(rserv as any)[type]()
-  }
-}
 </script>
-
-<style lang="scss">
-.row {
-  display: flex;
-  flex-direction: row;
-}
-</style>
