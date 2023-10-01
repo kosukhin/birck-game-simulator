@@ -17,11 +17,7 @@ import { Euler, MathUtils, Vector3 } from 'three'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
-import {
-  EMoveDirection,
-  EKeyCode,
-  KeysToMoveMap,
-} from '~~/src/Common/Types/GameTypes'
+import { EKeyCode, KeysToMoveMap } from '~~/src/Common/Types/GameTypes'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import { floor } from '~~/src/Common/Library/ThreeD/Entities/Floor'
@@ -39,6 +35,7 @@ import {
 import { baseSize } from '~~/src/Common/Constants/Three'
 import { useSnakeCameraAnimation } from '~~/src/Snake/Modules/useSnakeCameraAnimation'
 import { mul } from '~~/src/Common/Tools/Math'
+import { ModelsPool } from '~~/src/Common/Models/ModelsPool'
 
 const rserv = new RenderService()
 const game = new WfSnake(15, 15)
@@ -125,25 +122,13 @@ game.afterNextFrame(() => {
   })
 })
 
-const k = 50
-
-const cameraControls = reactive<Record<string, number>>({
-  rx: 0,
-  ry: 0,
-  rz: 0,
-})
 const newRotation = new THREE.Euler(0, 0, 0)
-
-function setRotationOrDefault(key: string, defVal: number) {
-  return cameraControls[key] === 0
-    ? defVal
-    : MathUtils.degToRad(Number(cameraControls[key]))
-}
+const cameraRotation = ModelsPool.cameraRotation()
 
 const { cameraPositionTick, camera } = useSnakeCameraAnimation()
 rserv.setAfterAnimate((additional: number) => {
   camera.value = rserv.camera
-  if (rserv.cameraType !== 3) {
+  if (!camera3Check(rserv.cameraType)) {
     return
   }
 
@@ -151,51 +136,29 @@ rserv.setAfterAnimate((additional: number) => {
     additional = 1
   }
 
-  let xMul = 1
-  let yMul = 1
-  const { direction } = game.snake
   const leadPoint = rserv.cubes[rserv.leadId]
 
   if (!leadPoint) {
     return
   }
 
+  const { direction } = game.snake
   let { x, y } = leadPoint.position
+  const {
+    y: dy,
+    x: dx,
+    yMul,
+    xMul,
+    rotationDeg,
+  } = cameraRotation.byDirection(direction)
 
-  if (direction === EMoveDirection.down) {
-    yMul = -1
-    xMul = 0
-    y += k
-    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(320))
-    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(0))
-    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(180))
-  }
-
-  if (direction === EMoveDirection.up) {
-    xMul = 0
-    y -= k
-    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(30))
-    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(0))
-    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(0))
-  }
-
-  if (direction === EMoveDirection.right) {
-    yMul = 0
-    xMul = 1
-    x -= k
-    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(0))
-    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(-30))
-    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(270))
-  }
-
-  if (direction === EMoveDirection.left) {
-    yMul = 0
-    xMul = -1
-    x += k
-    newRotation.x = setRotationOrDefault('rx', MathUtils.degToRad(0))
-    newRotation.y = setRotationOrDefault('ry', MathUtils.degToRad(30))
-    newRotation.z = setRotationOrDefault('rz', MathUtils.degToRad(90))
-  }
+  y += dy
+  x += dx
+  newRotation.set(
+    MathUtils.degToRad(rotationDeg[0]),
+    MathUtils.degToRad(rotationDeg[1]),
+    MathUtils.degToRad(rotationDeg[2])
+  )
 
   cameraPositionTick(
     additional,
