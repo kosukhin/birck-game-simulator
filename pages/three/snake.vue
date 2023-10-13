@@ -29,18 +29,19 @@ import {
   useNextFrameDrawProcedure,
 } from '~~/src/Snake/Procedures/draw'
 import { thenIf } from '~~/src/Common/Tools/LogicFlow'
+import { I } from '~~/src/Common/Library/I'
 
-const rserv = new RenderService()
-const game = new WfSnake(15, 15)
+const rserv = I.getInstance(RenderService)
+const game = I.getInstance(WfSnake, 15, 15)
 
-rserv.afterScene(() => {
-  useSceneInitProcedure(rserv)
-  useSoundBindProcedure(rserv, game)
+I.reactOn(rserv.afterScene.bind(rserv), () => {
+  I.applyProcess(useSceneInitProcedure, rserv)
+  I.applyProcess(useSoundBindProcedure, rserv, game)
 })
 
-const startForwardPosition = new Vector3()
-const startPosition = new Vector3()
-const startRotation = new Euler()
+const startForwardPosition = I.getInstance(Vector3)
+const startPosition = I.getInstance(Vector3)
+const startRotation = I.getInstance(Euler)
 
 useKeyboardProcedure(rserv, game, startPosition, startRotation)
 
