@@ -1,6 +1,9 @@
 import * as THREE from 'three'
-import { SceneConfig } from '~~/src/Common/Library/ThreeD/Configs/SceneConfig'
+import { Color, Mesh } from 'three'
+import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+import { reactOn } from '~/src/Common/Library/I'
+import { FloorModel } from '~/src/Common/Library/ThreeD/Configs/FloorModel'
 
 export class RenderService {
   additional: number = 1
@@ -254,9 +257,39 @@ export class RenderService {
     })
   }
 
-  applySceneConfig(config: SceneConfig) {
-    console.log(config)
-    this.scene.background = config.fields.background
-    this.scene.add(config.fields.floor)
+  applySceneConfig(model: SceneModel) {
+    reactOn(this.afterScene.bind(this), async () => {
+      if (!model.fields) {
+        return
+      }
+      // TODO обработать звуки
+      this.scene.background = new Color(model.fields.background)
+      this.scene.add(await this.buildFloorByModel(model.fields.floor))
+    })
+  }
+
+  async buildFloorByModel(model: FloorModel): Promise<Mesh> {
+    if (!model.fields) {
+      throw new Error('no mesh fo floor')
+    }
+    const textureLoader = new THREE.TextureLoader()
+    const texture = await textureLoader.loadAsync(model.fields.texture)
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+    texture.offset.set(...model.fields.offset)
+    texture.repeat.set(...model.fields.repeat)
+    const { width, height, widthSegments, heightSegments } = model.fields
+    const floorGeometry = new THREE.PlaneGeometry(
+      width,
+      height,
+      widthSegments,
+      heightSegments
+    )
+    const floorMaterial = new THREE.MeshStandardMaterial({
+      map: texture,
+    })
+    const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial)
+    floorMesh.position.set(100, -100, -4)
+
+    return floorMesh
   }
 }

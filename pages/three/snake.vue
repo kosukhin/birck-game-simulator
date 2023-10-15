@@ -12,11 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import { Color, Euler, Vector3 } from 'three'
+import { Euler, Vector3 } from 'three'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { applyProcess, reactOn, takeInstance } from '~~/src/Common/Library/I'
-import { FloorConfig } from '~~/src/Common/Library/ThreeD/Configs/FloorConfig'
-import { SceneConfig } from '~~/src/Common/Library/ThreeD/Configs/SceneConfig'
+import { applyProcess, takeInstance } from '~~/src/Common/Library/I'
+import { FloorModel } from '~~/src/Common/Library/ThreeD/Configs/FloorModel'
+import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { ModelsPool } from '~~/src/Common/Models/ModelsPool'
 import { camera3Check } from '~~/src/Common/Tools/Camera'
@@ -33,36 +33,26 @@ import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
 const rserv = takeInstance(RenderService)
 const game = takeInstance(WfSnake, 15, 15)
-let sceneConfig = takeInstance(SceneConfig)
-
-sceneConfig = sceneConfig.modify({
-  background: takeInstance(Color, 'skyblue'),
+const floor = takeInstance(FloorModel, {
+  texture: '/images/textures/grass2.jpg',
+  offset: [0, 0],
+  repeat: [20, 20],
+  width: 2400,
+  height: 2400,
+  widthSegments: 100,
+  heightSegments: 1,
+})
+const scene = takeInstance(SceneModel, {
+  background: 'skyblue',
   soundToEvents: [
     ['afterEated', '/sounds/eated.wav'],
     ['explode', '/sounds/explode.wav'],
     ['gameover', '/sounds/explode.wav'],
   ],
+  floor,
 })
 
-reactOn(rserv.afterScene.bind(rserv), async () => {
-  const floor = takeInstance(FloorConfig, {
-    texture,
-  })
-  const floorMesh = await floor(
-    '/images/textures/grass2.jpg',
-    [0, 0],
-    [20, 20],
-    2400,
-    2400,
-    100,
-    1
-  ).build()
-  rserv.applySceneConfig(
-    sceneConfig.modify({
-      floor: floorMesh,
-    })
-  )
-})
+rserv.applySceneConfig(scene)
 
 const startForwardPosition = takeInstance(Vector3)
 const startPosition = takeInstance(Vector3)

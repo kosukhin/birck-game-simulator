@@ -12,8 +12,8 @@ interface FloorFields {
   heightSegments?: number
 }
 
-export class FloorConfig extends BaseConfig<FloorFields> {
+export class FloorModel extends BaseConfig<FloorFields> {
   newInstance(newFields: FloorFields): this {
-    return takeInstance(FloorConfig, newFields) as this
+    return takeInstance(FloorModel, newFields) as this
   }
 }
