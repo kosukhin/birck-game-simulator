@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { Euler, Vector3 } from 'three'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { applyProcess, takeInstance } from '~~/src/Common/Library/I'
+import { reactOn, takeInstance } from '~~/src/Common/Library/I'
 import { FloorModel } from '~~/src/Common/Library/ThreeD/Configs/FloorModel'
 import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
@@ -28,8 +28,11 @@ import {
   useDrawTickProcedure,
   useNextFrameDrawProcedure,
 } from '~~/src/Snake/Procedures/draw'
-import { useKeyboardProcedure } from '~~/src/Snake/Procedures/keyboard'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
+import { useService } from '~/src/Common/Helpers/HService'
+import { SKeyboard } from '~/src/Common/Services/SKeyboard'
+import { CameraModel } from '~/src/Common/Library/ThreeD/Configs/CameraModel'
+import { KeysToMoveMap } from '~/src/Common/Types/GameTypes'
 
 const rserv = takeInstance(RenderService)
 const game = takeInstance(WfSnake, 15, 15)
@@ -58,7 +61,17 @@ const startForwardPosition = takeInstance(Vector3)
 const startPosition = takeInstance(Vector3)
 const startRotation = takeInstance(Euler)
 
-applyProcess(useKeyboardProcedure, rserv, game, startPosition, startRotation)
+const keyboard = useService<SKeyboard>('keyboard')
+const cameraModel = takeInstance(CameraModel)
+reactOn(keyboard.registerSubscriber.bind(keyboard), (keyCode) => {
+  thenIf(KeysToMoveMap[keyCode], () => {
+    cameraModel.modify({
+      directionKeyCode: keyCode,
+      cameraPosition: startPosition,
+      cameraRotation: startRotation,
+    })
+  })
+})
 
 rserv.setLeadId('leadPoint')
 game.afterNextFrame(() => {

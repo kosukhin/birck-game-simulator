@@ -1,8 +1,8 @@
-export interface Config<TFields> {
-  modify(fields: TFields): Config<TFields>
+export interface Model<TFields> {
+  modify(fields: TFields): Model<TFields>
 }
 
-export abstract class BaseConfig<T> implements Config<T> {
+export abstract class BaseModel<T> implements Model<T> {
   abstract newInstance(newFields: T): this
 
   constructor(readonly fields?: T) {}

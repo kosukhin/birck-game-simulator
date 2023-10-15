@@ -18,7 +18,9 @@ export function takeInstance<T extends { new (...args: any[]): any }>(
   return new constructorFunction(...args)
 }
 
-export function reactOn(fn: Function, cb: Function) {
+type Argument<T> = T extends (arg: infer U) => any ? U : never
+
+export function reactOn<T extends (arg: any) => any>(fn: T, cb: Argument<T>) {
   return fn(cb)
 }
 

@@ -1,4 +1,4 @@
-import { BaseConfig } from '~~/src/Common/Config/Config'
+import { BaseModel } from '~/src/Common/Config/Model'
 import { takeInstance } from '~~/src/Common/Library/I'
 import { TShapePosition } from '~~/src/Common/Types/GridTypes'
 
@@ -12,7 +12,7 @@ interface FloorFields {
   heightSegments?: number
 }
 
-export class FloorModel extends BaseConfig<FloorFields> {
+export class FloorModel extends BaseModel<FloorFields> {
   newInstance(newFields: FloorFields): this {
     return takeInstance(FloorModel, newFields) as this
   }
