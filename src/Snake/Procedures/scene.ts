@@ -2,6 +2,11 @@ import { Color } from 'three'
 import { floor } from '~~/src/Common/Library/ThreeD/Entities/Floor'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 
+/*
+- устанавливаю фон сцены синим
+- описываю настройки пола
+- добавляю пол на сцену
+*/
 export async function useSceneInitProcedure(rserv: RenderService) {
   rserv.scene.background = new Color('skyblue')
   const floorMesh = await floor(

@@ -12,38 +12,63 @@
 </template>
 
 <script setup lang="ts">
-import { Euler, Vector3 } from 'three'
-import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
-import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
+import { Color, Euler, Vector3 } from 'three'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { camera3Check } from '~~/src/Common/Tools/Camera'
-import { useSnakeCameraAnimation } from '~~/src/Snake/Modules/useSnakeCameraAnimation'
+import { applyProcess, reactOn, takeInstance } from '~~/src/Common/Library/I'
+import { FloorConfig } from '~~/src/Common/Library/ThreeD/Configs/FloorConfig'
+import { SceneConfig } from '~~/src/Common/Library/ThreeD/Configs/SceneConfig'
+import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { ModelsPool } from '~~/src/Common/Models/ModelsPool'
-import { useSceneInitProcedure } from '~~/src/Snake/Procedures/scene'
-import { useKeyboardProcedure } from '~~/src/Snake/Procedures/keyboard'
-import { useSoundBindProcedure } from '~~/src/Snake/Procedures/sound'
+import { camera3Check } from '~~/src/Common/Tools/Camera'
 import { toBaseSize } from '~~/src/Common/Tools/Cast'
+import { thenIf } from '~~/src/Common/Tools/LogicFlow'
+import { useSnakeCameraAnimation } from '~~/src/Snake/Modules/useSnakeCameraAnimation'
 import {
   useBordersDrawProcedure,
   useDrawTickProcedure,
   useNextFrameDrawProcedure,
 } from '~~/src/Snake/Procedures/draw'
-import { thenIf } from '~~/src/Common/Tools/LogicFlow'
-import { I } from '~~/src/Common/Library/I'
+import { useKeyboardProcedure } from '~~/src/Snake/Procedures/keyboard'
+import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
-const rserv = I.getInstance(RenderService)
-const game = I.getInstance(WfSnake, 15, 15)
+const rserv = takeInstance(RenderService)
+const game = takeInstance(WfSnake, 15, 15)
+let sceneConfig = takeInstance(SceneConfig)
 
-I.reactOn(rserv.afterScene.bind(rserv), () => {
-  I.applyProcess(useSceneInitProcedure, rserv)
-  I.applyProcess(useSoundBindProcedure, rserv, game)
+sceneConfig = sceneConfig.modify({
+  background: takeInstance(Color, 'skyblue'),
+  soundToEvents: [
+    ['afterEated', '/sounds/eated.wav'],
+    ['explode', '/sounds/explode.wav'],
+    ['gameover', '/sounds/explode.wav'],
+  ],
 })
 
-const startForwardPosition = I.getInstance(Vector3)
-const startPosition = I.getInstance(Vector3)
-const startRotation = I.getInstance(Euler)
+reactOn(rserv.afterScene.bind(rserv), async () => {
+  const floor = takeInstance(FloorConfig, {
+    texture,
+  })
+  const floorMesh = await floor(
+    '/images/textures/grass2.jpg',
+    [0, 0],
+    [20, 20],
+    2400,
+    2400,
+    100,
+    1
+  ).build()
+  rserv.applySceneConfig(
+    sceneConfig.modify({
+      floor: floorMesh,
+    })
+  )
+})
 
-useKeyboardProcedure(rserv, game, startPosition, startRotation)
+const startForwardPosition = takeInstance(Vector3)
+const startPosition = takeInstance(Vector3)
+const startRotation = takeInstance(Euler)
+
+applyProcess(useKeyboardProcedure, rserv, game, startPosition, startRotation)
 
 rserv.setLeadId('leadPoint')
 game.afterNextFrame(() => {

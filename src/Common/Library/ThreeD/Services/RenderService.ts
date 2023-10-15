@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { SceneConfig } from '~~/src/Common/Library/ThreeD/Configs/SceneConfig'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 
 export class RenderService {
@@ -251,5 +252,11 @@ export class RenderService {
 
       resolve(cachedSound)
     })
+  }
+
+  applySceneConfig(config: SceneConfig) {
+    console.log(config)
+    this.scene.background = config.fields.background
+    this.scene.add(config.fields.floor)
   }
 }

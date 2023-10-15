@@ -2,6 +2,13 @@ import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderServi
 import { threeAudioPlay } from '~~/src/Common/Tools/Three'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
+/*
+- создаем звук eated.wav
+- привязываем его к событию afterAte
+- создаем звук explode.wav
+- привязываем его на событие explode
+- при событии mounted вызываем загрузку звуков
+ */
 export function useSoundBindProcedure(rserv: RenderService, game: WfSnake) {
   const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
   game.addEvent('afterEated', async () => {
@@ -15,7 +22,7 @@ export function useSoundBindProcedure(rserv: RenderService, game: WfSnake) {
     threeAudioPlay(sound)
   })
 
-  onMounted(() => {
-    Promise.all([eatSound(), explodeSound()])
+  onMounted(async () => {
+    await Promise.all([eatSound(), explodeSound()])
   })
 }
