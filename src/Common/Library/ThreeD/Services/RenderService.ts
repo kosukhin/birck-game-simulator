@@ -259,25 +259,19 @@ export class RenderService {
 
   applySceneConfig(model: SceneModel) {
     reactOn(this.afterScene.bind(this), async () => {
-      if (!model.fields) {
-        return
-      }
       // TODO обработать звуки
-      this.scene.background = new Color(model.fields.background)
-      this.scene.add(await this.buildFloorByModel(model.fields.floor))
+      this.scene.background = new Color(model.background)
+      this.scene.add(await this.buildFloorByModel(model.floor))
     })
   }
 
   async buildFloorByModel(model: FloorModel): Promise<Mesh> {
-    if (!model.fields) {
-      throw new Error('no mesh fo floor')
-    }
     const textureLoader = new THREE.TextureLoader()
-    const texture = await textureLoader.loadAsync(model.fields.texture)
+    const texture = await textureLoader.loadAsync(model.texture)
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-    texture.offset.set(...model.fields.offset)
-    texture.repeat.set(...model.fields.repeat)
-    const { width, height, widthSegments, heightSegments } = model.fields
+    texture.offset.set(...model.offset)
+    texture.repeat.set(...model.repeat)
+    const { width, height, widthSegments, heightSegments } = model
     const floorGeometry = new THREE.PlaneGeometry(
       width,
       height,

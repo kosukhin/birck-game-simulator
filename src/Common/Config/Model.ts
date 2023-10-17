@@ -2,13 +2,10 @@ export interface Model<TFields> {
   modify(fields: TFields): Model<TFields>
 }
 
-export abstract class BaseModel<T> implements Model<T> {
-  abstract newInstance(newFields: T): this
-
-  constructor(readonly fields?: T) {}
-
-  modify(fields: Partial<T>) {
-    const newFields = Object.assign(this.fields ?? {}, fields) as T
-    return this.newInstance(newFields)
+export abstract class BaseModel {
+  modify(fields: Partial<typeof this>) {
+    const newFields = Object.assign({ ...this }, fields)
+    newFields.modify = this.modify.bind(newFields)
+    return newFields as this
   }
 }
