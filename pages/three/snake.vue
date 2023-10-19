@@ -79,7 +79,7 @@ let cameraModel = takeInstance(
 )
 reactOn(keyboard.registerSubscriber.bind(keyboard), (keyCode) => {
   thenIf(KeysToMoveMap[keyCode], () => {
-    cameraModel = cameraModel.modify({
+    cameraModel = cameraModel.returnChanged({
       directionKeyCode: keyCode,
       cameraPosition: startPosition,
       cameraRotation: startRotation,
@@ -93,6 +93,12 @@ reactOn(keyboard.registerSubscriber.bind(keyboard), (keyCode) => {
 })
 
 rserv.setLeadId('leadPoint')
+/*
+В rserv.camera.position записываем значение из startPosition
+Создаем куб для точки цели
+Создаем куб для лид поинта
+Для каждого поинта змейки управляение кубом
+ */
 game.afterNextFrame(() => {
   useNextFrameDrawProcedure(rserv, game, startForwardPosition)
 })

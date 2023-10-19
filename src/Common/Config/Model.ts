@@ -3,9 +3,9 @@ export interface Model<TFields> {
 }
 
 export abstract class BaseModel {
-  modify(fields: Partial<typeof this>) {
+  returnChanged(fields: Partial<typeof this>) {
     const newFields = Object.assign({ ...this }, fields)
-    newFields.modify = this.modify.bind(newFields)
+    newFields.returnChanged = this.returnChanged.bind(newFields)
     return newFields as this
   }
 }

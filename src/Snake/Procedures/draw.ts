@@ -6,6 +6,8 @@ import { iterate } from '~~/src/Common/Tools/LogicFlow'
 import { threeVectorSetFrom } from '~~/src/Common/Tools/Three'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { CameraRotation } from '~~/src/Snake/Models/CameraRotation'
+import { createGamePoints } from '~/src/Snake/Services/toModels'
+import { drawFrameCubes } from '~/src/Snake/Application/drawFrameCubes'
 
 export function useBordersDrawProcedure(rserv: RenderService, game: WfSnake) {
   const { width, height } = game.grid
@@ -37,32 +39,25 @@ export function useNextFrameDrawProcedure(
   game: WfSnake,
   startForwardPosition: Vector3
 ) {
+  const gamePoints = createGamePoints(game)
+  const cubes = drawFrameCubes(
+    gamePoints.target,
+    gamePoints.snakeLead,
+    gamePoints.snakeTail.tail
+  )
+  rserv.manageCubeModel(cubes.target)
+  rserv.manageCubeModel(cubes.lead)
+  cubes.tail
+    .map((cube, index) => {
+      return cube.returnChanged({
+        id: game.snake.points[index].id,
+      })
+    })
+    .forEach(rserv.manageCubeModel.bind(rserv))
   threeVectorSetFrom(rserv.camera.position, startForwardPosition)
-  rserv.manageCube(
-    game.target.id,
-    toBaseSize(game.target.x),
-    toBaseSize(-game.target.y),
-    0x00aa00
-  )
-
-  rserv.manageCube(
-    'leadPoint',
-    toBaseSize(game.snake.leadPoint.x),
-    toBaseSize(-game.snake.leadPoint.y),
-    0xaa0000
-  )
-
   rserv.setCameraPointId(game.snake.points[1].id)
   rserv.setLastUpdateTime(new Date().getTime())
   rserv.setGameSpeed(game.speed.value)
-  game.snake.points.forEach((point: any) => {
-    rserv.manageCube(
-      point.id,
-      toBaseSize(point.x),
-      toBaseSize(-point.y),
-      0x8888ff
-    )
-  })
 }
 
 export function useDrawTickProcedure(

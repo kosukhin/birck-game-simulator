@@ -4,6 +4,7 @@ import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { reactOn } from '~/src/Common/Library/I'
 import { FloorModel } from '~/src/Common/Library/ThreeD/Configs/FloorModel'
+import { Cube } from '~/src/Snake/Models'
 
 export class RenderService {
   additional: number = 1
@@ -179,6 +180,14 @@ export class RenderService {
       this.updateCube(id, x, y)
     } else {
       this.createCube(id, x, y, color, texture)
+    }
+  }
+
+  manageCubeModel(cube: Cube) {
+    if (this.hasCube(cube.id)) {
+      this.updateCube(cube.id, cube.x, cube.y)
+    } else {
+      this.createCube(cube.id, cube.x, cube.y, Number(cube.color))
     }
   }
 

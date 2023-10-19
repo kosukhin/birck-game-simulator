@@ -1,7 +1,7 @@
 import { CameraModel } from './../../Common/Library/ThreeD/Configs/CameraModel'
-import { thenIf, passNotNullishValue } from '~~/src/Common/Tools/LogicFlow'
+import { passNotNullishValue, thenIf } from '~~/src/Common/Tools/LogicFlow'
 import { EMoveDirection, KeysToMoveMap } from '~~/src/Common/Types/GameTypes'
-import { camera3KeyMapper, camera3Check } from '~~/src/Common/Tools/Camera'
+import { camera3Check, camera3KeyMapper } from '~~/src/Common/Tools/Camera'
 
 export function calculateDirection(camera: CameraModel) {
   let newDirection = KeysToMoveMap[camera.directionKeyCode]
@@ -13,7 +13,7 @@ export function calculateDirection(camera: CameraModel) {
     )
   })
 
-  return camera.modify({
+  return camera.returnChanged({
     direction: newDirection as EMoveDirection,
   })
 }
