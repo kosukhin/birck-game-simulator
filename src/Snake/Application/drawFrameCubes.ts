@@ -1,13 +1,32 @@
-import { Cube, Point } from '~/src/Snake/Models'
+import { Cube, SnakeGame } from '~/src/Snake/Models'
 import { takeInstance } from '~/src/Common/Library/I'
+import { leadPointId, targetPointId } from '~/src/Snake/Constants/game'
+import {
+  leadPointColor,
+  snakeTailColor,
+  targetColor,
+} from '~/src/Snake/Constants/colors'
 
-export function drawFrameCubes(target: Point, lead: Point, tail: Point[]) {
-  const tailCubes = tail.map((point, index) => {
-    return takeInstance(Cube, `tail_${index}`, 0xeeeeee, point.x, point.y)
+export function drawFrameCubes(snakeGame: SnakeGame) {
+  const tailCubes = snakeGame.tail.points.map((point) => {
+    return takeInstance(Cube, point.id, snakeTailColor, point.x, point.y)
   })
+
   return {
-    target: takeInstance(Cube, 'target', 0x00aa00, target.x, target.y),
-    lead: takeInstance(Cube, 'lead', 0xaa0000, lead.x, lead.y),
+    target: takeInstance(
+      Cube,
+      targetPointId,
+      targetColor,
+      snakeGame.target.x,
+      snakeGame.target.y
+    ),
+    lead: takeInstance(
+      Cube,
+      leadPointId,
+      leadPointColor,
+      snakeGame.lead.x,
+      snakeGame.lead.y
+    ),
     tail: tailCubes,
   }
 }

@@ -19,7 +19,7 @@ import { CameraModel } from '~/src/Common/Library/ThreeD/Configs/CameraModel'
 import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
 import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { EKeyCode, KeysToMoveMap } from '~/src/Common/Types/GameTypes'
-import { reactOn, takeInstance } from '~~/src/Common/Library/I'
+import { takeInstance } from '~~/src/Common/Library/I'
 import { FloorModel } from '~~/src/Common/Library/ThreeD/Configs/FloorModel'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { ModelsPool } from '~~/src/Common/Models/ModelsPool'
@@ -38,31 +38,18 @@ import {
   applyCameraModelToRenderService,
 } from '~~/src/Snake/Services/applyCameraModel'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
+import { leadPointId } from '~/src/Snake/Constants/game'
+import { floorTexture } from '~/src/Snake/Constants/textures'
+import { floorSizes } from '~/src/Snake/Constants/sizes'
+import { sceneBackgroundColor } from '~/src/Snake/Constants/colors'
+import { gameSounds } from '~/src/Snake/Constants/sounds'
 
-const rserv = takeInstance(RenderService)
+const renderService = takeInstance(RenderService)
 const game = takeInstance(WfSnake, 15, 15)
-const floor = takeInstance(
-  FloorModel,
-  '/images/textures/grass2.jpg',
-  [0, 0],
-  [20, 20],
-  2400,
-  2400,
-  100,
-  1
-)
-const scene = takeInstance(
-  SceneModel,
-  'skyblue',
-  [
-    ['afterEated', '/sounds/eated.wav'],
-    ['explode', '/sounds/explode.wav'],
-    ['gameover', '/sounds/explode.wav'],
-  ],
-  floor
-)
+const floor = takeInstance(FloorModel, floorTexture, ...floorSizes)
+const scene = takeInstance(SceneModel, sceneBackgroundColor, gameSounds, floor)
 
-rserv.applySceneConfig(scene)
+renderService.applySceneConfig(scene)
 
 const startForwardPosition = takeInstance(Vector3)
 const startPosition = takeInstance(Vector3)
@@ -75,43 +62,41 @@ let cameraModel = takeInstance(
   game.snake.direction,
   startPosition,
   startRotation,
-  rserv.cameraType
+  renderService.cameraType
 )
-reactOn(keyboard.registerSubscriber.bind(keyboard), (keyCode) => {
-  thenIf(KeysToMoveMap[keyCode], () => {
-    cameraModel = cameraModel.returnChanged({
+keyboard.registerSubscriber((keyCode) => {
+  if (KeysToMoveMap[keyCode]) {
+    cameraModel = cameraModel.takeChanged({
       directionKeyCode: keyCode,
       cameraPosition: startPosition,
       cameraRotation: startRotation,
-      cameraType: rserv.cameraType,
+      cameraType: renderService.cameraType,
       direction: game.snake.direction,
     })
     cameraModel = calculateDirection(cameraModel)
     applyCameraModelToGame(game, cameraModel)
-    applyCameraModelToRenderService(rserv, cameraModel)
-  })
+    applyCameraModelToRenderService(renderService, cameraModel)
+  }
 })
 
-rserv.setLeadId('leadPoint')
-/*
-В rserv.camera.position записываем значение из startPosition
-Создаем куб для точки цели
-Создаем куб для лид поинта
-Для каждого поинта змейки управляение кубом
- */
+renderService.setLeadId(leadPointId)
 game.afterNextFrame(() => {
-  useNextFrameDrawProcedure(rserv, game, startForwardPosition)
+  useNextFrameDrawProcedure(renderService, game, startForwardPosition)
 })
 
 const cameraRotation = ModelsPool.cameraRotation()
 
 const { cameraPositionTick, camera } = useSnakeCameraAnimation()
-rserv.setAfterAnimate((additional: number) => {
-  camera.value = rserv.camera
+renderService.setAfterAnimate((additional: number) => {
+  camera.value = renderService.camera
 
-  thenIf(camera3Check(rserv.cameraType), () => {
+  thenIf(camera3Check(renderService.cameraType), () => {
     additional = additional > 1 ? 1 : additional
-    const tickResult: any = useDrawTickProcedure(rserv, game, cameraRotation)
+    const tickResult: any = useDrawTickProcedure(
+      renderService,
+      game,
+      cameraRotation
+    )
 
     thenIf(!!tickResult, () => {
       cameraPositionTick(
@@ -133,12 +118,12 @@ rserv.setAfterAnimate((additional: number) => {
 
 const canvasWrapper = ref()
 onMounted(() => {
-  rserv.render(canvasWrapper.value)
+  renderService.render(canvasWrapper.value)
   game.run()
-  useBordersDrawProcedure(rserv, game)
+  useBordersDrawProcedure(renderService, game)
 
   setTimeout(() => {
-    rserv.camera3()
+    renderService.camera3()
   })
 })
 </script>

@@ -13,7 +13,7 @@ export function calculateDirection(camera: CameraModel) {
     )
   })
 
-  return camera.returnChanged({
+  return camera.takeChanged({
     direction: newDirection as EMoveDirection,
   })
 }

@@ -6,6 +6,12 @@ export class Point extends BaseModel {
   }
 }
 
+export class PointWithId extends Point {
+  constructor(readonly id: string, ...rest: [number, number]) {
+    super(...rest)
+  }
+}
+
 export class Cube extends BaseModel {
   constructor(
     readonly id: string,
@@ -18,7 +24,17 @@ export class Cube extends BaseModel {
 }
 
 export class SnakeTail extends BaseModel {
-  constructor(readonly tail: Point[]) {
+  constructor(readonly points: PointWithId[]) {
+    super()
+  }
+}
+
+export class SnakeGame extends BaseModel {
+  constructor(
+    readonly target: Point,
+    readonly lead: Point,
+    readonly tail: SnakeTail
+  ) {
     super()
   }
 }
