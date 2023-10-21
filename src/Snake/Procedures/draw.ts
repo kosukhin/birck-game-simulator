@@ -8,8 +8,8 @@ import { threeVectorSetFrom } from '~~/src/Common/Tools/Three'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { CameraRotation } from '~~/src/Snake/Models/CameraRotation'
 import { oCreateSnakeGameModel } from '~/src/Snake/Services/toModels'
-import { mDrawFrameCubes } from '~/src/Snake/Application/mDrawFrameCubes'
 import { oManageCube } from '~/src/Snake/Services/render'
+import { mDrawFrameCubes } from '~/src/Snake/Models/methods'
 
 export function useBordersDrawProcedure(rserv: RenderService, game: WfSnake) {
   const { width, height } = game.grid

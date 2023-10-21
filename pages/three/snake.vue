@@ -14,10 +14,8 @@
 <script setup lang="ts">
 import { Euler, Vector3 } from 'three'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { useService } from '~/src/Common/Helpers/HService'
 import { CameraModel } from '~/src/Common/Library/ThreeD/Configs/CameraModel'
 import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
-import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { EKeyCode, KeysToMoveMap } from '~/src/Common/Types/GameTypes'
 import { takeInstance } from '~~/src/Common/Library/I'
 import { FloorModel } from '~~/src/Common/Library/ThreeD/Configs/FloorModel'
@@ -26,7 +24,6 @@ import { ModelsPool } from '~~/src/Common/Models/ModelsPool'
 import { camera3Check } from '~~/src/Common/Tools/Camera'
 import { toBaseSize } from '~~/src/Common/Tools/Cast'
 import { thenIf } from '~~/src/Common/Tools/LogicFlow'
-import { mCalculateDirection } from '~/src/Snake/Application/mCalculateDirection'
 import { useSnakeCameraAnimation } from '~~/src/Snake/Modules/useSnakeCameraAnimation'
 import {
   cNextFrameDrawProcedure,
@@ -43,6 +40,9 @@ import { floorTexture } from '~/src/Snake/Constants/textures'
 import { floorSizes } from '~/src/Snake/Constants/sizes'
 import { sceneBackgroundColor } from '~/src/Snake/Constants/colors'
 import { gameSounds } from '~/src/Snake/Constants/sounds'
+import { oOnNewKey } from '~/src/Snake/Services/io'
+import { oOnTick, oSetLeadId } from '~/src/Snake/Services/render'
+import { mCalculateDirection } from '~/src/Snake/Models/methods'
 
 const renderService = takeInstance(RenderService)
 const game = takeInstance(WfSnake, 15, 15)
@@ -55,7 +55,6 @@ const startForwardPosition = takeInstance(Vector3)
 const startPosition = takeInstance(Vector3)
 const startRotation = takeInstance(Euler)
 
-const keyboard = useService<SKeyboard>('keyboard')
 let cameraModel = takeInstance(
   CameraModel,
   EKeyCode.D,
@@ -64,7 +63,7 @@ let cameraModel = takeInstance(
   startRotation,
   renderService.cameraType
 )
-keyboard.registerSubscriber((keyCode) => {
+oOnNewKey((keyCode) => {
   if (KeysToMoveMap[keyCode]) {
     cameraModel = cameraModel.takeChanged({
       directionKeyCode: keyCode,
@@ -79,7 +78,7 @@ keyboard.registerSubscriber((keyCode) => {
   }
 })
 
-renderService.setLeadId(leadPointId)
+oSetLeadId(renderService, leadPointId)
 game.afterNextFrame(() => {
   cNextFrameDrawProcedure(renderService, game, startForwardPosition)
 })
@@ -87,7 +86,8 @@ game.afterNextFrame(() => {
 const cameraRotation = ModelsPool.cameraRotation()
 
 const { cameraPositionTick, camera } = useSnakeCameraAnimation()
-renderService.setAfterAnimate((additional: number) => {
+
+oOnTick(renderService, (additional: number) => {
   camera.value = renderService.camera
 
   thenIf(camera3Check(renderService.cameraType), () => {
@@ -99,6 +99,7 @@ renderService.setAfterAnimate((additional: number) => {
     )
 
     thenIf(!!tickResult, () => {
+      // TODO Это бизнес логика перенести в m
       cameraPositionTick(
         additional,
         {
