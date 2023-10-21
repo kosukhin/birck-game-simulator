@@ -26,16 +26,16 @@ import { ModelsPool } from '~~/src/Common/Models/ModelsPool'
 import { camera3Check } from '~~/src/Common/Tools/Camera'
 import { toBaseSize } from '~~/src/Common/Tools/Cast'
 import { thenIf } from '~~/src/Common/Tools/LogicFlow'
-import { calculateDirection } from '~~/src/Snake/Application/calculateDirection'
+import { mCalculateDirection } from '~/src/Snake/Application/mCalculateDirection'
 import { useSnakeCameraAnimation } from '~~/src/Snake/Modules/useSnakeCameraAnimation'
 import {
+  cNextFrameDrawProcedure,
   useBordersDrawProcedure,
   useDrawTickProcedure,
-  useNextFrameDrawProcedure,
 } from '~~/src/Snake/Procedures/draw'
 import {
-  applyCameraModelToGame,
-  applyCameraModelToRenderService,
+  oApplyCameraModelToRenderService,
+  oApplyCameraToGame,
 } from '~~/src/Snake/Services/applyCameraModel'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { leadPointId } from '~/src/Snake/Constants/game'
@@ -73,15 +73,15 @@ keyboard.registerSubscriber((keyCode) => {
       cameraType: renderService.cameraType,
       direction: game.snake.direction,
     })
-    cameraModel = calculateDirection(cameraModel)
-    applyCameraModelToGame(game, cameraModel)
-    applyCameraModelToRenderService(renderService, cameraModel)
+    cameraModel = mCalculateDirection(cameraModel)
+    oApplyCameraToGame(game, cameraModel)
+    oApplyCameraModelToRenderService(renderService, cameraModel)
   }
 })
 
 renderService.setLeadId(leadPointId)
 game.afterNextFrame(() => {
-  useNextFrameDrawProcedure(renderService, game, startForwardPosition)
+  cNextFrameDrawProcedure(renderService, game, startForwardPosition)
 })
 
 const cameraRotation = ModelsPool.cameraRotation()

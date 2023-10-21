@@ -1,4 +1,5 @@
 import { Euler, MathUtils, Vector3 } from 'three'
+import { partial } from 'lodash'
 import { RenderService } from './../../Common/Library/ThreeD/Services/RenderService'
 import { baseSize } from '~~/src/Common/Constants/Three'
 import { toBaseSize } from '~~/src/Common/Tools/Cast'
@@ -6,8 +7,9 @@ import { iterate } from '~~/src/Common/Tools/LogicFlow'
 import { threeVectorSetFrom } from '~~/src/Common/Tools/Three'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { CameraRotation } from '~~/src/Snake/Models/CameraRotation'
-import { createSnakeGameModel } from '~/src/Snake/Services/toModels'
-import { drawFrameCubes } from '~/src/Snake/Application/drawFrameCubes'
+import { oCreateSnakeGameModel } from '~/src/Snake/Services/toModels'
+import { mDrawFrameCubes } from '~/src/Snake/Application/mDrawFrameCubes'
+import { oManageCube } from '~/src/Snake/Services/render'
 
 export function useBordersDrawProcedure(rserv: RenderService, game: WfSnake) {
   const { width, height } = game.grid
@@ -34,16 +36,18 @@ export function useBordersDrawProcedure(rserv: RenderService, game: WfSnake) {
   }, height)
 }
 
-export function useNextFrameDrawProcedure(
+export function cNextFrameDrawProcedure(
   rserv: RenderService,
   game: WfSnake,
   startForwardPosition: Vector3
 ) {
-  const snakeGame = createSnakeGameModel(game)
-  const cubes = drawFrameCubes(snakeGame)
-  rserv.manageCubeModel(cubes.target)
-  rserv.manageCubeModel(cubes.lead)
-  cubes.tail.forEach(rserv.manageCubeModel.bind(rserv))
+  const snakeGame = oCreateSnakeGameModel(game)
+  const cubes = mDrawFrameCubes(snakeGame)
+  oManageCube(rserv, cubes.target)
+  oManageCube(rserv, cubes.lead)
+  cubes.tail.forEach(partial(oManageCube, rserv))
+
+  // TODO над нижней частью нужно подумать
   threeVectorSetFrom(rserv.camera.position, startForwardPosition)
   rserv.setCameraPointId(game.snake.points[1].id)
   rserv.setLastUpdateTime(new Date().getTime())

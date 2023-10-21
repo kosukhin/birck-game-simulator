@@ -7,7 +7,7 @@ import {
   targetColor,
 } from '~/src/Snake/Constants/colors'
 
-export function drawFrameCubes(snakeGame: SnakeGame) {
+export function mDrawFrameCubes(snakeGame: SnakeGame) {
   const tailCubes = snakeGame.tail.points.map((point) => {
     return takeInstance(Cube, point.id, snakeTailColor, point.x, point.y)
   })

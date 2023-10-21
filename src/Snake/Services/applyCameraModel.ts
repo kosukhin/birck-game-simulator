@@ -6,11 +6,11 @@ import {
 } from '~~/src/Common/Tools/Three'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
-export function applyCameraModelToGame(game: WfSnake, camera: CameraModel) {
+export function oApplyCameraToGame(game: WfSnake, camera: CameraModel) {
   game.moveSnake(camera.direction)
 }
 
-export function applyCameraModelToRenderService(
+export function oApplyCameraModelToRenderService(
   rserv: RenderService,
   camera: CameraModel
 ) {

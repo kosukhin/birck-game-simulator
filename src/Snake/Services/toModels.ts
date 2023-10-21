@@ -3,7 +3,7 @@ import { WfSnake } from '~/src/Snake/Workflows/WfSnake'
 import { takeInstance } from '~/src/Common/Library/I'
 import { toBaseSize } from '~/src/Common/Tools/Cast'
 
-export function createSnakeGameModel(game: WfSnake): SnakeGame {
+export function oCreateSnakeGameModel(game: WfSnake): SnakeGame {
   const tailPoints = game.snake.points.map((point: any) => {
     return takeInstance(
       PointWithId,
