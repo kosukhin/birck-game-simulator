@@ -1,3 +1,5 @@
+import { BaseService } from '~/src/Base/BaseService'
+
 export type ConstructorProps<T> = T extends {
   new (...args: infer U): any
 }
@@ -30,4 +32,30 @@ export function reactOn<T extends (arg: any) => any>(fn: T, cb: Argument<T>) {
 
 export function applyProcess(fn: Function, ...args: any[]) {
   return fn(...args)
+}
+
+const singletons: any = {}
+export function takeSingleton<T extends { new (...args: any[]): any }>(
+  constructorFunction: T,
+  ...args: ConstructorProps<T>
+): ConstructorResult<T> {
+  if (singletons[constructorFunction.name]) {
+    return singletons[constructorFunction.name]
+  }
+  // eslint-disable-next-line new-cap
+  singletons[constructorFunction.name] = new constructorFunction(...args)
+  return singletons[constructorFunction.name]
+}
+
+export function takeService<T extends { new (...args: any[]): any }>(
+  constructorFunction: T,
+  ...args: ConstructorProps<T>
+): ConstructorResult<T> {
+  const instance: any = takeSingleton(constructorFunction, ...args)
+
+  if (!(instance instanceof BaseService)) {
+    throw new TypeError('Cant create service')
+  }
+
+  return instance.setup() as ConstructorResult<T>
 }
