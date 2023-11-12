@@ -15,9 +15,13 @@
 import { Euler, Vector3 } from 'three'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import { CameraModel } from '~/src/Common/Library/ThreeD/Configs/CameraModel'
-import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
 import { EKeyCode, KeysToMoveMap } from '~/src/Common/Types/GameTypes'
-import { takeInstance } from '~~/src/Common/Library/I'
+import {
+  takeChanged,
+  takeInstance,
+  takeService,
+  takeSingleton,
+} from '~~/src/Common/Library/I'
 import { FloorModel } from '~~/src/Common/Library/ThreeD/Configs/FloorModel'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { ModelsPool } from '~~/src/Common/Models/ModelsPool'
@@ -30,31 +34,33 @@ import {
   useBordersDrawProcedure,
   useDrawTickProcedure,
 } from '~~/src/Snake/Procedures/draw'
-import {
-  oApplyCameraModelToRenderService,
-  oApplyCameraToGame,
-} from '~~/src/Snake/Services/applyCameraModel'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { leadPointId } from '~/src/Snake/Constants/game'
 import { floorTexture } from '~/src/Snake/Constants/textures'
 import { floorSizes } from '~/src/Snake/Constants/sizes'
 import { sceneBackgroundColor } from '~/src/Snake/Constants/colors'
 import { gameSounds } from '~/src/Snake/Constants/sounds'
-import { oOnNewKey } from '~/src/Snake/Services/io'
+import { onNewKey } from '~/src/Snake/Services/io'
 import { oOnTick, oSetLeadId } from '~/src/Snake/Services/render'
-import { mCalculateDirection } from '~/src/Snake/Models/methods'
+import { SceneService } from '~/src/Common/Library/ThreeD/Modules/scene/SceneService'
+import { Scene } from '~/src/Common/Library/ThreeD/Modules/scene/Scene'
+import { CameraGameService } from '~/src/Snake/Modules/camera/CameraGameService'
+import { CameraRenderService } from '~/src/Snake/Modules/camera/CameraRenderService'
 
-const renderService = takeInstance(RenderService)
+const renderService = takeSingleton(RenderService)
 const game = takeInstance(WfSnake, 15, 15)
 const floor = takeInstance(FloorModel, floorTexture, ...floorSizes)
-const scene = takeInstance(SceneModel, sceneBackgroundColor, gameSounds, floor)
+const scene = takeInstance(Scene, sceneBackgroundColor, gameSounds, floor)
 
-renderService.applySceneConfig(scene)
+const sceneService = takeService(SceneService)
+sceneService.apply(scene)
 
 const startForwardPosition = takeInstance(Vector3)
 const startPosition = takeInstance(Vector3)
 const startRotation = takeInstance(Euler)
 
+const cameraGameService = takeService(CameraGameService)
+const cameraRenderService = takeService(CameraRenderService)
 let cameraModel = takeInstance(
   CameraModel,
   EKeyCode.D,
@@ -63,19 +69,19 @@ let cameraModel = takeInstance(
   startRotation,
   renderService.cameraType
 )
-oOnNewKey((keyCode) => {
-  if (KeysToMoveMap[keyCode]) {
-    cameraModel = cameraModel.takeChanged({
-      directionKeyCode: keyCode,
-      cameraPosition: startPosition,
-      cameraRotation: startRotation,
-      cameraType: renderService.cameraType,
-      direction: game.snake.direction,
-    })
-    cameraModel = mCalculateDirection(cameraModel)
-    oApplyCameraToGame(game, cameraModel)
-    oApplyCameraModelToRenderService(renderService, cameraModel)
+onNewKey((keyCode) => {
+  if (!KeysToMoveMap[keyCode]) {
+    return
   }
+
+  cameraModel = takeChanged(CameraModel, cameraModel, {
+    directionKeyCode: keyCode,
+    cameraType: renderService.cameraType,
+    direction: game.snake.direction,
+  })
+  cameraModel = cameraGameService.calculateDirection(cameraModel)
+  cameraGameService.apply(cameraModel, game)
+  cameraRenderService.apply(cameraModel)
 })
 
 oSetLeadId(renderService, leadPointId)

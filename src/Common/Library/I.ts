@@ -24,6 +24,16 @@ export function takeInstance<T extends { new (...args: any[]): any }>(
   return new constructorFunction(...args)
 }
 
+export function takeChanged<T extends { new (...args: any[]): any }>(
+  constructorFunction: T,
+  model: ConstructorResult<T>,
+  fields: Partial<ConstructorResult<T>>
+) {
+  const newFields = Object.assign({ ...model }, fields)
+  // @ts-ignore
+  return takeInstance(constructorFunction, ...Object.values(newFields))
+}
+
 type Argument<T> = T extends (arg: infer U) => any ? U : never
 
 export function reactOn<T extends (arg: any) => any>(fn: T, cb: Argument<T>) {

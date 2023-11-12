@@ -1,7 +1,7 @@
 import { FloorModel } from '~/src/Common/Library/ThreeD/Configs/FloorModel'
 import { BaseModel } from '~/src/Base/BaseModel'
 
-export class SceneModel extends BaseModel {
+export class Scene extends BaseModel {
   constructor(
     readonly background: string,
     readonly soundToEvents: [string, string][],

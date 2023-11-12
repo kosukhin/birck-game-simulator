@@ -18,13 +18,13 @@ export abstract class BaseService {
     return this
   }
 
-  apply<T extends any>(model: BaseModel): Promise<T> | never {
-    if (this.appliers[model.modelName()]) {
-      return this.appliers[model.modelName()](model) as Promise<T>
+  apply<T extends any>(model: BaseModel, ...args: any[]): Promise<T> | never {
+    if (this.appliers[model.internalName()]) {
+      return this.appliers[model.internalName()](model, ...args) as Promise<T>
     }
 
     throw new Error(
-      `Model ${model.modelName()} is not configured for service! ${
+      `Model ${model.internalName()} is not configured for service! ${
         this.constructor.name
       }`
     )

@@ -1,6 +1,6 @@
 import { Euler, Vector3 } from 'three'
-import { BaseModel } from '~/src/Common/Config/Model'
 import { EKeyCode, EMoveDirection } from '~/src/Common/Types/GameTypes'
+import { BaseModel } from '~/src/Base/BaseModel'
 
 export class CameraModel extends BaseModel {
   constructor(
@@ -11,5 +11,9 @@ export class CameraModel extends BaseModel {
     readonly cameraType: number
   ) {
     super()
+  }
+
+  internalName(): string {
+    return 'Camera'
   }
 }
