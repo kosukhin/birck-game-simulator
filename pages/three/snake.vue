@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { create, takeSingleton } from '~~/src/Common/Library/I'
+import { create } from '~~/src/Common/Library/I'
 import { FloorModel } from '~~/src/Common/Library/ThreeD/Configs/FloorModel'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { onFrame, WfSnake } from '~~/src/Snake/Workflows/WfSnake'
@@ -32,7 +32,7 @@ import { frameEffect } from '~/src/Snake/Effects/frameEffect'
 import { Tick } from '~/src/Common/Library/ThreeD/Modules/tick/Tick'
 import { tickEffect } from '~/src/Snake/Effects/tickEffect'
 
-const renderService = takeSingleton(RenderService)
+const renderService = create(RenderService)
 const game = create(WfSnake, 15, 15)
 const floor = create(FloorModel, floorTexture, ...floorSizes)
 const scene = create(Scene, sceneBackgroundColor, gameSounds, floor)
