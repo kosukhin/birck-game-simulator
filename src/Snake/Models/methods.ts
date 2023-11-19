@@ -3,7 +3,7 @@ import { EMoveDirection, KeysToMoveMap } from '~/src/Common/Types/GameTypes'
 import { passNotNullishValue } from '~/src/Common/Tools/LogicFlow'
 import { camera3Check, camera3KeyMapper } from '~/src/Common/Tools/Camera'
 import { Cube, SnakeGame } from '~/src/Snake/Models/index'
-import { takeChanged, takeInstance } from '~/src/Common/Library/I'
+import { create, takeChanged } from '~/src/Common/Library/I'
 import {
   leadPointColor,
   snakeTailColor,
@@ -28,18 +28,18 @@ export function mCalculateDirection(camera: CameraModel) {
 
 export function mDrawFrameCubes(snakeGame: SnakeGame) {
   const tailCubes = snakeGame.tail.points.map((point) => {
-    return takeInstance(Cube, point.id, snakeTailColor, point.x, point.y)
+    return create(Cube, point.id, snakeTailColor, point.x, point.y)
   })
 
   return {
-    target: takeInstance(
+    target: create(
       Cube,
       targetPointId,
       targetColor,
       snakeGame.target.x,
       snakeGame.target.y
     ),
-    lead: takeInstance(
+    lead: create(
       Cube,
       leadPointId,
       leadPointColor,

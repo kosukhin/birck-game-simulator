@@ -169,3 +169,7 @@ export class WfSnake implements IGameWorkflow {
     this.#events[name] = cb
   }
 }
+
+export function onFrame(game: WfSnake, cb: Function) {
+  game.afterNextFrame(cb)
+}

@@ -16,7 +16,7 @@ export type NoMethods<T> = {
   [K in keyof T]: T[K] extends Function ? never : K
 }[keyof T]
 
-export function takeInstance<T extends { new (...args: any[]): any }>(
+export function create<T extends { new (...args: any[]): any }>(
   constructorFunction: T,
   ...args: ConstructorProps<T>
 ): ConstructorResult<T> {
@@ -31,7 +31,7 @@ export function takeChanged<T extends { new (...args: any[]): any }>(
 ) {
   const newFields = Object.assign({ ...model }, fields)
   // @ts-ignore
-  return takeInstance(constructorFunction, ...Object.values(newFields))
+  return create(constructorFunction, ...Object.values(newFields))
 }
 
 type Argument<T> = T extends (arg: infer U) => any ? U : never
