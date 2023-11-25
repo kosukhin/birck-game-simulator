@@ -5,5 +5,5 @@ import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderServic
 
 export const sceneEffectHandler = () =>
   handleEffect(sceneEffect.id, (model: Scene, renderService: RenderService) => {
-    console.log(model, renderService)
+    renderService.applySceneConfig(model)
   })

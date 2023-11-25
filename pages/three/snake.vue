@@ -35,27 +35,43 @@ import { sceneEffectHandler } from '~~/src/Common/Library/ThreeD/Modules/scene/s
 import { keyPressEffectHandler } from '~/src/Snake/EffectHandlers/keyPressEffectHandler'
 import { frameEffectHandler } from '~/src/Snake/EffectHandlers/frameEffectHandler'
 import { tickEffectHandler } from '~/src/Snake/EffectHandlers/tickEffectHandler'
+import { Point } from '~/src/Snake/Models'
 
 sceneEffectHandler()
 keyPressEffectHandler()
 frameEffectHandler()
 tickEffectHandler()
 
+// https://github.com/kosukhin/brick-game-simulator/blob/68ef8cf50a7c7dd4e0345d306d0616f691369ecf/pages/three/snake.vue
+
 const renderService = create(RenderService)
 const game = create(WfSnake, 15, 15)
 const floor = create(FloorModel, floorTexture, ...floorSizes)
-const scene = create(Scene, sceneBackgroundColor, gameSounds, floor)
+const scene = create(Scene, [15, 15], sceneBackgroundColor, gameSounds, floor)
 
 sceneEffect.apply(scene, renderService)
 
 onNewKey(async (keyCode) => {
   const keyPress = create(KeyPress, keyCode)
-  await keyPressEffect.apply(keyPress)
+  await keyPressEffect.apply(keyPress, game, renderService)
 })
 
 onFrame(game, async () => {
   const frame = create(Frame, {})
-  await frameEffect.apply(frame)
+  frame.pointGroups[game.target.id] = create(
+    Point,
+    game.target.x,
+    -game.target.y
+  )
+  frame.pointGroups.leadPoint = create(
+    Point,
+    game.snake.leadPoint.x,
+    -game.snake.leadPoint.y
+  )
+  game.snake.points.forEach((point: any) => {
+    frame.pointGroups[point.id] = create(Point, point.x, -point.y)
+  })
+  await frameEffect.apply(frame, renderService)
 })
 
 onTick(renderService, async (additional: number) => {

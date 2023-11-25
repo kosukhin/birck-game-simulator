@@ -1,10 +1,11 @@
 import * as THREE from 'three'
 import { Color, Mesh } from 'three'
-import { SceneModel } from '~/src/Common/Library/ThreeD/Configs/SceneModel'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { reactOn } from '~/src/Common/Library/I'
 import { FloorModel } from '~/src/Common/Library/ThreeD/Configs/FloorModel'
 import { Cube } from '~/src/Snake/Models'
+import { Scene } from '~/src/Common/Library/ThreeD/Modules/scene/Scene'
+import { baseSize } from '~/src/Common/Constants/Three'
 
 export class RenderService {
   additional: number = 1
@@ -266,11 +267,24 @@ export class RenderService {
     })
   }
 
-  applySceneConfig(model: SceneModel) {
+  applySceneConfig(model: Scene) {
     reactOn(this.afterScene.bind(this), async () => {
       // TODO обработать звуки
       this.scene.background = new Color(model.background)
       this.scene.add(await this.buildFloorByModel(model.floor))
+      const color = 0x2b241d
+      const width = model.size[0]
+      const height = model.size[1]
+
+      for (let i = 0; i < width; i++) {
+        this.createCube('top' + i, i * baseSize, 1 * baseSize, color)
+        this.createCube('bottom' + i, i * baseSize, -height * baseSize, color)
+      }
+
+      for (let i = 0; i < height; i++) {
+        this.createCube('left' + i, -1 * baseSize, -i * baseSize, color)
+        this.createCube('right' + i, width * baseSize, -i * baseSize, color)
+      }
     })
   }
 
