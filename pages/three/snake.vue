@@ -31,6 +31,15 @@ import { Frame } from '~/src/Common/Library/ThreeD/Modules/frame/Frame'
 import { frameEffect } from '~/src/Snake/Effects/frameEffect'
 import { Tick } from '~/src/Common/Library/ThreeD/Modules/tick/Tick'
 import { tickEffect } from '~/src/Snake/Effects/tickEffect'
+import { sceneEffectHandler } from '~~/src/Common/Library/ThreeD/Modules/scene/sceneEffectHandler'
+import { keyPressEffectHandler } from '~/src/Snake/EffectHandlers/keyPressEffectHandler'
+import { frameEffectHandler } from '~/src/Snake/EffectHandlers/frameEffectHandler'
+import { tickEffectHandler } from '~/src/Snake/EffectHandlers/tickEffectHandler'
+
+sceneEffectHandler()
+keyPressEffectHandler()
+frameEffectHandler()
+tickEffectHandler()
 
 const renderService = create(RenderService)
 const game = create(WfSnake, 15, 15)
@@ -39,19 +48,19 @@ const scene = create(Scene, sceneBackgroundColor, gameSounds, floor)
 
 sceneEffect.apply(scene, renderService)
 
-onNewKey((keyCode) => {
+onNewKey(async (keyCode) => {
   const keyPress = create(KeyPress, keyCode)
-  keyPressEffect.apply(keyPress)
+  await keyPressEffect.apply(keyPress)
 })
 
-onFrame(game, () => {
+onFrame(game, async () => {
   const frame = create(Frame, {})
-  frameEffect.apply(frame)
+  await frameEffect.apply(frame)
 })
 
-onTick(renderService, (additional: number) => {
+onTick(renderService, async (additional: number) => {
   const tick = create(Tick, additional)
-  tickEffect.apply(tick)
+  await tickEffect.apply(tick)
 })
 
 const canvasWrapper = ref()

@@ -1,5 +1,5 @@
-import {RenderService} from '~/src/Common/Library/ThreeD/Services/RenderService'
-import {Cube} from '~/src/Snake/Models'
+import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
+import { Cube } from '~/src/Snake/Models'
 
 export function oManageCube(rserv: RenderService, cube: Cube) {
   rserv.manageCubeModel(cube)
@@ -12,4 +12,3 @@ export function oSetLeadId(rserv: RenderService, id: string) {
 export function onTick(rserv: RenderService, cb: (additional: number) => void) {
   rserv.setAfterAnimate(cb)
 }
-)
