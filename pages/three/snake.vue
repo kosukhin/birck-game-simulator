@@ -75,8 +75,13 @@ onFrame(game, async () => {
 })
 
 onTick(renderService, async (additional: number) => {
-  const tick = create(Tick, additional)
-  await tickEffect.apply(tick)
+  const leadPoint = create(
+    Point,
+    game.snake.leadPoint.x,
+    game.snake.leadPoint.y
+  )
+  const tick = create(Tick, additional, game.snake.direction, leadPoint)
+  await tickEffect.apply(tick, renderService)
 })
 
 const canvasWrapper = ref()
