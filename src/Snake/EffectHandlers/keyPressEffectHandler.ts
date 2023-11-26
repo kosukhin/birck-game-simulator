@@ -18,7 +18,6 @@ export const keyPressEffectHandler = () => {
   handleEffect(
     keyPressEffect.id,
     (model: KeyPress, game: WfSnake, renderService: RenderService) => {
-      console.log(model)
       if (KeysToMoveMap[model.keyCode] !== undefined) {
         let newDirection = KeysToMoveMap[model.keyCode]
 

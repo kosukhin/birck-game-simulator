@@ -11,7 +11,6 @@ const newRotation: D3 = { x: 0, y: 0, z: 0 }
 const k = 50
 export const tickEffectHandler = () =>
   handleEffect(tickEffect.id, (model: Tick, renderService: RenderService) => {
-    console.log(model)
     let additional = model.additional
 
     if (additional > 1) {
@@ -62,17 +61,12 @@ export const tickEffectHandler = () =>
     }
 
     calcAnimatePosition(
-      additional,
       {
-        x: x + baseSize * xMul,
-        y: -y + baseSize * yMul,
+        x: x - baseSize * xMul * additional,
+        y: -y - baseSize * yMul * additional,
         z: 60,
       },
       newRotation,
-      {
-        x,
-        y,
-      },
       renderService
     )
   })
@@ -80,26 +74,13 @@ export const tickEffectHandler = () =>
 const baseSize = 10
 
 function calcAnimatePosition(
-  additional: number,
   newPosition: D3,
   newRotation: D3,
-  leadPoint: { x: number; y: number },
   renderService: RenderService
 ) {
-  let xsize = newPosition.x - renderService.camera.position.x
-  let ysize = newPosition.y - renderService.camera.position.y
-
-  if (Math.abs(xsize) >= baseSize || Math.abs(ysize) >= baseSize) {
-    renderService.camera.position.x += xsize * additional
-    renderService.camera.position.y += ysize * additional
-    renderService.camera.position.z = newPosition.z
-  } else {
-    xsize = newPosition.x - leadPoint.x
-    ysize = newPosition.y - leadPoint.y
-    renderService.camera.position.x = leadPoint.x + xsize * additional
-    renderService.camera.position.y = leadPoint.y + ysize * additional
-    renderService.camera.position.z = newPosition.z
-  }
+  renderService.camera.position.x = newPosition.x
+  renderService.camera.position.y = newPosition.y
+  renderService.camera.position.z = newPosition.z
 
   renderService.camera.rotation.x = newRotation.x
   renderService.camera.rotation.y = newRotation.y

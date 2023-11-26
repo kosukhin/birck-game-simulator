@@ -6,6 +6,12 @@ export class Point extends BaseModel {
   }
 }
 
+export class PointWithColor extends Point {
+  constructor(readonly color: number, ...rest: [number, number]) {
+    super(...rest)
+  }
+}
+
 export class PointWithId extends Point {
   constructor(readonly id: string, ...rest: [number, number]) {
     super(...rest)

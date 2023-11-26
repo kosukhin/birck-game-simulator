@@ -7,7 +7,12 @@ const baseSize = 10
 export const frameEffectHandler = () =>
   handleEffect(frameEffect.id, (model: Frame, renderService: RenderService) => {
     Object.entries(model.pointGroups).forEach(([id, point]) => {
-      renderService.manageCube(id, point.x * baseSize, point.y * baseSize)
+      renderService.manageCube(
+        id,
+        point.x * baseSize,
+        point.y * baseSize,
+        point.color
+      )
     })
-    console.log(model)
+    renderService.setLastUpdateTime(new Date().getTime())
   })

@@ -25,7 +25,6 @@ import { onNewKey } from '~/src/Snake/Services/io'
 import { onTick } from '~/src/Snake/Services/render'
 import { Scene } from '~/src/Common/Library/ThreeD/Modules/scene/Scene'
 import { sceneEffect } from '~/src/Common/Library/ThreeD/Modules/scene/sceneEffect'
-import { KeyPress } from '~/src/Common/Library/ThreeD/Modules/keyPress/KeyPress'
 import { keyPressEffect } from '~/src/Snake/Effects/keyPressEffect'
 import { Frame } from '~/src/Common/Library/ThreeD/Modules/frame/Frame'
 import { frameEffect } from '~/src/Snake/Effects/frameEffect'
@@ -35,14 +34,13 @@ import { sceneEffectHandler } from '~~/src/Common/Library/ThreeD/Modules/scene/s
 import { keyPressEffectHandler } from '~/src/Snake/EffectHandlers/keyPressEffectHandler'
 import { frameEffectHandler } from '~/src/Snake/EffectHandlers/frameEffectHandler'
 import { tickEffectHandler } from '~/src/Snake/EffectHandlers/tickEffectHandler'
-import { Point } from '~/src/Snake/Models'
+import { Point, PointWithColor } from '~/src/Snake/Models'
+import { KeyPress } from '~/src/Common/Library/ThreeD/Modules/keyPress/KeyPress'
 
 sceneEffectHandler()
 keyPressEffectHandler()
 frameEffectHandler()
 tickEffectHandler()
-
-// https://github.com/kosukhin/brick-game-simulator/blob/68ef8cf50a7c7dd4e0345d306d0616f691369ecf/pages/three/snake.vue
 
 const renderService = create(RenderService)
 const game = create(WfSnake, 15, 15)
@@ -52,24 +50,31 @@ const scene = create(Scene, [15, 15], sceneBackgroundColor, gameSounds, floor)
 sceneEffect.apply(scene, renderService)
 
 onNewKey(async (keyCode) => {
-  const keyPress = create(KeyPress, keyCode)
-  await keyPressEffect.apply(keyPress, game, renderService)
+  await keyPressEffect.apply(create(KeyPress, keyCode), game, renderService)
 })
 
 onFrame(game, async () => {
+  renderService.setGameSpeed(game.speed.value)
   const frame = create(Frame, {})
   frame.pointGroups[game.target.id] = create(
-    Point,
+    PointWithColor,
+    0x00bb00,
     game.target.x,
     -game.target.y
   )
   frame.pointGroups.leadPoint = create(
-    Point,
+    PointWithColor,
+    0xff2222,
     game.snake.leadPoint.x,
     -game.snake.leadPoint.y
   )
   game.snake.points.forEach((point: any) => {
-    frame.pointGroups[point.id] = create(Point, point.x, -point.y)
+    frame.pointGroups[point.id] = create(
+      PointWithColor,
+      0xff5555,
+      point.x,
+      -point.y
+    )
   })
   await frameEffect.apply(frame, renderService)
 })
