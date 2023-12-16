@@ -69,3 +69,36 @@ export function takeService<T extends { new (...args: any[]): any }>(
 
   return instance.setup() as ConstructorResult<T>
 }
+
+export const defineModelFactory =
+  <T>() =>
+  <D extends Partial<T>>(defaults?: D) => {
+    return (
+      required?: Omit<T, keyof D> & Partial<D>,
+      changed?: Partial<T>
+    ): Readonly<T> => {
+      return Object.freeze({
+        ...defaults,
+        ...required,
+        ...changed,
+      } as T)
+    }
+  }
+
+export const defineModelEffect = <
+  T extends (...args: any[]) => any,
+  R extends any
+>(
+  // eslint-disable-next-line indent
+  modelFactory: T,
+  // eslint-disable-next-line indent
+  fn: (model: ReturnType<T>) => R
+  // eslint-disable-next-line indent
+) => {
+  return <CR = void>(
+    ...args: Parameters<T>
+  ): Readonly<CR extends void ? R : CR> => {
+    const model = modelFactory(...args)
+    return fn(model) as CR extends void ? R : CR
+  }
+}

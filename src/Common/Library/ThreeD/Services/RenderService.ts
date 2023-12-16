@@ -1,11 +1,11 @@
 import * as THREE from 'three'
 import { Color, Mesh } from 'three'
-import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
-import { reactOn } from '~/src/Common/Library/I'
-import { FloorModel } from '~/src/Common/Library/ThreeD/Configs/FloorModel'
-import { Cube } from '~/src/Snake/Models'
-import { Scene } from '~/src/Common/Library/ThreeD/Modules/scene/Scene'
 import { baseSize } from '~/src/Common/Constants/Three'
+import { reactOn } from '~/src/Common/Library/I'
+import { FloorModel } from '~~/app/appModules/common/floor/floorModel'
+import { Cube } from '~/src/Snake/Models'
+import { SceneModel } from '~~/app/appModules/common/scene/sceneModel'
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 
 export class RenderService {
   additional: number = 1
@@ -267,7 +267,7 @@ export class RenderService {
     })
   }
 
-  applySceneConfig(model: Scene) {
+  applySceneConfig(model: SceneModel) {
     reactOn(this.afterScene.bind(this), async () => {
       // TODO обработать звуки
       this.scene.background = new Color(model.background)
