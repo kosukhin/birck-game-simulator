@@ -1,5 +1,5 @@
 import { floorModel } from '~~/app/appModules/common/floor/floorModel'
-import { scene } from '~~/app/appModules/common/scene/scene'
+import { doScene } from '~~/app/appModules/common/scene/scene'
 import { sceneModel } from '~~/app/appModules/common/scene/sceneModel'
 import {
   gameInContext,
@@ -34,7 +34,7 @@ export namespace snakeController {
       background: sceneBackgroundColor,
       soundToEvents: gameSounds,
     })
-    scene(theScene)
+    doScene(theScene)
   }
 
   export function handleFrame() {

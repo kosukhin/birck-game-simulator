@@ -82,9 +82,6 @@ export class RenderService {
     })
     this.#material.flatShading = false
 
-    this.#soundListener = new THREE.AudioListener()
-    this.#camera.add(this.#soundListener)
-
     const animate = () => {
       requestAnimationFrame(animate)
       if (this.#afterAnimate) {
@@ -243,6 +240,11 @@ export class RenderService {
   sound(key: string, path: string, forceNew = false): Promise<THREE.Audio> {
     return new Promise((resolve) => {
       if (!this.#sounds[key]) {
+        if (!this.#soundListener) {
+          this.#soundListener = new THREE.AudioListener()
+          this.#camera.add(this.#soundListener)
+        }
+
         const sound = new THREE.Audio(this.#soundListener)
         const audioLoader = new THREE.AudioLoader()
         // TODO переделать на loadAsync
