@@ -1,6 +1,5 @@
 import { floorModel } from '~~/app/appModules/common/floor/floorModel'
 import { doScene } from '~~/app/appModules/common/scene/scene'
-import { sceneModel } from '~~/app/appModules/common/scene/sceneModel'
 import {
   gameInContext,
   renderServiceInContext,
@@ -12,10 +11,10 @@ import {
   pointWithColorModel,
 } from '~~/app/appModules/point/pointModel'
 import { doTick } from '~~/app/appModules/tick/doTick'
-import { tickModel } from '~~/app/appModules/tick/tickModel'
 import { sceneBackgroundColor } from '~~/src/Snake/Constants/colors'
 import { gameSounds } from '~~/src/Snake/Constants/sounds'
 import { floorTexture } from '~~/src/Snake/Constants/textures'
+import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
 export namespace snakeController {
   export function initApp() {
@@ -28,17 +27,16 @@ export namespace snakeController {
       widthSegments: 100,
       heightSegments: 1,
     })
-    const theScene = sceneModel({
+    doScene({
       floor: theFloor,
       size: [15, 15],
       background: sceneBackgroundColor,
       soundToEvents: gameSounds,
     })
-    doScene(theScene)
   }
 
   export function handleFrame() {
-    const theGame = gameInContext()
+    const theGame = gameInContext<WfSnake>()
     const theRenderService = renderServiceInContext()
     theRenderService.setGameSpeed(theGame.speed.value)
     const theFrame = frameModel({
@@ -65,16 +63,15 @@ export namespace snakeController {
   }
 
   export function handleTick(additional: number) {
-    const theGame = gameInContext()
+    const theGame = gameInContext<WfSnake>()
     const leadPoint = pointModel({
       x: theGame.snake.leadPoint.x,
       y: theGame.snake.leadPoint.y,
     })
-    const tick = tickModel({
+    doTick({
       additional,
       direction: theGame.snake.direction,
       leadPoint,
     })
-    doTick(tick)
   }
 }
