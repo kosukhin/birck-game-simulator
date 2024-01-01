@@ -1,4 +1,4 @@
-import { floorModel } from '~~/app/appModules/common/floor/floorModel'
+import { Floor } from './../common/floor/floor'
 import { doScene } from '~~/app/appModules/common/scene/scene'
 import {
   gameInContext,
@@ -18,21 +18,12 @@ import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
 export namespace snakeController {
   export function initApp() {
-    const theFloor = floorModel({
-      texture: floorTexture,
-      offset: [0, 0],
-      repeat: [20, 20],
-      width: 2400,
-      height: 2400,
-      widthSegments: 100,
-      heightSegments: 1,
-    })
-    doScene({
-      floor: theFloor,
-      size: [15, 15],
-      background: sceneBackgroundColor,
-      soundToEvents: gameSounds,
-    })
+    doScene(
+      [15, 15],
+      sceneBackgroundColor,
+      gameSounds,
+      new Floor(floorTexture, [0, 0], [20, 20], 2400, 2400, 100, 1)
+    )
   }
 
   export function handleFrame() {

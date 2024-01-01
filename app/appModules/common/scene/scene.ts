@@ -1,15 +1,25 @@
-import { sceneModel } from '~~/app/appModules/common/scene/sceneModel'
+import { Floor } from '~~/app/appModules/common/floor/floor'
 import {
   gameInContext,
   renderServiceInContext,
 } from '~~/app/appModules/context'
-import { defineModelEffect } from '~~/src/Common/Library/I'
+import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
-export const doScene = defineModelEffect(sceneModel, (model) => {
+export class Scene {
+  constructor(
+    public size: [number, number],
+    public background: string,
+    public soundToEvents: [string, string][],
+    public floor: Floor
+  ) {}
+}
+
+export const doScene = (...props: ConstructorParameters<typeof Scene>) => {
+  const model = new Scene(...props)
   const renderService = renderServiceInContext()
   renderService.applySceneConfig(model)
 
-  const game = gameInContext()
+  const game = gameInContext<WfSnake>()
   model.soundToEvents.forEach((soundModel) => {
     const soundCb = () => renderService.sound(soundModel[0], soundModel[1])
     game.addEvent(soundModel[0], async () => {
@@ -19,4 +29,4 @@ export const doScene = defineModelEffect(sceneModel, (model) => {
       }, 33)
     })
   })
-})
+}

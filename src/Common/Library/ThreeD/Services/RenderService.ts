@@ -2,9 +2,9 @@ import * as THREE from 'three'
 import { Color, Mesh } from 'three'
 import { baseSize } from '~/src/Common/Constants/Three'
 import { reactOn } from '~/src/Common/Library/I'
-import { FloorModel } from '~~/app/appModules/common/floor/floorModel'
 import { Cube } from '~/src/Snake/Models'
-import { SceneModel } from '~~/app/appModules/common/scene/sceneModel'
+import { FloorModel } from '~~/app/appModules/common/floor/floorModel'
+import { Scene } from '~~/app/appModules/common/scene/scene'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 
 export class RenderService {
@@ -269,7 +269,7 @@ export class RenderService {
     })
   }
 
-  applySceneConfig(model: SceneModel) {
+  applySceneConfig(model: Scene) {
     reactOn(this.afterScene.bind(this), async () => {
       // TODO обработать звуки
       this.scene.background = new Color(model.background)
