@@ -1,7 +1,3 @@
-import { defineModelFactory } from '~~/src/Common/Library/I'
-
-export type SharedState = {
-  path: string
+export class SharedState {
+  constructor(public path: string) {}
 }
-
-export const sharedStateModel = defineModelFactory<SharedState>()({})

@@ -1,9 +1,8 @@
 import { renderServiceInContext } from '~~/app/appModules/context'
-import { frameModel } from '~~/app/appModules/frame/frameModel'
+import { Frame } from '~~/app/appModules/frame/frameModel'
 import { baseSize } from '~~/src/Common/Constants/Three'
-import { defineModelEffect } from '~~/src/Common/Library/I'
 
-export const doFrame = defineModelEffect(frameModel, (model) => {
+export const doFrame = (model: Frame) => {
   const renderService = renderServiceInContext()
   Object.entries(model.pointGroups).forEach(([id, point]) => {
     renderService.manageCube(
@@ -14,4 +13,4 @@ export const doFrame = defineModelEffect(frameModel, (model) => {
     )
   })
   renderService.setLastUpdateTime(new Date().getTime())
-})
+}

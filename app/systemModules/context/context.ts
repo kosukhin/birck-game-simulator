@@ -1,3 +1,5 @@
+import { Effect, EffectProps } from '~~/app/systemModules/base/effect'
+
 export class ContextModels {
   constructor(public models: Record<string, any>) {}
 }
@@ -8,28 +10,24 @@ export class Context {
   constructor(public key: string) {}
 }
 
-export const context = <T extends unknown>(
-  ...props: ConstructorParameters<typeof Context>
+export const context: <T>(...props: EffectProps<typeof Context>) => T = (
+  key
 ) => {
-  const model = new Context(...props)
   for (const contextModel of contextStack) {
-    if (contextModel.models[model.key]) {
-      return contextModel.models[model.key] as T
+    if (contextModel.models[key]) {
+      return contextModel.models[key]
     }
   }
 
-  throw new Error(`Unknonwn key ${model.key} in context!`)
+  throw new Error(`Unknonwn key ${key} in context!`)
 }
 
 export class InContext {
   constructor(public context: ContextModels, public fn?: Function) {}
 }
 
-export const inContext = (
-  ...props: ConstructorParameters<typeof InContext>
-) => {
-  const model = new InContext(...props)
-  contextStack.unshift(model.context)
-  model?.fn?.()
+export const inContext: Effect<typeof InContext> = (context, fn) => {
+  contextStack.unshift(context)
+  fn?.()
   contextStack.shift()
 }

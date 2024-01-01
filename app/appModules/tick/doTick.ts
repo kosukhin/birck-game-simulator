@@ -1,16 +1,20 @@
 import { MathUtils } from 'three'
 import { renderServiceInContext } from '~~/app/appModules/context'
-import { tickModel } from '~~/app/appModules/tick/tickModel'
+import { Tick } from '~~/app/appModules/tick/tickModel'
+import { Effect } from '~~/app/systemModules/base/effect'
 import { baseSize } from '~~/src/Common/Constants/Three'
-import { defineModelEffect } from '~~/src/Common/Library/I'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 
 type D3 = { x: number; y: number; z: number }
 const newRotation: D3 = { x: 0, y: 0, z: 0 }
 const k = 50
 
-export const doTick = defineModelEffect(tickModel, (model) => {
-  let additional = model.additional
+export const doTick: Effect<typeof Tick> = (
+  initAdditional,
+  direction,
+  leadPoint
+) => {
+  let additional = initAdditional
 
   if (additional > 1) {
     additional = 1
@@ -18,8 +22,6 @@ export const doTick = defineModelEffect(tickModel, (model) => {
 
   let xMul = 1
   let yMul = 1
-  const direction = model.direction
-  const leadPoint = model.leadPoint
   let x = leadPoint.x * baseSize
   let y = leadPoint.y * baseSize
 
@@ -67,7 +69,7 @@ export const doTick = defineModelEffect(tickModel, (model) => {
     },
     newRotation
   )
-})
+}
 
 function calcAnimatePosition(newPosition: D3, newRotation: D3) {
   const renderService = renderServiceInContext()

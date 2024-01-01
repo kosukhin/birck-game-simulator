@@ -5,11 +5,8 @@ import {
   renderServiceInContext,
 } from '~~/app/appModules/context'
 import { doFrame } from '~~/app/appModules/frame/doFrame'
-import { frameModel } from '~~/app/appModules/frame/frameModel'
-import {
-  pointModel,
-  pointWithColorModel,
-} from '~~/app/appModules/point/pointModel'
+import { Frame } from '~~/app/appModules/frame/frameModel'
+import { PointWithColorModel } from '~~/app/appModules/point/pointModel'
 import { doTick } from '~~/app/appModules/tick/doTick'
 import { sceneBackgroundColor } from '~~/src/Snake/Constants/colors'
 import { gameSounds } from '~~/src/Snake/Constants/sounds'
@@ -30,39 +27,29 @@ export namespace snakeController {
     const theGame = gameInContext<WfSnake>()
     const theRenderService = renderServiceInContext()
     theRenderService.setGameSpeed(theGame.speed.value)
-    const theFrame = frameModel({
-      pointGroups: {},
-    })
-    theFrame.pointGroups[theGame.target.id] = pointWithColorModel({
-      color: 0x00bb00,
-      x: theGame.target.x,
-      y: -theGame.target.y,
-    })
-    theFrame.pointGroups.leadPoint = pointWithColorModel({
-      color: 0xff2222,
-      x: theGame.snake.leadPoint.x,
-      y: -theGame.snake.leadPoint.y,
-    })
+    const theFrame = new Frame({})
+    theFrame.pointGroups[theGame.target.id] = new PointWithColorModel(
+      0x00bb00,
+      theGame.target.x,
+      -theGame.target.y
+    )
+    theFrame.pointGroups.leadPoint = new PointWithColorModel(
+      0xff2222,
+      theGame.snake.leadPoint.x,
+      -theGame.snake.leadPoint.y
+    )
     theGame.snake.points.forEach((point: any) => {
-      theFrame.pointGroups[point.id] = pointWithColorModel({
-        color: 0xff5555,
-        x: point.x,
-        y: -point.y,
-      })
+      theFrame.pointGroups[point.id] = new PointWithColorModel(
+        0xff5555,
+        point.x,
+        -point.y
+      )
     })
     doFrame(theFrame)
   }
 
   export function handleTick(additional: number) {
     const theGame = gameInContext<WfSnake>()
-    const leadPoint = pointModel({
-      x: theGame.snake.leadPoint.x,
-      y: theGame.snake.leadPoint.y,
-    })
-    doTick({
-      additional,
-      direction: theGame.snake.direction,
-      leadPoint,
-    })
+    doTick(additional, theGame.snake.direction, theGame.snake.leadPoint)
   }
 }

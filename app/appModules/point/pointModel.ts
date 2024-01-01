@@ -1,16 +1,7 @@
-import { defineModelFactory } from '~~/src/Common/Library/I'
-
-export type PointWithColorModel = {
-  color: number
-  x: number
-  y: number
+export class PointWithColorModel {
+  constructor(public color: number, public x: number, public y: number) {}
 }
 
-export const pointWithColorModel = defineModelFactory<PointWithColorModel>()({})
-
-export type PointModel = {
-  x: number
-  y: number
+export class PointModel {
+  constructor(public x: number, public y: number) {}
 }
-
-export const pointModel = defineModelFactory<PointModel>()({})

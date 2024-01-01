@@ -1,3 +1,1 @@
-export namespace tetrisController [
-
-]
+export namespace tetrisController {}

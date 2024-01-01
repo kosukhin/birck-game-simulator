@@ -32,7 +32,7 @@ const snakeContext = new ContextModels({
 inContext(snakeContext, snakeController.initApp)
 
 onNewKey((keyCode) => {
-  inContext(snakeContext, () => doKeyPress({ keyCode }))
+  inContext(snakeContext, () => doKeyPress(keyCode))
 })
 
 onFrame(game, () => {
