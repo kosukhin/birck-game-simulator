@@ -25,11 +25,23 @@ import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import SpaceHint from '~/src/Common/Components/KeyboardHint/SpaceHint.vue'
 import { cubesGroupExtract } from '~/src/Common/Functions/cubesGroupExtract'
 import { cubesToInvisible } from '~/src/Common/Functions/cubesToInvisible'
+import { ContextModels, inContext } from '~~/app/systemModules/context/context'
+import { blasteroidController } from '~~/app/appModules/blasteroid/blasteroidController'
 
 const canvasWrapper = ref()
 
 const keyboard = useService<SKeyboard>('keyboard')
+
 const game = new WfBlasteroid()
+const rserv = new RenderService()
+
+const theContext = new ContextModels({
+  renderService: rserv,
+  game,
+})
+
+inContext(theContext, blasteroidController.initApp)
+
 game.run()
 
 keyboard.clearSubscribers()
@@ -44,7 +56,6 @@ keyboard.registerSubscriber((key: EKeyCode) => {
 
 // set canvas constants
 const baseSize = 10
-const rserv = new RenderService()
 game.afterNextFrame(() => {
   cubesGroupExtract(rserv.cubes, 'target_').forEach(cubesToInvisible)
 
@@ -148,19 +159,6 @@ game.afterTargetBeated(async () => {
 
 onMounted(() => {
   rserv.render(canvasWrapper.value)
-
-  // множество границ рендеринг
-  const width = game.grid.width
-  const height = game.grid.height
-  const white = 0xffffff
-  for (let i = 0; i < width; i++) {
-    rserv.createCube('top' + i, i * baseSize, 1 * baseSize, white)
-    rserv.createCube('bottom' + i, i * baseSize, -height * baseSize, white)
-  }
-  for (let i = 0; i < height; i++) {
-    rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, white)
-    rserv.createCube('right' + i, width * baseSize, -i * baseSize, white)
-  }
 
   setTimeout(() => {
     rserv.camera3()

@@ -3,8 +3,8 @@ import {
   gameInContext,
   renderServiceInContext,
 } from '~~/app/appModules/context'
-import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 import { effect } from '~~/app/systemModules/base/effect'
+import { IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 
 export class Scene {
   constructor(
@@ -20,7 +20,7 @@ export const doScene = effect<typeof Scene>((...props) => {
   const renderService = renderServiceInContext()
   renderService.applySceneConfig(model)
 
-  const game = gameInContext<WfSnake>()
+  const game = gameInContext<IGameWorkflow>()
   model.soundToEvents.forEach((soundModel) => {
     const soundCb = () => renderService.sound(soundModel[0], soundModel[1])
     game.addEvent(soundModel[0], async () => {

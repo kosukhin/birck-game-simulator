@@ -10,8 +10,8 @@ export enum EKeyCode {
 
 export interface IGameWorkflow {
   run(): void
-
   pause(): void
+  addEvent(name: string, cb: Function): void
 }
 
 export enum EMoveDirection {
