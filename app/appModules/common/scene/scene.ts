@@ -3,8 +3,8 @@ import {
   gameInContext,
   renderServiceInContext,
 } from '~~/app/appModules/context'
-import { Effect } from '~~/app/systemModules/base/effect'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
+import { effect } from '~~/app/systemModules/base/effect'
 
 export class Scene {
   constructor(
@@ -15,7 +15,7 @@ export class Scene {
   ) {}
 }
 
-export const doScene: Effect<typeof Scene> = (...props) => {
+export const doScene = effect<typeof Scene>((...props) => {
   const model = new Scene(...props)
   const renderService = renderServiceInContext()
   renderService.applySceneConfig(model)
@@ -30,4 +30,4 @@ export const doScene: Effect<typeof Scene> = (...props) => {
       }, 33)
     })
   })
-}
+})
