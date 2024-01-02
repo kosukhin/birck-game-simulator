@@ -1,14 +1,15 @@
-import { NewDirection } from './newDirectionModel'
 import {
   gameInContext,
   renderServiceInContext,
 } from '~~/app/appModules/context'
-import { effect } from '~~/app/systemModules/base/effect'
+import { NewDirection } from '~~/src/Snake/Modules/direction/newDirectionModel'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
-export const newDirection = effect<typeof NewDirection>((direction) => {
+export const newDirection: (
+  ...p: ConstructorParameters<typeof NewDirection>
+) => void = (direction) => {
   const game = gameInContext<WfSnake>()
   game.moveSnake(direction)
   const renderService = renderServiceInContext()
   renderService.setLeadDirection(direction)
-})
+}

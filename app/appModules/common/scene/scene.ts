@@ -3,8 +3,6 @@ import {
   gameInContext,
   renderServiceInContext,
 } from '~~/app/appModules/context'
-import { effect } from '~~/app/systemModules/base/effect'
-import { IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 
 export class Scene {
   constructor(
@@ -15,12 +13,14 @@ export class Scene {
   ) {}
 }
 
-export const doScene = effect<typeof Scene>((...props) => {
+export const doScene: (
+  ...props: ConstructorParameters<typeof Scene>
+) => void = (...props) => {
   const model = new Scene(...props)
   const renderService = renderServiceInContext()
   renderService.applySceneConfig(model)
 
-  const game = gameInContext<IGameWorkflow>()
+  const game = gameInContext()
   model.soundToEvents.forEach((soundModel) => {
     const soundCb = () => renderService.sound(soundModel[0], soundModel[1])
     game.addEvent(soundModel[0], async () => {
@@ -30,4 +30,4 @@ export const doScene = effect<typeof Scene>((...props) => {
       }, 33)
     })
   })
-})
+}
