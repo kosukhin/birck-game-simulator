@@ -1,4 +1,6 @@
-import { Floor } from './../common/floor/floor'
+import { Floor } from '~~/app/appModules/common/floor/floor'
+import { state } from '~~/app/systemModules/state/state'
+import { mountedHook } from '~~/app/systemModules/mountedHook/mountedHook'
 import { doScene } from '~~/app/appModules/common/scene/scene'
 import {
   gameInContext,
@@ -11,12 +13,52 @@ import { doTick } from '~~/app/appModules/tick/doTick'
 import { sceneBackgroundColor } from '~~/src/Snake/Constants/colors'
 import { gameSounds } from '~~/src/Snake/Constants/sounds'
 import { floorTexture } from '~~/src/Snake/Constants/textures'
-import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
+import { WfSnake, onFrame } from '~~/src/Snake/Workflows/WfSnake'
+import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
+import { ContextModels, inContext } from '~~/app/systemModules/context/context'
+import { onNewKey } from '~~/src/Snake/Services/io'
+import { doKeyPress } from '~~/app/appModules/keyPress/doKeyPress'
+import { onTick } from '~~/src/Snake/Services/render'
+
+const fieldSize: [number, number] = [15, 15]
 
 export namespace snakeController {
+  export function setup() {
+    const renderService = new RenderService()
+    const game = new WfSnake(...fieldSize)
+
+    const snakeContext = new ContextModels({
+      renderService,
+      game,
+    })
+
+    inContext(snakeContext, initApp)
+
+    onNewKey((keyCode) => {
+      inContext(snakeContext, () => doKeyPress(keyCode))
+    })
+
+    onFrame(game, () => {
+      inContext(snakeContext, handleFrame)
+    })
+
+    onTick(renderService, (additional: number) => {
+      inContext(snakeContext, () => handleTick(additional))
+    })
+
+    const canvasWrapper = state()
+
+    mountedHook(() => {
+      renderService.render(canvasWrapper.get<HTMLElement>())
+      game.run()
+    })
+
+    return canvasWrapper.target()
+  }
+
   export function initApp() {
     doScene(
-      [15, 15],
+      fieldSize,
       sceneBackgroundColor,
       gameSounds,
       new Floor(floorTexture, [0, 0], [20, 20], 2400, 2400, 100, 1)

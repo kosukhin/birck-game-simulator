@@ -13,39 +13,7 @@
 
 <script setup lang="ts">
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { onNewKey } from '~/src/Snake/Services/io'
-import { onTick } from '~/src/Snake/Services/render'
-import { doKeyPress } from '~~/app/appModules/keyPress/doKeyPress'
 import { snakeController } from '~~/app/appModules/snake/snakeController'
-import { ContextModels, inContext } from '~~/app/systemModules/context/context'
-import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
-import { WfSnake, onFrame } from '~~/src/Snake/Workflows/WfSnake'
 
-const renderService = new RenderService()
-const game = new WfSnake(15, 15)
-
-const snakeContext = new ContextModels({
-  renderService,
-  game,
-})
-
-inContext(snakeContext, snakeController.initApp)
-
-onNewKey((keyCode) => {
-  inContext(snakeContext, () => doKeyPress(keyCode))
-})
-
-onFrame(game, () => {
-  inContext(snakeContext, snakeController.handleFrame)
-})
-
-onTick(renderService, (additional: number) => {
-  inContext(snakeContext, () => snakeController.handleTick(additional))
-})
-
-const canvasWrapper = ref()
-onMounted(() => {
-  renderService.render(canvasWrapper.value)
-  game.run()
-})
+const canvasWrapper = snakeController.setup()
 </script>
