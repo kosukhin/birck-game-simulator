@@ -1,4 +1,4 @@
-import { context } from '~~/app/systemModules/context/context'
+import { context } from '~~/app/systemModules/context'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 

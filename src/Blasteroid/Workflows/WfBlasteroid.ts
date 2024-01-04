@@ -187,4 +187,9 @@ export class WfBlasteroid implements IGameWorkflow {
   afterTargetBeated(cb: Function) {
     this.#afterTargetBeated = cb
   }
+
+  #events: Record<string, Function> = {}
+  addEvent(name: string, cb: Function) {
+    this.#events[name] = cb
+  }
 }

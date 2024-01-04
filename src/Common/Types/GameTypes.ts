@@ -12,6 +12,7 @@ export interface IGameWorkflow {
   run(): void
   pause(): void
   addEvent(name: string, cb: Function): void
+  afterNextFrame(cb: Function): void
 }
 
 export enum EMoveDirection {

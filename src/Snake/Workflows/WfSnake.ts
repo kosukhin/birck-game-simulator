@@ -170,6 +170,6 @@ export class WfSnake implements IGameWorkflow {
   }
 }
 
-export function onFrame(game: WfSnake, cb: Function) {
+export function onFrame(game: IGameWorkflow, cb: Function) {
   game.afterNextFrame(cb)
 }
