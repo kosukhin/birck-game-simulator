@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { snakeController } from '~~/app/appModules/snake/snakeController'
+import { snakeController } from '~~/app/controllers/snakeController'
 
-const canvasWrapper = snakeController.setup()
+const { canvasWrapper, game } = snakeController.setup()
 </script>

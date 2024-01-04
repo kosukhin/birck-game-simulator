@@ -1,18 +1,18 @@
 import { MathUtils } from 'three'
-import { renderServiceInContext } from '~~/app/appModules/context'
-import { Tick } from '~~/app/appModules/tick/tickModel'
+import { renderServiceInContext } from '~~/app/appModules/inContext'
 import { baseSize } from '~~/src/Common/Constants/Three'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+import { Point } from '~~/src/Snake/Models'
 
 type D3 = { x: number; y: number; z: number }
 const newRotation: D3 = { x: 0, y: 0, z: 0 }
 const k = 50
 
-export const doTick: (...props: ConstructorParameters<typeof Tick>) => void = (
-  initAdditional,
-  direction,
-  leadPoint
-) => {
+export function renderTick(
+  initAdditional: number,
+  direction: EMoveDirection,
+  leadPoint: Point
+) {
   let additional = initAdditional
 
   if (additional > 1) {

@@ -1,7 +1,7 @@
-export class PointWithColorModel {
+export class PointWithColor {
   constructor(public color: number, public x: number, public y: number) {}
 }
 
-export class PointModel {
+export class Point {
   constructor(public x: number, public y: number) {}
 }

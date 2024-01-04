@@ -2,7 +2,7 @@
   <div>
     <h1>Бластероид</h1>
     <div ref="canvasWrapper"></div>
-    <KeyboardHint @pause="onPaused">
+    <KeyboardHint @pause="game.pause">
       <SpaceHint />
       <br />
     </KeyboardHint>
@@ -12,21 +12,19 @@
 <script lang="ts" setup>
 import * as THREE from 'three'
 import { MathUtils } from 'three'
-import { useService } from '~/src/Common/Helpers/HService'
-import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { WfBlasteroid } from '~/src/Blasteroid/Workflows/WfBlasteroid'
+import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import SpaceHint from '~/src/Common/Components/KeyboardHint/SpaceHint.vue'
+import { cubesGroupExtract } from '~/src/Common/Functions/cubesGroupExtract'
+import { cubesToInvisible } from '~/src/Common/Functions/cubesToInvisible'
+import { useService } from '~/src/Common/Helpers/HService'
+import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
+import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
 } from '~/src/Common/Types/GameTypes'
-import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
-import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import SpaceHint from '~/src/Common/Components/KeyboardHint/SpaceHint.vue'
-import { cubesGroupExtract } from '~/src/Common/Functions/cubesGroupExtract'
-import { cubesToInvisible } from '~/src/Common/Functions/cubesToInvisible'
-import { ContextModels, inContext } from '~~/app/systemModules/context/context'
-import { blasteroidController } from '~~/app/appModules/blasteroid/blasteroidController'
 
 const canvasWrapper = ref()
 
@@ -34,13 +32,6 @@ const keyboard = useService<SKeyboard>('keyboard')
 
 const game = new WfBlasteroid()
 const rserv = new RenderService()
-
-const theContext = new ContextModels({
-  renderService: rserv,
-  game,
-})
-
-inContext(theContext, blasteroidController.initApp)
 
 game.run()
 

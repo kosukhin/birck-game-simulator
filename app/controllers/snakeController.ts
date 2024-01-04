@@ -1,24 +1,23 @@
-import { Floor } from '~~/app/appModules/common/floor/floor'
-import { state } from '~~/app/systemModules/state/state'
-import { mountedHook } from '~~/app/systemModules/mountedHook/mountedHook'
-import { doScene } from '~~/app/appModules/common/scene/scene'
+import { Floor } from '~~/app/appModules/common/floor'
+import { renderScene } from '~~/app/appModules/common/scene'
+import { PointsGroup, renderFrame } from '~~/app/appModules/frame'
 import {
   gameInContext,
   renderServiceInContext,
-} from '~~/app/appModules/context'
-import { doFrame } from '~~/app/appModules/frame/doFrame'
-import { Frame } from '~~/app/appModules/frame/frameModel'
-import { PointWithColorModel } from '~~/app/appModules/point/pointModel'
-import { doTick } from '~~/app/appModules/tick/doTick'
+} from '~~/app/appModules/inContext'
+import { doKeyPress } from '~~/app/appModules/keyPress'
+import { renderTick } from '~~/app/appModules/tick'
+import { inContext } from '~~/app/systemModules/context'
+import { mountedHook } from '~~/app/systemModules/mountedHook'
+import { state } from '~~/app/systemModules/state'
+import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { sceneBackgroundColor } from '~~/src/Snake/Constants/colors'
 import { gameSounds } from '~~/src/Snake/Constants/sounds'
 import { floorTexture } from '~~/src/Snake/Constants/textures'
-import { WfSnake, onFrame } from '~~/src/Snake/Workflows/WfSnake'
-import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
-import { ContextModels, inContext } from '~~/app/systemModules/context/context'
+import { Point, PointWithColor } from '~~/src/Snake/Models'
 import { onNewKey } from '~~/src/Snake/Services/io'
-import { doKeyPress } from '~~/app/appModules/keyPress/doKeyPress'
 import { onTick } from '~~/src/Snake/Services/render'
+import { WfSnake, onFrame } from '~~/src/Snake/Workflows/WfSnake'
 
 const fieldSize: [number, number] = [15, 15]
 
@@ -27,10 +26,12 @@ export namespace snakeController {
     const renderService = new RenderService()
     const game = new WfSnake(...fieldSize)
 
-    const snakeContext = new ContextModels({
-      renderService,
-      game,
-    })
+    const snakeContext = {
+      models: {
+        renderService,
+        game,
+      },
+    }
 
     inContext(snakeContext, initApp)
 
@@ -53,11 +54,14 @@ export namespace snakeController {
       game.run()
     })
 
-    return canvasWrapper.target()
+    return {
+      canvasWrapper: canvasWrapper.target(),
+      game,
+    }
   }
 
   export function initApp() {
-    doScene(
+    renderScene(
       fieldSize,
       sceneBackgroundColor,
       gameSounds,
@@ -69,29 +73,29 @@ export namespace snakeController {
     const theGame = gameInContext<WfSnake>()
     const theRenderService = renderServiceInContext()
     theRenderService.setGameSpeed(theGame.speed.value)
-    const theFrame = new Frame({})
-    theFrame.pointGroups[theGame.target.id] = new PointWithColorModel(
+    const theFrame: PointsGroup = {}
+    theFrame[theGame.target.id] = new PointWithColor(
       0x00bb00,
       theGame.target.x,
       -theGame.target.y
     )
-    theFrame.pointGroups.leadPoint = new PointWithColorModel(
+    theFrame.leadPoint = new PointWithColor(
       0xff2222,
       theGame.snake.leadPoint.x,
       -theGame.snake.leadPoint.y
     )
     theGame.snake.points.forEach((point: any) => {
-      theFrame.pointGroups[point.id] = new PointWithColorModel(
-        0xff5555,
-        point.x,
-        -point.y
-      )
+      theFrame[point.id] = new PointWithColor(0xff5555, point.x, -point.y)
     })
-    doFrame(theFrame)
+    renderFrame(theFrame)
   }
 
   export function handleTick(additional: number) {
     const theGame = gameInContext<WfSnake>()
-    doTick(additional, theGame.snake.direction, theGame.snake.leadPoint)
+    renderTick(
+      additional,
+      theGame.snake.direction,
+      new Point(theGame.snake.leadPoint.x, theGame.snake.leadPoint.y)
+    )
   }
 }

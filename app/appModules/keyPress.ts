@@ -1,18 +1,15 @@
 import {
-  gameInContext,
-  renderServiceInContext,
-} from '~~/app/appModules/context'
-import { KeyPress } from '~~/app/appModules/keyPress/keyPressModel'
-import {
   EKeyCode,
   KeysToMoveCamera3,
   KeysToMoveMap,
-} from '~~/src/Common/Types/GameTypes'
+} from './../../src/Common/Types/GameTypes'
+import {
+  gameInContext,
+  renderServiceInContext,
+} from '~~/app/appModules/inContext'
 import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
 
-export const doKeyPress: (
-  ...props: ConstructorParameters<typeof KeyPress>
-) => void = (keyCode) => {
+export function doKeyPress(keyCode: EKeyCode) {
   if (KeysToMoveMap[keyCode] !== undefined) {
     let newDirection = KeysToMoveMap[keyCode]
 
