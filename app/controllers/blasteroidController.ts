@@ -1,17 +1,22 @@
+import { MathUtils } from 'three'
 import { Floor } from '~~/app/appModules/common/floor'
 import { renderScene } from '~~/app/appModules/common/scene'
 import { PointsGroup, renderFrame } from '~~/app/appModules/frame'
-import { doKeyPress } from '~~/app/appModules/keyPress'
-import { renderTick } from '~~/app/appModules/tick'
 import { inContext } from '~~/app/systemModules/context'
 import { mountedHook } from '~~/app/systemModules/mountedHook'
 import { state } from '~~/app/systemModules/state'
 import { gameInContext, renderServiceInContext } from '~~/context'
 import { WfBlasteroid } from '~~/src/Blasteroid/Workflows/WfBlasteroid'
+import { baseSize } from '~~/src/Common/Constants/Three'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
+import {
+  EKeyCode,
+  EMoveDirection,
+  KeysToMoveMap,
+} from '~~/src/Common/Types/GameTypes'
+import { sceneBackgroundColor } from '~~/src/Snake/Constants/colors'
 import { gameSounds } from '~~/src/Snake/Constants/sounds'
-import { floorTexture } from '~~/src/Snake/Constants/textures'
-import { Point, PointWithColor } from '~~/src/Snake/Models'
+import { PointWithColor } from '~~/src/Snake/Models'
 import { onNewKey } from '~~/src/Snake/Services/io'
 import { onTick } from '~~/src/Snake/Services/render'
 import { onFrame } from '~~/src/Snake/Workflows/WfSnake'
@@ -31,15 +36,20 @@ export namespace blasteroidController {
     inContext(gameContext, initApp)
 
     onNewKey((keyCode) => {
-      inContext(gameContext, () => doKeyPress(keyCode))
+      const theGame = gameInContext<WfBlasteroid>()
+      theGame.move(KeysToMoveMap[keyCode] ?? EMoveDirection.up)
+
+      if (keyCode === EKeyCode.SPC) {
+        theGame.shoot()
+      }
     })
 
     onFrame(game, () => {
       inContext(gameContext, handleFrame)
     })
 
-    onTick(renderService, (additional: number) => {
-      inContext(gameContext, () => handleTick(additional))
+    onTick(renderService, () => {
+      inContext(gameContext, () => handleTick())
     })
 
     const canvasWrapper = state()
@@ -58,9 +68,17 @@ export namespace blasteroidController {
   export function initApp() {
     renderScene(
       [20, 15],
-      '/images/textures/space.jpeg',
+      sceneBackgroundColor,
       gameSounds,
-      new Floor(floorTexture, [0, 0], [20, 20], 2400, 2400, 100, 1)
+      new Floor(
+        '/images/textures/space.jpeg',
+        [0, 0],
+        [20, 20],
+        2400,
+        2400,
+        100,
+        1
+      )
     )
   }
 
@@ -76,8 +94,8 @@ export namespace blasteroidController {
         if (isFilled) {
           theFrame[id] = new PointWithColor(
             0x888888,
-            theGame.target.x,
-            -theGame.target.y
+            theGame.target.x + cellIndex,
+            -theGame.target.y - rowIndex
           )
         }
       })
@@ -88,9 +106,9 @@ export namespace blasteroidController {
         const id = `blasteroid_${cellIndex}_${rowIndex}`
         if (isFilled) {
           theFrame[id] = new PointWithColor(
-            0x888888,
-            theGame.target.x,
-            -theGame.target.y
+            0xff0000,
+            theGame.blasteroid.x + cellIndex,
+            -theGame.blasteroid.y - rowIndex
           )
         }
       })
@@ -99,12 +117,17 @@ export namespace blasteroidController {
     renderFrame(theFrame)
   }
 
-  export function handleTick(additional: number) {
+  export function handleTick() {
     const theGame = gameInContext<WfBlasteroid>()
-    renderTick(
-      additional,
-      theGame.blasteroid.direction,
-      new Point(theGame.blasteroid.x, theGame.blasteroid.y)
-    )
+    const theRenderService = renderServiceInContext()
+
+    theRenderService.camera.position.z = 80
+    theRenderService.camera.position.x =
+      (theGame.blasteroid.x - 3) * baseSize + 40
+    theRenderService.camera.position.y = -theGame.blasteroid.y * baseSize - 60
+
+    theRenderService.camera.rotation.x = MathUtils.degToRad(45)
+    theRenderService.camera.rotation.y = MathUtils.degToRad(0)
+    theRenderService.camera.rotation.z = MathUtils.degToRad(0)
   }
 }
