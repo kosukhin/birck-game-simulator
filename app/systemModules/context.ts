@@ -1,5 +1,5 @@
-export type ContextModels = {
-  models: Record<string, any>
+export class ContextModels {
+  constructor(public models: Record<string, any>) {}
 }
 
 const contextStack: ContextModels[] = []
@@ -17,5 +17,4 @@ export function context<T>(key: string): T {
 export function inContext(context: ContextModels, fn?: Function) {
   contextStack.unshift(context)
   fn?.()
-  contextStack.shift()
 }

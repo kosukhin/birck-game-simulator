@@ -2,11 +2,13 @@ import { Color, MathUtils } from 'three'
 import { Floor } from '~~/app/appModules/common/floor'
 import { renderScene } from '~~/app/appModules/common/scene'
 import { PointsGroup, renderFrame } from '~~/app/appModules/frame'
-import { inContext } from '~~/app/systemModules/context'
+import { cmd, startCommandsProcessor } from '~~/app/systemModules/command'
+import { ContextModels, inContext } from '~~/app/systemModules/context'
 import { mountedHook } from '~~/app/systemModules/mountedHook'
 import { state } from '~~/app/systemModules/state'
 import { gameInContext, renderServiceInContext } from '~~/context'
 import { WfBlasteroid } from '~~/src/Blasteroid/Workflows/WfBlasteroid'
+import GameCardVue from '~~/src/Common/Components/GameCard/GameCard.vue'
 import { baseSize } from '~~/src/Common/Constants/Three'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import {
@@ -26,13 +28,12 @@ export namespace blasteroidController {
     const renderService = new RenderService()
     const game = new WfBlasteroid()
 
-    const gameContext = {
-      models: {
-        renderService,
-        game,
-      },
-    }
+    const gameContext = new ContextModels({
+      renderService,
+      game,
+    })
 
+    startCommandsProcessor()
     inContext(gameContext, initApp)
 
     onNewKey((keyCode) => {
@@ -121,19 +122,17 @@ export namespace blasteroidController {
     const theRenderService = renderServiceInContext()
 
     Object.values(theGame.shoots).forEach((shoot) => {
-      const id = `shoot_${shoot.id}`
-      const cube = theRenderService.cubes?.[id]
-      if (shoot.willBeRemoved) {
-        cube.visible = false
-        return
+      if (!shoot.isDone) {
+        cmd(() => {
+          renderFrame({
+            [`shoot_${shoot.id}`]: new PointWithColor(
+              0xff6666,
+              shoot.x,
+              -shoot.y
+            ),
+          })
+        })
       }
-      theRenderService.manageCube(
-        id,
-        shoot.x * baseSize,
-        -shoot.y * baseSize,
-        new Color('darkorange')
-      )
-      cube && (cube.visible = true)
     })
 
     theRenderService.camera.position.z = 80
