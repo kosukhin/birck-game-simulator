@@ -1,4 +1,4 @@
-import { MathUtils } from 'three'
+import { Color, MathUtils } from 'three'
 import { Floor } from '~~/app/appModules/common/floor'
 import { renderScene } from '~~/app/appModules/common/scene'
 import { PointsGroup, renderFrame } from '~~/app/appModules/frame'
@@ -36,11 +36,10 @@ export namespace blasteroidController {
     inContext(gameContext, initApp)
 
     onNewKey((keyCode) => {
-      const theGame = gameInContext<WfBlasteroid>()
-      theGame.move(KeysToMoveMap[keyCode] ?? EMoveDirection.up)
+      game.move(KeysToMoveMap[keyCode] ?? EMoveDirection.up)
 
       if (keyCode === EKeyCode.SPC) {
-        theGame.shoot()
+        game.shoot()
       }
     })
 
@@ -67,7 +66,7 @@ export namespace blasteroidController {
 
   export function initApp() {
     renderScene(
-      [20, 15],
+      [15, 20],
       sceneBackgroundColor,
       gameSounds,
       new Floor(
@@ -120,6 +119,22 @@ export namespace blasteroidController {
   export function handleTick() {
     const theGame = gameInContext<WfBlasteroid>()
     const theRenderService = renderServiceInContext()
+
+    Object.values(theGame.shoots).forEach((shoot) => {
+      const id = `shoot_${shoot.id}`
+      const cube = theRenderService.cubes?.[id]
+      if (shoot.willBeRemoved) {
+        cube.visible = false
+        return
+      }
+      theRenderService.manageCube(
+        id,
+        shoot.x * baseSize,
+        -shoot.y * baseSize,
+        new Color('darkorange')
+      )
+      cube && (cube.visible = true)
+    })
 
     theRenderService.camera.position.z = 80
     theRenderService.camera.position.x =

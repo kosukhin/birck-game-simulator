@@ -6,6 +6,11 @@ export type PointsGroup = Record<string, PointWithColor>
 
 export function renderFrame(pointsGroup: PointsGroup) {
   const renderService = renderServiceInContext()
+  Object.entries(renderService.cubes).forEach(([id, cube]) => {
+    if (id.indexOf('target_') === 0) {
+      cube.visible = false
+    }
+  })
   Object.entries(pointsGroup).forEach(([id, point]) => {
     renderService.manageCube(
       id,
@@ -13,6 +18,8 @@ export function renderFrame(pointsGroup: PointsGroup) {
       point.y * baseSize,
       point.color
     )
+    const cube = renderService.cubes?.[id]
+    cube && (cube.visible = true)
   })
   renderService.setLastUpdateTime(new Date().getTime())
 }
