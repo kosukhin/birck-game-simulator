@@ -1,6 +1,6 @@
 import { MathUtils } from 'three'
-import { renderServiceInContext } from '~~/app/appModules/inContext'
 import { baseSize } from '~~/src/Common/Constants/Three'
+import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { Point } from '~~/src/Snake/Models'
 
@@ -9,6 +9,7 @@ const newRotation: D3 = { x: 0, y: 0, z: 0 }
 const k = 50
 
 export function renderTick(
+  getRenderService: () => RenderService,
   initAdditional: number,
   direction: EMoveDirection,
   leadPoint: Point
@@ -60,18 +61,12 @@ export function renderTick(
     newRotation.z = MathUtils.degToRad(90)
   }
 
-  calcAnimatePosition(
-    {
-      x: x - baseSize * xMul * additional,
-      y: -y - baseSize * yMul * additional,
-      z: 60,
-    },
-    newRotation
-  )
-}
-
-function calcAnimatePosition(newPosition: D3, newRotation: D3) {
-  const renderService = renderServiceInContext()
+  const newPosition = {
+    x: x - baseSize * xMul * additional,
+    y: -y - baseSize * yMul * additional,
+    z: 60,
+  }
+  const renderService = getRenderService()
   renderService.camera.position.x = newPosition.x
   renderService.camera.position.y = newPosition.y
   renderService.camera.position.z = newPosition.z

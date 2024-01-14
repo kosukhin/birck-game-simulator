@@ -1,8 +1,6 @@
 import { Floor } from '~~/app/appModules/common/floor'
-import {
-  gameInContext,
-  renderServiceInContext,
-} from '~~/app/appModules/inContext'
+import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
+import { IGameWorkflow } from '~~/src/Common/Types/GameTypes'
 
 export type Scene = {
   size: [number, number]
@@ -12,12 +10,14 @@ export type Scene = {
 }
 
 export function renderScene(
+  getGame: () => IGameWorkflow,
+  getRenderService: () => RenderService,
   size: [number, number],
   background: string,
   soundToEvents: [string, string][],
   floor: Floor
 ) {
-  const renderService = renderServiceInContext()
+  const renderService = getRenderService()
   renderService.applySceneConfig({
     size,
     background,
@@ -25,7 +25,7 @@ export function renderScene(
     floor,
   })
 
-  const game = gameInContext()
+  const game = getGame()
   soundToEvents.forEach((soundModel) => {
     const soundCb = () => renderService.sound(soundModel[0], soundModel[1])
     game.addEvent(soundModel[0], async () => {

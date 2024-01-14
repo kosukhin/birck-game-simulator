@@ -1,11 +1,14 @@
-import { renderServiceInContext } from '~~/app/appModules/inContext'
 import { baseSize } from '~~/src/Common/Constants/Three'
+import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { PointWithColor } from '~~/src/Snake/Models'
 
 export type PointsGroup = Record<string, PointWithColor>
 
-export function renderFrame(pointsGroup: PointsGroup) {
-  const renderService = renderServiceInContext()
+export function renderFrame(
+  getRenderService: () => RenderService,
+  pointsGroup: PointsGroup
+) {
+  const renderService = getRenderService()
   Object.entries(renderService.cubes).forEach(([id, cube]) => {
     if (id.indexOf('target_') === 0) {
       cube.visible = false
