@@ -4,7 +4,8 @@
  * это основной элемент
  */
 export interface Block {
-  x: number,
-  y: number,
+  x: number
+  y: number
   id: string
+  group: string
 }

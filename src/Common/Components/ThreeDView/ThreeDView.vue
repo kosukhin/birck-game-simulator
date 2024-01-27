@@ -1,0 +1,103 @@
+<template>
+  <div>
+    <div>
+      <div ref="canvasWrapper"></div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { PropType } from 'vue'
+import partial from 'lodash/partial'
+import { GameGrid } from '~/src/Common/cpu/providers/types/Game'
+import { Camera } from '~/src/Common/cpu/providers/types/Camera'
+import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
+import { onTick } from '~/src/Snake/Services/render'
+import { Floor } from '~/app/appModules/common/floor'
+import { floorTexture } from '~/src/Snake/Constants/textures'
+import { renderTick } from '~/app/appModules/tick'
+import { EMoveDirection } from '~/src/Common/Types/GameTypes'
+import { Block } from '~~/src/Common/cpu/providers/types/Block'
+
+const props = defineProps({
+  speed: {
+    type: Number,
+    default: 400,
+  },
+  blockGroupColor: {
+    type: Object as PropType<Record<string, string>>,
+    default: () => ({}),
+  },
+  direction: {
+    type: [String, Number] as PropType<EMoveDirection>,
+    default: EMoveDirection.right,
+  },
+  camera: {
+    type: Object as PropType<Camera>,
+    required: true,
+  },
+  boundsColor: {
+    type: String,
+    required: true,
+  },
+  floorTexture: {
+    type: String,
+    required: true,
+  },
+  gameGrid: {
+    type: Object as PropType<GameGrid>,
+    required: true,
+  },
+})
+
+const renderService = new RenderService()
+renderService.applySceneConfig({
+  size: [props.gameGrid.gameSize.width, props.gameGrid.gameSize.height],
+  background: props.boundsColor,
+  soundToEvents: [],
+  floor: new Floor(floorTexture, [0, 0], [20, 20], 2400, 2400, 100, 1),
+})
+
+let lastRelease = Date.now()
+const emulatedFrame = () => {
+  const now = Date.now()
+  if (now - lastRelease < props.speed) {
+    return
+  }
+  console.log('frame')
+  renderService.setGameSpeed(props.speed)
+  renderService.setLastUpdateTime(Date.now())
+  lastRelease = Date.now()
+}
+
+const baseSize = 10
+const tickHandler = partial(
+  renderTick,
+  () => renderService,
+  () => props.direction,
+  () => {
+    return props.gameGrid?.blocks.find(
+      (block) => block.id === props.camera?.lookToBlockId
+    ) as Block
+  },
+  () => props.camera?.cameraHeightDistance
+)
+
+onTick(renderService, (additional: number) => {
+  emulatedFrame()
+  props.gameGrid?.blocks.forEach((block) => {
+    renderService.manageCube(
+      block.id,
+      block.x * baseSize,
+      -block.y * baseSize,
+      props.blockGroupColor[block.group] ?? '#f00'
+    )
+  })
+  tickHandler(additional)
+})
+
+const canvasWrapper = ref<HTMLElement>()
+onMounted(() => {
+  canvasWrapper.value && renderService.render(canvasWrapper.value)
+})
+</script>

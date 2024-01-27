@@ -21,13 +21,13 @@ export const useSnake = (
     direction: EMoveDirection.right,
   }
 
-  const target: Block = { x: 5, y: 5, id: 'target' }
+  const target: Block = { x: -1, y: -1, id: 'target', group: 'target' }
   const snake: Block[] = [
-    { x: 4, y: 0, id: 'lead' },
-    { x: 3, y: 0, id: 'tail1' },
-    { x: 2, y: 0, id: 'tail2' },
-    { x: 1, y: 0, id: 'tail3' },
-    { x: 0, y: 0, id: 'tail4' },
+    { x: 4, y: 0, id: 'lead', group: 'lead' },
+    { x: 3, y: 0, id: 'tail1', group: 'tail' },
+    { x: 2, y: 0, id: 'tail2', group: 'tail' },
+    { x: 1, y: 0, id: 'tail3', group: 'tail' },
+    { x: 0, y: 0, id: 'tail4', group: 'tail' },
   ]
   gameGrid.get().blocks.push(target)
   gameGrid.get().blocks.push(...snake)
@@ -53,6 +53,7 @@ export const useSnake = (
   }
 
   return {
+    getDirection: () => snakeState.direction,
     changeDirection: partial(changeDirection, snakeState),
     pause: partial(pause, gameSettings, nextFrame),
     start: partial(start, gameSettings, nextFrame),
@@ -128,6 +129,7 @@ const addBlockToTail = (gameGrid: GameGrid) => {
   gameGrid.blocks.push({
     ...lead,
     id: 'tail' + gameGrid.blocks.length,
+    group: 'tail',
   })
 }
 

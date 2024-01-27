@@ -1,18 +1,20 @@
 import { MathUtils } from 'three'
+import { Block } from '~~/src/Common/cpu/providers/types/Block'
 import { baseSize } from '~~/src/Common/Constants/Three'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
-import { Point } from '~~/src/Snake/Models'
+import { FType } from '~/src/Common/cpu/utils/system'
 
 type D3 = { x: number; y: number; z: number }
 const newRotation: D3 = { x: 0, y: 0, z: 0 }
 const k = 50
 
 export function renderTick(
-  getRenderService: () => RenderService,
-  initAdditional: number,
-  direction: EMoveDirection,
-  leadPoint: Point
+  getRenderService: FType<RenderService>,
+  direction: FType<EMoveDirection>,
+  cameraLookTo: FType<Block>,
+  cameraHeight: FType<number>,
+  initAdditional: number
 ) {
   let additional = initAdditional
 
@@ -22,10 +24,10 @@ export function renderTick(
 
   let xMul = 1
   let yMul = 1
-  let x = leadPoint.x * baseSize
-  let y = leadPoint.y * baseSize
+  let x = cameraLookTo().x * baseSize
+  let y = cameraLookTo().y * baseSize
 
-  if (direction === EMoveDirection.down) {
+  if (direction() === EMoveDirection.down) {
     yMul = 1
     xMul = 0
     y -= k
@@ -34,7 +36,7 @@ export function renderTick(
     newRotation.z = MathUtils.degToRad(180)
   }
 
-  if (direction === EMoveDirection.up) {
+  if (direction() === EMoveDirection.up) {
     yMul = -1
     xMul = 0
     y += k
@@ -43,7 +45,7 @@ export function renderTick(
     newRotation.z = MathUtils.degToRad(0)
   }
 
-  if (direction === EMoveDirection.right) {
+  if (direction() === EMoveDirection.right) {
     yMul = 0
     xMul = -1
     x -= k
@@ -52,7 +54,7 @@ export function renderTick(
     newRotation.z = MathUtils.degToRad(270)
   }
 
-  if (direction === EMoveDirection.left) {
+  if (direction() === EMoveDirection.left) {
     yMul = 0
     xMul = 1
     x += k
@@ -64,7 +66,7 @@ export function renderTick(
   const newPosition = {
     x: x - baseSize * xMul * additional,
     y: -y - baseSize * yMul * additional,
-    z: 60,
+    z: cameraHeight(),
   }
   const renderService = getRenderService()
   renderService.camera.position.x = newPosition.x
