@@ -1,6 +1,7 @@
 import { GameGrid } from '~/src/Common/cpu/providers/types/Game'
 import { Block } from '~/src/Common/cpu/providers/types/Block'
 import { TGrid } from '~/src/Common/Types/GridTypes'
+import { EMoveDirection, ReverseDirections } from '~/src/Common/Types/GameTypes'
 
 export const gameGridToMGrid = (gameGrid: GameGrid): TGrid => {
   const bgBitmap: number[][] = []
@@ -22,4 +23,13 @@ export const gameGridToMGrid = (gameGrid: GameGrid): TGrid => {
   }
 
   return bgBitmap
+}
+
+export const isReverseDirection = (
+  direction: EMoveDirection,
+  newDirection: EMoveDirection
+) => {
+  const reverseDirection = ReverseDirections[newDirection]
+
+  return reverseDirection === direction
 }

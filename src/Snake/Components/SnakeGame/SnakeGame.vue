@@ -35,7 +35,7 @@ import { MGrid } from '~/src/Common/Models/MGrid'
 const settings = ref<GameSettings>({
   isGameOver: false,
   score: 0,
-  speed: 500,
+  speed: 300,
   isPaused: false,
 })
 const gameGrid = ref<GameGrid>({
