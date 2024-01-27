@@ -1,53 +1,72 @@
 <template>
   <div class="game screen">
-    <div v-if="game.isGameOver.value" class="game-over">
+    <div v-if="settings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+        :sub-title="`${$services.lang.t('Score')}: ${settings.score}`"
         :title="$services.lang.t('Game over')"
         icon="error"
       />
     </div>
     <div class="grid-header">
-      {{ $services.lang.t('Score') }}: {{ game.score }},
+      {{ $services.lang.t('Score') }}: {{ settings.score }},
       {{ $services.lang.t('Speed') }}:
-      {{ game.speed }}
+      {{ settings.speed }}
     </div>
-    <CanvasView :fps="10" :grid="game.grid" />
-    <KeyboardHint @pause="onPaused" />
+    <CanvasView :fps="10" :grid="grid" />
+    <KeyboardHint @pause="snakeActions.pause()" />
     <RouterLink to="/three/snake"> Змейка 3д</RouterLink>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted } from 'vue'
-import { useService } from '~~/src/Common/Helpers/HService'
-import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
-import { WfSnake } from '~~/src/Snake/Workflows/WfSnake'
-import { EKeyCode, KeysToMoveMap } from '~~/src/Common/Types/GameTypes'
+import partial from 'lodash/partial'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import { useSnake } from '~~/src/Snake/cpu/composables/useSnake'
+import { GameGrid, GameSettings } from '~~/src/Common/cpu/providers/types/Game'
+import { refState } from '~~/src/Common/cpu/utils/state'
+import { timer } from '~~/src/Common/cpu/utils/timer'
+import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
+import { useService } from '~/src/Common/Helpers/HService'
+import { SKeyboard } from '~/src/Common/Services/SKeyboard'
+import { EKeyCode, KeysToMoveMap } from '~/src/Common/Types/GameTypes'
+import { MGrid } from '~/src/Common/Models/MGrid'
 
+const settings = ref<GameSettings>({
+  isGameOver: false,
+  score: 0,
+  speed: 500,
+  isPaused: false,
+})
+const gameGrid = ref<GameGrid>({
+  blocks: [],
+  gameSize: {
+    height: 15,
+    width: 15,
+  },
+})
+const snakeActions = useSnake(
+  partial(refState, settings),
+  partial(refState, gameGrid),
+  timer
+)
+snakeActions.start()
+
+// FIXME переделать сервис убрать
 const keyboard = useService<SKeyboard>('keyboard')
-const game = new WfSnake()
-game.run()
-
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
-    game.moveSnake(KeysToMoveMap[key])
+    snakeActions.changeDirection(KeysToMoveMap[key])
   }
 })
 
-const onPaused = () => {
-  game.pause()
-}
-
-const emit = defineEmits(['grid'])
-onMounted(() => {
-  emit('grid', game.grid)
+const grid = new MGrid({
+  ...gameGrid.value.gameSize,
+  bgBitmap: gameGridToMGrid(gameGrid.value),
 })
 
-onUnmounted(() => {
-  game.setGameOver()
+watchEffect(() => {
+  grid.setGrid(gameGridToMGrid(gameGrid.value))
 })
 </script>

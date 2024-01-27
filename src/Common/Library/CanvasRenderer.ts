@@ -8,9 +8,9 @@ const DOT_SIZE = 12
 export class CanvasRenderer {
   #grid: MGrid
   #fps: number
-  #canvas: HTMLCanvasElement
+  #canvas!: HTMLCanvasElement
   #renderingIntervalPointer = null
-  #ctx: CanvasRenderingContext2D
+  #ctx!: CanvasRenderingContext2D
 
   constructor(grid: MGrid, fps: number) {
     this.#grid = grid

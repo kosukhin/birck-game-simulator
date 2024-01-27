@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { PropType, ref } from 'vue'
 import StandardRenderer from '~~/src/Common/Components/CanvasView/StandardRenderer.vue'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { useService } from '~~/src/Common/Helpers/HService'
@@ -27,7 +27,7 @@ import ThreeRenderer from '~~/src/Common/Components/CanvasView/ThreeRenderer.vue
 defineProps({
   grid: {
     required: true,
-    type: Object as () => MGrid,
+    type: Object as PropType<MGrid>,
   },
   fps: {
     required: true,
