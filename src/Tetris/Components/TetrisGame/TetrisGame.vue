@@ -1,66 +1,74 @@
 <template>
   <div class="game screen">
-    <div v-if="game.isGameOver.value" class="game-over">
+    <div v-if="gameSettings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+        :sub-title="`${$services.lang.t('Score')}: ${gameSettings.score}`"
         :title="$services.lang.t('Game over')"
         icon="error"
       />
     </div>
     <div class="grid-header">
-      {{ $services.lang.t('Score') }}: {{ game.score }},
+      {{ $services.lang.t('Score') }}: {{ gameSettings.score }},
       {{ $services.lang.t('Speed') }}:
-      {{ game.speed }}
+      {{ gameSettings.speed }}
     </div>
-    <CanvasView :fps="10" :grid="game.grid" />
-    <KeyboardHint @pause="onPaused" />
+    <CanvasView :fps="10" :grid="grid" />
+    <KeyboardHint @pause="tetrisActions.pause" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-import { WfTetris } from '~~/src/Tetris/Workflows/WfTetris'
-import { useService } from '~~/src/Common/Helpers/HService'
-import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
+import partial from 'lodash/partial'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { EKeyCode } from '~~/src/Common/Types/GameTypes'
+import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
+import {
+  EKeyCode,
+  EMoveDirection,
+  KeysToMoveMap,
+} from '~/src/Common/Types/GameTypes'
+import { MGrid } from '~/src/Common/Models/MGrid'
+import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
+import { useTetris } from '~/src/Tetris/cpu/composables/useTetris'
+import { refState } from '~/src/Common/cpu/utils/state'
+import { timer } from '~/src/Common/cpu/utils/timer'
+import { keyboard } from '~/src/Common/cpu/utils/keyboard'
 
-const keyboard = useService<SKeyboard>('keyboard')
-const game = new WfTetris()
-game.run()
+const gameSettings = ref<GameSettings>({
+  isGameOver: false,
+  score: 0,
+  speed: 300,
+  isPaused: false,
+  frameCounter: 1,
+  direction: EMoveDirection.right,
+})
+const gameGrid = ref<GameGrid>({
+  blocks: [],
+  gameSize: {
+    height: 20,
+    width: 15,
+  },
+})
 
-keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: EKeyCode) => {
-  const shape = game.grid.getFirstShape()
+const tetrisActions = useTetris(
+  partial(refState, gameSettings),
+  partial(refState, gameGrid),
+  timer
+)
+tetrisActions.start()
 
-  if (!shape) {
-    return
-  }
-
-  if (key === EKeyCode.W) {
-    game.rotateShape()
-  }
-
-  if (key === EKeyCode.S) {
-    game.moveShapeDown()
-  }
-
-  if (key === EKeyCode.A) {
-    game.moveShapeByX(-1)
-  }
-
-  if (key === EKeyCode.D) {
-    game.moveShapeByX(1)
+keyboard((key: EKeyCode) => {
+  if (KeysToMoveMap[key] !== undefined) {
+    tetrisActions.direction(KeysToMoveMap[key])
   }
 })
 
-const emit = defineEmits(['grid'])
-onMounted(() => {
-  emit('grid', game.grid)
+const grid = new MGrid({
+  ...gameGrid.value.gameSize,
+  bgBitmap: gameGridToMGrid(gameGrid.value),
 })
 
-const onPaused = () => {
-  game.pause()
-}
+watchEffect(() => {
+  grid.setGrid(gameGridToMGrid(gameGrid.value))
+})
 </script>
