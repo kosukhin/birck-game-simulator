@@ -23,22 +23,19 @@ export const useTetris = (
   let shape: Shape = createRandomShape()
   gameGrid.get().blocks.push(...shape.blocks)
 
-  // rotateShapeBlocks('2', shape)
-
   const nextFrame = () => {
     doTimer(gameSettings.get().speed, () => {
       gameSettings.get().frameCounter += 1
       moveShape({ y: 1 }, shape, gameGrid.get())
 
-      // Проверить что фигура коснулась границы
       const mxY = maxY(shape.blocks)
 
       if (mxY >= gameGrid.get().gameSize.height - 1) {
         shape = createRandomShape()
         gameGrid.get().blocks.push(...shape.blocks)
       }
-      console.log('mxy', mxY)
 
+      removeFilledLines(gameGrid.get())
       nextFrame()
     })
   }
@@ -70,6 +67,27 @@ export const useTetris = (
     },
     stop() {},
   }
+}
+
+const removeFilledLines = (gameGrid: GameGrid) => {
+  console.log(gameGrid.blocks.length)
+  const lines: Record<string, any> = {}
+  gameGrid.blocks.forEach((block, index) => {
+    if (!lines[block.y]) {
+      lines[block.y] = {}
+    }
+    lines[block.y][block.x] = index
+  })
+
+  Object.entries(lines).forEach(([index, blocksMap]) => {
+    const blocks = Object.values(blocksMap) as number[]
+    if (blocks.length >= gameGrid.gameSize.width) {
+      console.log('line', index, blocks)
+      blocks.forEach((index: number) => {
+        gameGrid.blocks.splice(index, 1)
+      })
+    }
+  })
 }
 
 const rotationTransitions: Record<
