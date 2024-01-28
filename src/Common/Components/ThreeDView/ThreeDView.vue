@@ -24,6 +24,10 @@ const props = defineProps({
     type: Number,
     default: 400,
   },
+  frameCounter: {
+    type: Number,
+    default: 1,
+  },
   blockGroupColor: {
     type: Object as PropType<Record<string, string>>,
     default: () => ({}),
@@ -58,18 +62,6 @@ renderService.applySceneConfig({
   floor: new Floor(floorTexture, [0, 0], [20, 20], 2400, 2400, 100, 1),
 })
 
-let lastRelease = Date.now()
-const emulatedFrame = () => {
-  const now = Date.now()
-  if (now - lastRelease < props.speed) {
-    return
-  }
-  console.log('frame')
-  renderService.setGameSpeed(props.speed)
-  renderService.setLastUpdateTime(Date.now())
-  lastRelease = Date.now()
-}
-
 const baseSize = 10
 const tickHandler = partial(
   renderTick,
@@ -83,8 +75,15 @@ const tickHandler = partial(
   () => props.camera?.cameraHeightDistance
 )
 
+watch(
+  () => props.frameCounter,
+  () => {
+    renderService.setGameSpeed(props.speed)
+    renderService.setLastUpdateTime(Date.now())
+  }
+)
+
 onTick(renderService, (additional: number) => {
-  emulatedFrame()
   props.gameGrid?.blocks.forEach((block) => {
     renderService.manageCube(
       block.id,

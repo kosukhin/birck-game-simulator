@@ -1,15 +1,30 @@
 <template>
   <div>
-    <RouterLink to="/simulator/snake/">Классическая змейка</RouterLink>
+    <div class="text-center">
+      <RouterLink to="/simulator/snake/">Классическая змейка</RouterLink>
+    </div>
     <h1>Змейка 3Д</h1>
+    <div v-if="settings.isGameOver" class="game-over">
+      <el-result
+        :sub-title="`${$services.lang.t('Score')}: ${settings.score}`"
+        :title="$services.lang.t('Game over')"
+        icon="error"
+      />
+    </div>
+    <div class="grid-header text-center">
+      {{ $services.lang.t('Score') }}: {{ settings.score }},
+      {{ $services.lang.t('Speed') }}:
+      {{ settings.speed }}
+    </div>
     <ThreeDView
+      :frame-counter="settings.frameCounter"
       :speed="settings.speed"
       :camera="camera"
       :game-grid="gameGrid"
       :block-group-color="blockGroupColor"
       floor-texture="/hello.jpg"
       bounds-color="#ccc"
-      :direction="direction"
+      :direction="settings.direction"
     />
     <KeyboardHint @pause="game.pause()" />
   </div>
@@ -25,15 +40,17 @@ import { refState } from '~/src/Common/cpu/utils/state'
 import { timer } from '~/src/Common/cpu/utils/timer'
 import { useService } from '~/src/Common/Helpers/HService'
 import { SKeyboard } from '~/src/Common/Services/SKeyboard'
-import { EKeyCode } from '~/src/Common/Types/GameTypes'
+import { EKeyCode, EMoveDirection } from '~/src/Common/Types/GameTypes'
 import { Camera } from '~/src/Common/cpu/providers/types/Camera'
 import { handleKey } from '~/app/hofs/snake/handleKey'
 
 const settings = ref<GameSettings>({
+  frameCounter: 1,
   isGameOver: false,
   score: 0,
   speed: 300,
   isPaused: false,
+  direction: EMoveDirection.right,
 })
 const gameGrid = ref<GameGrid>({
   blocks: [],
@@ -49,13 +66,15 @@ const snakeActions = useSnake(
 )
 snakeActions.start()
 
-const direction = ref(snakeActions.getDirection())
 // FIXME переделать сервис убрать
 const keyboard = useService<SKeyboard>('keyboard')
 keyboard.clearSubscribers()
 keyboard.registerSubscriber((key: EKeyCode) => {
-  handleKey(() => key, snakeActions.getDirection, snakeActions.changeDirection)
-  direction.value = snakeActions.getDirection()
+  handleKey(
+    () => key,
+    () => settings.value.direction,
+    snakeActions.changeDirection
+  )
 })
 
 const blockGroupColor = {

@@ -7,6 +7,7 @@
         icon="error"
       />
     </div>
+    <RouterLink to="/three/snake"> Змейка 3д</RouterLink>
     <div class="grid-header">
       {{ $services.lang.t('Score') }}: {{ settings.score }},
       {{ $services.lang.t('Speed') }}:
@@ -14,7 +15,6 @@
     </div>
     <CanvasView :fps="10" :grid="grid" />
     <KeyboardHint @pause="snakeActions.pause()" />
-    <RouterLink to="/three/snake"> Змейка 3д</RouterLink>
   </div>
 </template>
 
@@ -29,7 +29,11 @@ import { timer } from '~~/src/Common/cpu/utils/timer'
 import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
 import { useService } from '~/src/Common/Helpers/HService'
 import { SKeyboard } from '~/src/Common/Services/SKeyboard'
-import { EKeyCode, KeysToMoveMap } from '~/src/Common/Types/GameTypes'
+import {
+  EKeyCode,
+  EMoveDirection,
+  KeysToMoveMap,
+} from '~/src/Common/Types/GameTypes'
 import { MGrid } from '~/src/Common/Models/MGrid'
 
 const settings = ref<GameSettings>({
@@ -37,6 +41,8 @@ const settings = ref<GameSettings>({
   score: 0,
   speed: 300,
   isPaused: false,
+  frameCounter: 1,
+  direction: EMoveDirection.right,
 })
 const gameGrid = ref<GameGrid>({
   blocks: [],

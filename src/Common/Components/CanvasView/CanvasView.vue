@@ -1,14 +1,5 @@
 <template>
   <div class="canvas-view">
-    <el-switch
-      v-model="useThreeJs"
-      :active-text="$services.lang.t('Use 3D')"
-      active-color="#13ce66"
-      class="canvas-view__switch"
-      inactive-color="#ff4949"
-      @input="changeUseTreeJs"
-    >
-    </el-switch>
     <div class="canvas-view__renderer">
       <standard-renderer v-if="!useThreeJs" :fps="fps" :grid="grid" />
       <three-renderer v-else :fps="fps" :grid="grid" />

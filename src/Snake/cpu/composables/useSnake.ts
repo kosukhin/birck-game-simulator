@@ -6,10 +6,6 @@ import { EMoveDirection } from '~/src/Common/Types/GameTypes'
 import { HMath } from '~/src/Common/Helpers/HMath'
 import { isReverseDirection } from '~/src/Common/cpu/utils/game'
 
-interface SnakeState {
-  direction: EMoveDirection
-}
-
 export const useSnake = (
   getGameSettings: FType<State<GameSettings>>,
   getGameGrid: FType<State<GameGrid>>,
@@ -17,9 +13,6 @@ export const useSnake = (
 ) => {
   const gameSettings = getGameSettings()
   const gameGrid = getGameGrid()
-  const snakeState: SnakeState = {
-    direction: EMoveDirection.right,
-  }
 
   const target: Block = { x: -1, y: -1, id: 'target', group: 'target' }
   const snake: Block[] = [
@@ -34,7 +27,8 @@ export const useSnake = (
   moveTargetToRandomPlace(gameGrid.get())
   const nextFrame = () => {
     doTimer(gameSettings.get().speed, () => {
-      moveForward(gameGrid.get(), snakeState)
+      gameSettings.get().frameCounter += 1
+      moveForward(gameGrid.get(), gameSettings)
 
       if (
         isSnakeOutOfBounds(gameGrid.get()) ||
@@ -53,15 +47,14 @@ export const useSnake = (
   }
 
   return {
-    getDirection: () => snakeState.direction,
-    changeDirection: partial(changeDirection, snakeState),
+    changeDirection: partial(changeDirection, gameSettings),
     pause: partial(pause, gameSettings, nextFrame),
     start: partial(start, gameSettings, nextFrame),
     destroy: partial(destroy, gameSettings),
   }
 }
 
-const moveForward = (gameGrid: GameGrid, snakeState: SnakeState) => {
+const moveForward = (gameGrid: GameGrid, gameSettings: State<GameSettings>) => {
   const [, loadPoint, ...tail] = gameGrid.blocks
 
   let prevPointPosition = [loadPoint.x, loadPoint.y]
@@ -72,21 +65,21 @@ const moveForward = (gameGrid: GameGrid, snakeState: SnakeState) => {
     prevPointPosition = position
   })
 
-  snakeState.direction === EMoveDirection.down && (loadPoint.y += 1)
-  snakeState.direction === EMoveDirection.up && (loadPoint.y -= 1)
-  snakeState.direction === EMoveDirection.right && (loadPoint.x += 1)
-  snakeState.direction === EMoveDirection.left && (loadPoint.x -= 1)
+  gameSettings.get().direction === EMoveDirection.down && (loadPoint.y += 1)
+  gameSettings.get().direction === EMoveDirection.up && (loadPoint.y -= 1)
+  gameSettings.get().direction === EMoveDirection.right && (loadPoint.x += 1)
+  gameSettings.get().direction === EMoveDirection.left && (loadPoint.x -= 1)
 }
 
 const changeDirection = (
-  snakeState: SnakeState,
+  gameSettings: State<GameSettings>,
   newDirection: EMoveDirection
 ) => {
-  if (isReverseDirection(snakeState.direction, newDirection)) {
+  if (isReverseDirection(gameSettings.get().direction, newDirection)) {
     return
   }
 
-  snakeState.direction = newDirection
+  gameSettings.get().direction = newDirection
 }
 
 const pause = (gameSettings: State<GameSettings>, nextFrame: () => void) => {
