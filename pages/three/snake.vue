@@ -38,11 +38,10 @@ import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
 import { useSnake } from '~/src/Snake/cpu/composables/useSnake'
 import { refState } from '~/src/Common/cpu/utils/state'
 import { timer } from '~/src/Common/cpu/utils/timer'
-import { useService } from '~/src/Common/Helpers/HService'
-import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import { EKeyCode, EMoveDirection } from '~/src/Common/Types/GameTypes'
 import { Camera } from '~/src/Common/cpu/providers/types/Camera'
 import { handleKey } from '~/app/hofs/snake/handleKey'
+import { keyboard } from '~/src/Common/cpu/utils/keyboard'
 
 const settings = ref<GameSettings>({
   frameCounter: 1,
@@ -66,10 +65,7 @@ const snakeActions = useSnake(
 )
 snakeActions.start()
 
-// FIXME переделать сервис убрать
-const keyboard = useService<SKeyboard>('keyboard')
-keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: EKeyCode) => {
+keyboard((key: EKeyCode) => {
   handleKey(
     () => key,
     () => settings.value.direction,

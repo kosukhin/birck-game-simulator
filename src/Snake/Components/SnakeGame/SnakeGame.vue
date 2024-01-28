@@ -27,14 +27,13 @@ import { GameGrid, GameSettings } from '~~/src/Common/cpu/providers/types/Game'
 import { refState } from '~~/src/Common/cpu/utils/state'
 import { timer } from '~~/src/Common/cpu/utils/timer'
 import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
-import { useService } from '~/src/Common/Helpers/HService'
-import { SKeyboard } from '~/src/Common/Services/SKeyboard'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
 } from '~/src/Common/Types/GameTypes'
 import { MGrid } from '~/src/Common/Models/MGrid'
+import { keyboard } from '~/src/Common/cpu/utils/keyboard'
 
 const settings = ref<GameSettings>({
   isGameOver: false,
@@ -58,10 +57,7 @@ const snakeActions = useSnake(
 )
 snakeActions.start()
 
-// FIXME переделать сервис убрать
-const keyboard = useService<SKeyboard>('keyboard')
-keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: EKeyCode) => {
+keyboard((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
     snakeActions.changeDirection(KeysToMoveMap[key])
   }
