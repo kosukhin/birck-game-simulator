@@ -8,4 +8,5 @@ export interface Block {
   y: number
   id: string
   group: string
+  localId?: string
 }

@@ -37,7 +37,7 @@ import { keyboard } from '~/src/Common/cpu/utils/keyboard'
 const gameSettings = ref<GameSettings>({
   isGameOver: false,
   score: 0,
-  speed: 300,
+  speed: 400,
   isPaused: false,
   frameCounter: 1,
   direction: EMoveDirection.right,
@@ -45,8 +45,8 @@ const gameSettings = ref<GameSettings>({
 const gameGrid = ref<GameGrid>({
   blocks: [],
   gameSize: {
-    height: 20,
-    width: 15,
+    height: 10,
+    width: 10,
   },
 })
 
@@ -58,8 +58,20 @@ const tetrisActions = useTetris(
 tetrisActions.start()
 
 keyboard((key: EKeyCode) => {
-  if (KeysToMoveMap[key] !== undefined) {
+  if (EKeyCode.W === key) {
     tetrisActions.direction(KeysToMoveMap[key])
+  }
+
+  if (EKeyCode.S === key) {
+    tetrisActions.moveDown()
+  }
+
+  if (key === EKeyCode.A) {
+    tetrisActions.moveByX(-1)
+  }
+
+  if (key === EKeyCode.D) {
+    tetrisActions.moveByX(1)
   }
 })
 
