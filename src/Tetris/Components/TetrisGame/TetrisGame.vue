@@ -45,8 +45,8 @@ const gameSettings = ref<GameSettings>({
 const gameGrid = ref<GameGrid>({
   blocks: [],
   gameSize: {
-    height: 10,
-    width: 10,
+    height: 20,
+    width: 15,
   },
 })
 

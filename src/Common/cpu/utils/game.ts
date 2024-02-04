@@ -13,11 +13,11 @@ export const gameGridToMGrid = (gameGrid: GameGrid): TGrid => {
     {}
   )
 
-  for (let i = 0; i < gameGrid.gameSize.width; i++) {
+  for (let i = 0; i < gameGrid.gameSize.height; i++) {
     if (!bgBitmap[i]) {
       bgBitmap[i] = []
     }
-    for (let j = 0; j < gameGrid.gameSize.height; j++) {
+    for (let j = 0; j < gameGrid.gameSize.width; j++) {
       bgBitmap[i][j] = Number(!!blocksMap[j + '-' + i])
     }
   }
