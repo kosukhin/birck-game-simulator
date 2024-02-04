@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash'
+import { random, uniqueId } from 'lodash'
 import { FType, State } from '~/src/Common/cpu/utils/system'
 import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
 import { Block } from '~/src/Common/cpu/providers/types/Block'
@@ -17,11 +17,39 @@ type Shape = {
 let shape: Shape | null = null
 
 // Как запустить цикл игры?
-const snakeMainCycle = (gameGrid: GameGrid) => {
+const snakeMainCycle = (gameGrid: GameGrid, gameSettings: GameSettings) => {
   !shape && createShape(gameGrid)
   stopShapeIfNeed(gameGrid)
   moveShapeDown(gameGrid)
-  incrementScore(checkLineFilled(gameGrid), gameGrid)
+  incrementScore(checkLineFilled(gameGrid), gameGrid, gameSettings)
+  checkGameOver(gameGrid, gameSettings)
+}
+
+const fallStaticBlocks = (gameGrid: GameGrid) => {
+  const staticBlocks = gameGrid.blocks
+  let hasBlocksToFall = false
+  const blocksGrid = staticBlocks.reduce((acc: any, item) => {
+    acc['' + item.y + item.x] = 1
+    return acc
+  }, {})
+  staticBlocks.forEach((block) => {
+    const nextY = block.y + 1
+    const notLast = nextY < gameGrid.gameSize.height
+    const noBottomBlock = !blocksGrid['' + nextY + block.x]
+    if (notLast && noBottomBlock) {
+      block.y += 1
+      hasBlocksToFall = true
+    }
+  })
+  if (hasBlocksToFall) {
+    fallStaticBlocks(gameGrid)
+  }
+}
+// Убедиться что игра не закончена как ?
+const checkGameOver = (gameGrid: GameGrid, gameSettings: GameSettings) => {
+  gameSettings.isGameOver = gameGrid.blocks.some((block) => {
+    return block.y < 0
+  })
 }
 // Как создать новую фигуру?
 const createShape = (gameGrid: GameGrid) => {
@@ -62,6 +90,16 @@ const isShapeStuckToBlock = (gameGrid: GameGrid) => {
   )
 }
 
+const isShapeStuckByWidth = (x: number, gameGrid: GameGrid) => {
+  return (
+    shape &&
+    shape.blocks.some((block) => {
+      const nextX = block.x + x
+      return nextX < 0 || nextX >= gameGrid.gameSize.width
+    })
+  )
+}
+
 const isShapeStuckToBlockByX = (gameGrid: GameGrid) => {
   if (!shape) {
     return false
@@ -81,10 +119,22 @@ const isShapeStuckToBlockByX = (gameGrid: GameGrid) => {
 
 // Как определить удаление линии?
 const checkLineFilled = (gameGrid: GameGrid): number => {
-  return 0
+  const filled = removeFilledLines(gameGrid)
+  if (filled) {
+    shape = null
+    fallStaticBlocks(gameGrid)
+  }
+  return filled
 }
 // Как увеличить счет если удалили линию?
-const incrementScore = (filledLines: number, gameGrid: GameGrid) => {}
+const incrementScore = (
+  filledLines: number,
+  gameGrid: GameGrid,
+  gameSettings: GameSettings
+) => {
+  gameSettings.score += filledLines
+  gameSettings.speed -= filledLines * 10
+}
 
 // Как отреагировать на перемещение по X?
 const moveShapeByX = (x: number, gameGrid: GameGrid) => {
@@ -95,10 +145,7 @@ const moveShapeByX = (x: number, gameGrid: GameGrid) => {
       }
 
       return (
-        !shape.blocks.some((block) => {
-          const nextX = block.x + x
-          return nextX < 0 || nextX >= gameGrid.gameSize.width
-        }) && !isShapeStuckToBlockByX(gameGrid)
+        !isShapeStuckByWidth(x, gameGrid) && !isShapeStuckToBlockByX(gameGrid)
       )
     })
     .map((gameGrid: GameGrid) => {
@@ -135,7 +182,7 @@ const rotateShape = (
         shape as Shape,
         gameGrid
       )
-      if (checkShapeMustStop(gameGrid)) {
+      if (checkShapeMustStop(gameGrid) || isShapeStuckByWidth(1, gameGrid)) {
         rotateShapeBlocks(
           (rotationTransitions as any)[backDirection][shape.rotation],
           shape as Shape,
@@ -179,8 +226,9 @@ export const useTetris = (
 
   const nextFrame = () => {
     doTimer(gameSettings.get().speed, () => {
-      snakeMainCycle(gameGrid.get())
-      nextFrame()
+      snakeMainCycle(gameGrid.get(), gameSettings.get())
+      !(gameSettings.get().isGameOver && gameSettings.get().isPaused) &&
+        nextFrame()
     })
   }
 
@@ -204,19 +252,18 @@ const removeFilledLines = (gameGrid: GameGrid) => {
   const lines: Record<string, any> = {}
   gameGrid.blocks.forEach((block, index) => {
     if (!lines[block.y]) {
-      lines[block.y] = {}
+      lines[block.y] = []
     }
-    lines[block.y][block.x] = index
+    lines[block.y].push(index)
   })
 
-  Object.entries(lines).forEach(([index, blocksMap]) => {
-    const blocks = Object.values(blocksMap) as number[]
-    if (blocks.length >= gameGrid.gameSize.width) {
-      blocks.forEach((index: number) => {
-        gameGrid.blocks.splice(index, 1)
-      })
-    }
+  gameGrid.blocks = gameGrid.blocks.filter((block) => {
+    return !lines[block.y] || lines[block.y].length < gameGrid.gameSize.width
   })
+
+  return Object.values(lines).filter(
+    (blocks: number[]) => blocks.length >= gameGrid.gameSize.width
+  ).length
 }
 
 const rotationDirectionTransitions: Record<
@@ -264,11 +311,15 @@ const moveShape = (
   })
 }
 
-const createShapeBlocks = (shapeName: string): Block[] => {
+const createShapeBlocks = (
+  shapeName: string,
+  shape: { x: number; y: number }
+): Block[] => {
   return (Object.entries(rotationRules[shapeName]['0']) as any).map(
     ([localId, pos]: [string, { x: number; y: number }]) => {
       return {
-        ...pos,
+        x: pos.x + shape.x,
+        y: pos.y + shape.y,
         group: shapeName,
         id: uniqueId(shapeName),
         localId,
@@ -301,11 +352,13 @@ const maxY = (blocks: Block[]) => Math.max(...blocks.map((b) => b.y))
 const maxX = (blocks: Block[]) => Math.max(...blocks.map((b) => b.x))
 
 const createRandomShape = (): Shape => {
+  const pos = { x: 5, y: -1 }
+  const blocks = Object.keys(rotationRules)
+  const newBlockName = blocks[random(0, blocks.length - 1)]
   return {
     rotation: '0',
-    x: 0,
-    y: 0,
-    blocks: createShapeBlocks('turnedRight'),
+    ...pos,
+    blocks: createShapeBlocks(newBlockName, pos),
   }
 }
 
@@ -370,22 +423,22 @@ const rotationRules: Record<string, any> = {
       '4': { x: 2, y: 1 },
     },
     '1': {
-      '1': { x: 0, y: 0 },
-      '2': { x: 0, y: 0 },
-      '3': { x: 0, y: 0 },
-      '4': { x: 0, y: 0 },
+      '1': { x: 1, y: 0 },
+      '2': { x: 1, y: 1 },
+      '3': { x: 1, y: 2 },
+      '4': { x: 0, y: 1 },
     },
     '2': {
-      '1': { x: 0, y: 0 },
+      '1': { x: 1, y: 1 },
       '2': { x: 0, y: 0 },
-      '3': { x: 0, y: 0 },
-      '4': { x: 0, y: 0 },
+      '3': { x: 1, y: 0 },
+      '4': { x: 2, y: 0 },
     },
     '3': {
       '1': { x: 0, y: 0 },
-      '2': { x: 0, y: 0 },
-      '3': { x: 0, y: 0 },
-      '4': { x: 0, y: 0 },
+      '2': { x: 0, y: 1 },
+      '3': { x: 0, y: 2 },
+      '4': { x: 1, y: 1 },
     },
   },
   movedRight: {
@@ -396,10 +449,10 @@ const rotationRules: Record<string, any> = {
       '4': { x: 1, y: 1 },
     },
     '1': {
-      '1': { x: 1, y: 0 },
-      '2': { x: 2, y: 0 },
-      '3': { x: 0, y: 1 },
-      '4': { x: 1, y: 1 },
+      '1': { x: 0, y: 0 },
+      '2': { x: 0, y: 1 },
+      '3': { x: 1, y: 1 },
+      '4': { x: 1, y: 2 },
     },
     '2': {
       '1': { x: 1, y: 0 },
@@ -408,10 +461,10 @@ const rotationRules: Record<string, any> = {
       '4': { x: 1, y: 1 },
     },
     '3': {
-      '1': { x: 1, y: 0 },
-      '2': { x: 2, y: 0 },
-      '3': { x: 0, y: 1 },
-      '4': { x: 1, y: 1 },
+      '1': { x: 0, y: 0 },
+      '2': { x: 0, y: 1 },
+      '3': { x: 1, y: 1 },
+      '4': { x: 1, y: 2 },
     },
   },
   movedLeft: {
