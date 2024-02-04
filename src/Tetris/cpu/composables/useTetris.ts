@@ -3,6 +3,7 @@ import { FType, State } from '~/src/Common/cpu/utils/system'
 import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
 import { Block } from '~/src/Common/cpu/providers/types/Block'
 import { EMoveDirection } from '~/src/Common/Types/GameTypes'
+import { Intention } from '~/src/Common/Library/Intention'
 
 type Rotation = '0' | '1' | '2' | '3'
 
@@ -13,6 +14,161 @@ type Shape = {
   blocks: Block[]
 }
 
+let shape: Shape | null = null
+
+// Как запустить цикл игры?
+const snakeMainCycle = (gameGrid: GameGrid) => {
+  !shape && createShape(gameGrid)
+  stopShapeIfNeed(gameGrid)
+  moveShapeDown(gameGrid)
+  incrementScore(checkLineFilled(gameGrid), gameGrid)
+}
+// Как создать новую фигуру?
+const createShape = (gameGrid: GameGrid) => {
+  shape = createRandomShape()
+  gameGrid.blocks.push(...shape.blocks)
+}
+// Как определить остановку фигуру?
+const checkShapeMustStop = (gameGrid: GameGrid) => {
+  return !shape || isShapeStuckToEnd(gameGrid) || isShapeStuckToBlock(gameGrid)
+}
+
+const stopShapeIfNeed = (gameGrid: GameGrid) => {
+  checkShapeMustStop(gameGrid) && (shape = null)
+}
+
+const isShapeStuckToEnd = (gameGrid: GameGrid) => {
+  return (
+    shape &&
+    shape.blocks.some((block) => {
+      const nextY = block.y + 1
+      return nextY >= gameGrid.gameSize.height
+    })
+  )
+}
+
+const isShapeStuckToBlock = (gameGrid: GameGrid) => {
+  if (!shape) {
+    return false
+  }
+
+  const shapeIds = shape.blocks.map((b) => b.id)
+  const shapeBlocks = gameGrid.blocks.filter((b) => shapeIds.includes(b.id))
+  const staticBlocks = gameGrid.blocks.filter((b) => !shapeIds.includes(b.id))
+  return staticBlocks.some((block) =>
+    shapeBlocks.some(
+      (shapeBlock) => shapeBlock.x === block.x && shapeBlock.y + 1 === block.y
+    )
+  )
+}
+
+const isShapeStuckToBlockByX = (gameGrid: GameGrid) => {
+  if (!shape) {
+    return false
+  }
+
+  const shapeIds = shape.blocks.map((b) => b.id)
+  const shapeBlocks = gameGrid.blocks.filter((b) => shapeIds.includes(b.id))
+  const staticBlocks = gameGrid.blocks.filter((b) => !shapeIds.includes(b.id))
+  return staticBlocks.some((block) =>
+    shapeBlocks.some(
+      (shapeBlock) =>
+        (shapeBlock.x + 1 === block.x || shapeBlock.x - 1 === block.x) &&
+        shapeBlock.y === block.y
+    )
+  )
+}
+
+// Как определить удаление линии?
+const checkLineFilled = (gameGrid: GameGrid): number => {
+  return 0
+}
+// Как увеличить счет если удалили линию?
+const incrementScore = (filledLines: number, gameGrid: GameGrid) => {}
+
+// Как отреагировать на перемещение по X?
+const moveShapeByX = (x: number, gameGrid: GameGrid) => {
+  new Intention(gameGrid)
+    .predicate(() => {
+      if (!shape) {
+        return false
+      }
+
+      return (
+        !shape.blocks.some((block) => {
+          const nextX = block.x + x
+          return nextX < 0 || nextX >= gameGrid.gameSize.width
+        }) && !isShapeStuckToBlockByX(gameGrid)
+      )
+    })
+    .map((gameGrid: GameGrid) => {
+      moveShape({ x }, shape as Shape, gameGrid)
+      return gameGrid
+    })
+}
+
+const moveShapeDown = (gameGrid: GameGrid) => {
+  new Intention(gameGrid)
+    .predicate(() => {
+      return !checkShapeMustStop(gameGrid)
+    })
+    .map((gameGrid: GameGrid) => {
+      moveShape({ y: 1 }, shape as Shape, gameGrid)
+      return gameGrid
+    })
+}
+
+const rotateShape = (
+  direction: EMoveDirection,
+  gameSettings: GameSettings,
+  gameGrid: GameGrid
+) => {
+  new Intention(gameGrid)
+    .predicate(() => {
+      if (!shape) {
+        return false
+      }
+
+      const backDirection = (rotationDirectionTransitions as any)[direction]
+      rotateShapeBlocks(
+        (rotationTransitions as any)[direction][shape.rotation],
+        shape as Shape,
+        gameGrid
+      )
+      if (checkShapeMustStop(gameGrid)) {
+        rotateShapeBlocks(
+          (rotationTransitions as any)[backDirection][shape.rotation],
+          shape as Shape,
+          gameGrid
+        )
+        return false
+      }
+
+      rotateShapeBlocks(
+        (rotationTransitions as any)[backDirection][shape.rotation],
+        shape as Shape,
+        gameGrid
+      )
+      return true
+    })
+    .map((gameGrid: GameGrid) => {
+      gameSettings.direction = direction
+
+      if (direction === EMoveDirection.up) {
+        rotateShapeBlocks(
+          rotationTransitions[direction][shape.rotation],
+          shape as Shape,
+          gameGrid
+        )
+      }
+
+      return gameGrid
+    })
+}
+// Как отреагировать на поворот фигуры?
+// Как отреагировать на ускорение фигуры
+
+// Как предоставить интерфейс управления игрой?
 export const useTetris = (
   getGameSettings: FType<State<GameSettings>>,
   getGameGrid: FType<State<GameGrid>>,
@@ -20,57 +176,31 @@ export const useTetris = (
 ) => {
   const gameSettings = getGameSettings()
   const gameGrid = getGameGrid()
-  let shape: Shape = createRandomShape()
-  gameGrid.get().blocks.push(...shape.blocks)
 
   const nextFrame = () => {
     doTimer(gameSettings.get().speed, () => {
-      gameSettings.get().frameCounter += 1
-      moveShape({ y: 1 }, shape, gameGrid.get())
-
-      const mxY = maxY(shape.blocks)
-
-      if (mxY >= gameGrid.get().gameSize.height - 1) {
-        shape = createRandomShape()
-        gameGrid.get().blocks.push(...shape.blocks)
-      }
-
-      removeFilledLines(gameGrid.get())
+      snakeMainCycle(gameGrid.get())
       nextFrame()
     })
   }
 
   return {
-    start() {
-      nextFrame()
-    },
+    start: nextFrame,
     pause() {},
     moveByX(x: number) {
-      moveShape({ x }, shape, gameGrid.get())
+      moveShapeByX(x, gameGrid.get())
     },
     moveDown() {
-      moveShape({ y: 1 }, shape, gameGrid.get())
+      moveShapeDown(gameGrid.get())
     },
     direction(newDirection: EMoveDirection) {
-      gameSettings.get().direction = newDirection
-
-      if (
-        newDirection === EMoveDirection.up ||
-        newDirection === EMoveDirection.down
-      ) {
-        rotateShapeBlocks(
-          rotationTransitions[newDirection][shape.rotation],
-          shape,
-          gameGrid.get()
-        )
-      }
+      rotateShape(newDirection, gameSettings.get(), gameGrid.get())
     },
     stop() {},
   }
 }
 
 const removeFilledLines = (gameGrid: GameGrid) => {
-  console.log(gameGrid.blocks.length)
   const lines: Record<string, any> = {}
   gameGrid.blocks.forEach((block, index) => {
     if (!lines[block.y]) {
@@ -82,12 +212,19 @@ const removeFilledLines = (gameGrid: GameGrid) => {
   Object.entries(lines).forEach(([index, blocksMap]) => {
     const blocks = Object.values(blocksMap) as number[]
     if (blocks.length >= gameGrid.gameSize.width) {
-      console.log('line', index, blocks)
       blocks.forEach((index: number) => {
         gameGrid.blocks.splice(index, 1)
       })
     }
   })
+}
+
+const rotationDirectionTransitions: Record<
+  EMoveDirection.up | EMoveDirection.down,
+  EMoveDirection.up | EMoveDirection.down
+> = {
+  [EMoveDirection.up]: EMoveDirection.down,
+  [EMoveDirection.down]: EMoveDirection.up,
 }
 
 const rotationTransitions: Record<
@@ -149,7 +286,6 @@ const rotateShapeBlocks = (
   const shapeIds = shape.blocks.map((b) => b.id)
   const shapeBlocks = gameGrid.blocks.filter((b) => shapeIds.includes(b.id))
   shape.rotation = rotation
-  console.log('rotation', rotation)
   const mY = minY(shapeBlocks)
   const mX = minX(shapeBlocks)
   shapeBlocks.forEach((block) => {
