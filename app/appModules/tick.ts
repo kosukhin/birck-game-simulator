@@ -4,12 +4,14 @@ import { baseSize } from '~~/src/Common/Constants/Three'
 import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
 import { FType } from '~/src/Common/cpu/utils/system'
+import { GameGrid } from '~/src/Common/cpu/providers/types/Game'
 
 type D3 = { x: number; y: number; z: number }
 const newRotation: D3 = { x: 0, y: 0, z: 0 }
 const k = 50
 
 export function renderTick(
+  getGameGrid: FType<GameGrid>,
   getRenderService: FType<RenderService>,
   direction: FType<EMoveDirection>,
   cameraLookTo: FType<Block>,
@@ -22,10 +24,16 @@ export function renderTick(
     additional = 1
   }
 
+  const gameGrid = getGameGrid()
+  const lookTo = cameraLookTo() || {
+    x: Math.round(gameGrid.gameSize.width / 2),
+    y: gameGrid.gameSize.height,
+  }
+
   let xMul = 1
   let yMul = 1
-  let x = cameraLookTo().x * baseSize
-  let y = cameraLookTo().y * baseSize
+  let x = lookTo.x * baseSize
+  let y = lookTo.y * baseSize
 
   if (direction() === EMoveDirection.down) {
     yMul = 1

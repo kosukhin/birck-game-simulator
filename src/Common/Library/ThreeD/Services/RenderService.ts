@@ -204,6 +204,10 @@ export class RenderService {
     return !!this.#cubes[id]
   }
 
+  removeCubeById(id: string) {
+    this.removeCube(this.#cubes[id])
+  }
+
   updateCube(id: string, x: number, y: number) {
     const cube = this.#cubes[id]
 
@@ -279,13 +283,13 @@ export class RenderService {
       const height = model.size[1]
 
       for (let i = 0; i < width; i++) {
-        this.createCube('top' + i, i * baseSize, 1 * baseSize, color)
-        this.createCube('bottom' + i, i * baseSize, -height * baseSize, color)
+        this.createCube('t' + i, i * baseSize, 1 * baseSize, color)
+        this.createCube('b' + i, i * baseSize, -height * baseSize, color)
       }
 
       for (let i = 0; i < height; i++) {
-        this.createCube('left' + i, -1 * baseSize, -i * baseSize, color)
-        this.createCube('right' + i, width * baseSize, -i * baseSize, color)
+        this.createCube('l' + i, -1 * baseSize, -i * baseSize, color)
+        this.createCube('r' + i, width * baseSize, -i * baseSize, color)
       }
     })
   }

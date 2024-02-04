@@ -52,6 +52,10 @@ const props = defineProps({
     type: Object as PropType<GameGrid>,
     required: true,
   },
+  noAnimation: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const renderService = new RenderService()
@@ -65,6 +69,7 @@ renderService.applySceneConfig({
 const baseSize = 10
 const tickHandler = partial(
   renderTick,
+  () => props.gameGrid,
   () => renderService,
   () => props.direction,
   () => {
@@ -78,6 +83,20 @@ const tickHandler = partial(
 watch(
   () => props.frameCounter,
   () => {
+    const cubes: any = { ...renderService.cubes }
+    props.gameGrid?.blocks.forEach((block) => {
+      cubes[block.id] = false
+    })
+    Object.entries(cubes).forEach(([id, cube]) => {
+      if (cube !== false && id.length > 3) {
+        renderService.removeCubeById(id)
+      }
+    })
+
+    if (props.noAnimation) {
+      return
+    }
+
     renderService.setGameSpeed(props.speed)
     renderService.setLastUpdateTime(Date.now())
   }

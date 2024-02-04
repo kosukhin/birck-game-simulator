@@ -1,196 +1,105 @@
 <template>
   <div>
-    <h1>Тетрис 3д</h1>
-    <div ref="canvasWrapper"></div>
-    <KeyboardHint @pause="game.pause()" />
+    <div class="text-center">
+      <RouterLink to="/simulator/tetris/">Классический тетрис</RouterLink>
+    </div>
+    <h1>Тетрис 3Д</h1>
+    <div v-if="gameSettings.isGameOver" class="game-over">
+      <el-result
+        :sub-title="`${$services.lang.t('Score')}: ${gameSettings.score}`"
+        :title="$services.lang.t('Game over')"
+        icon="error"
+      />
+    </div>
+    <div class="grid-header text-center">
+      {{ $services.lang.t('Score') }}: {{ gameSettings.score }},
+      {{ $services.lang.t('Speed') }}:
+      {{ gameSettings.speed }}
+    </div>
+    <ThreeDView
+      no-animation
+      :frame-counter="gameSettings.frameCounter"
+      :speed="gameSettings.speed"
+      :camera="camera"
+      :game-grid="gameGrid"
+      :block-group-color="blockGroupColor"
+      floor-texture="/hello.jpg"
+      bounds-color="#ccc"
+      :direction="gameSettings.direction"
+    />
+    <KeyboardHint @pause="tetrisActions.pause()" />
   </div>
 </template>
 
-<script lang="ts" setup>
-import { MathUtils, Vector3 } from 'three'
-import * as THREE from 'three'
-import { useService } from '~/src/Common/Helpers/HService'
-import { SKeyboard } from '~/src/Common/Services/SKeyboard'
-import { WfTetris } from '~/src/Tetris/Workflows/WfTetris'
-import { EKeyCode } from '~/src/Common/Types/GameTypes'
-import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
+<script setup lang="ts">
+import partial from 'lodash/partial'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import ThreeDView from '~/src/Common/Components/ThreeDView/ThreeDView.vue'
+import {GameGrid, GameSettings} from '~/src/Common/cpu/providers/types/Game'
+import {refState} from '~/src/Common/cpu/utils/state'
+import {timer} from '~/src/Common/cpu/utils/timer'
+import {EKeyCode, EMoveDirection, KeysToMoveMap,} from '~/src/Common/Types/GameTypes'
+import {Camera} from '~/src/Common/cpu/providers/types/Camera'
+import {keyboard} from '~/src/Common/cpu/utils/keyboard'
+import {useTetris} from '~/src/Tetris/cpu/composables/useTetris'
 
-const baseSize = 10
-const canvasWrapper = ref()
-const keyboard = useService<SKeyboard>('keyboard')
-const game = new WfTetris()
-const rserv = new RenderService()
+const gameSettings = ref<GameSettings>({
+  frameCounter: 1,
+  isGameOver: false,
+  score: 0,
+  speed: 400,
+  isPaused: false,
+  direction: EMoveDirection.right,
+})
+const gameGrid = ref<GameGrid>({
+  blocks: [],
+  gameSize: {
+    height: 20,
+    width: 15,
+  },
+})
 
-keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: EKeyCode) => {
-  const shape = game.grid.getFirstShape()
+const tetrisActions = useTetris(
+  partial(refState, gameSettings),
+  partial(refState, gameGrid),
+  timer
+)
+tetrisActions.start()
+setTimeout(() => {
+  tetrisActions.direction(EMoveDirection.up)
+}, 1000)
 
-  if (!shape) {
-    return
+keyboard((key: EKeyCode) => {
+  if (EKeyCode.W === key) {
+    tetrisActions.direction(KeysToMoveMap[key])
   }
 
-  if (key === EKeyCode.W) {
-    game.rotateShape()
-  }
-
-  if (key === EKeyCode.S) {
-    game.moveShapeDown()
+  if (EKeyCode.S === key) {
+    tetrisActions.moveDown()
   }
 
   if (key === EKeyCode.A) {
-    game.moveShapeByX(1)
+    tetrisActions.moveByX(-1)
   }
 
   if (key === EKeyCode.D) {
-    game.moveShapeByX(-1)
+    tetrisActions.moveByX(1)
   }
 })
 
-const textureLoader = new THREE.TextureLoader()
-let bricksTexture: any = null
-textureLoader.load('/images/textures/bricks.png', (texture) => {
-  bricksTexture = texture
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-  texture.offset.set(Math.random() * 100, Math.random() * 100)
-  texture.repeat.set(0.1, 0.1)
-})
-
-game.afterNewShape(() => {
-  bricksTexture = bricksTexture.clone()
-  bricksTexture.offset.set(Math.random() * 100, Math.random() * 100)
-})
-
-rserv.afterScene(async () => {
-  rserv.scene.background = new THREE.Color('skyblue')
-  const textureLoader = new THREE.TextureLoader()
-  const texture = await textureLoader.loadAsync('/images/textures/grass2.jpg')
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-  texture.offset.set(0, 0)
-  texture.repeat.set(20, 20)
-  const floorGeometry = new THREE.PlaneGeometry(2400, 2400, 100, 1)
-  const floorMaterial = new THREE.MeshStandardMaterial({
-    map: texture,
-  })
-  const floor = new THREE.Mesh(floorGeometry, floorMaterial)
-  floor.position.set(100, -100, -4)
-  rserv.scene.add(floor)
-})
-
-const newPosition = new Vector3()
-game.afterNextFrame(() => {
-  if (!bricksTexture) {
-    return
-  }
-  rserv.setLastUpdateTime(new Date().getTime())
-  rserv.setGameSpeed(game.speed.value)
-
-  Object.entries(rserv.cubes).forEach(([id, cube]) => {
-    if (id.indexOf('target_') === 0 || id.indexOf('bg_') === 0) {
-      cube.visible = false
-    }
-  })
-
-  const shape = game.grid.getFirstShape()
-  if (shape) {
-    newPosition.z = 80
-    newPosition.x = shape.x * baseSize
-    newPosition.y = -shape.y * baseSize + 70
-
-    rserv.camera.rotation.x = MathUtils.degToRad(-45)
-    rserv.camera.rotation.y = MathUtils.degToRad(0)
-    rserv.camera.rotation.z = MathUtils.degToRad(180)
-
-    shape.bitmap.forEach((row, rowIndex) => {
-      row.forEach((isFilled, cellIndex) => {
-        const id = `target_${cellIndex}_${rowIndex}`
-        const cube = rserv.cubes?.[id]
-        const cubeExists = rserv.hasCube(id)
-
-        if (isFilled) {
-          rserv.manageCube(
-            id,
-            (shape.x + cellIndex) * baseSize,
-            (-shape.y - rowIndex) * baseSize,
-            0xaa0000,
-            bricksTexture
-          )
-          cubeExists && (cube.visible = true)
-        } else if (cubeExists) {
-          cube.visible = false
-        }
-      })
-    })
-  }
-
-  game.grid.bgBitmap.forEach((row, rowIndex) => {
-    row.forEach((isFilled, cellIndex) => {
-      const id = `bg_${cellIndex}_${rowIndex}`
-      const cube = rserv.cubes?.[id]
-      const cubeExists = rserv.hasCube(id)
-
-      if (isFilled) {
-        rserv.manageCube(
-          id,
-          cellIndex * baseSize,
-          -rowIndex * baseSize,
-          0xaa0000,
-          bricksTexture
-        )
-        cubeExists && (cube.visible = true)
-      } else if (cubeExists) {
-        cube.visible = false
-      }
-    })
-  })
-})
-
-rserv.setAfterAnimate((additional: number) => {
-  if (additional > 1) {
-    additional = 1
-  }
-
-  const xsize = newPosition.x - rserv.camera.position.x
-  const ysize = newPosition.y - rserv.camera.position.y
-
-  rserv.camera.position.x += xsize * additional
-  rserv.camera.position.y += ysize * additional
-  rserv.camera.position.z = newPosition.z
-})
-
-const eatSound = () => rserv.sound('eated', '/sounds/eated.wav')
-
-game.afterLineFired(async () => {
-  const sound = await eatSound()
-  sound.play()
-  setTimeout(() => {
-    sound.stop()
-  }, 1500)
-})
-
-onMounted(() => {
-  rserv.render(canvasWrapper.value)
-
-  Promise.all([eatSound()]).then(() => {
-    game.run()
-  })
-
-  setTimeout(() => {
-    rserv.camera3()
-  })
-
-  const width = game.grid.width
-  const height = game.grid.height
-  const white = 0xffffff
-
-  for (let i = 0; i < width; i++) {
-    rserv.createCube('top' + i, i * baseSize, 1 * baseSize, white)
-    rserv.createCube('bottom' + i, i * baseSize, -height * baseSize, white)
-  }
-
-  for (let i = 0; i < height; i++) {
-    rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, white)
-    rserv.createCube('right' + i, width * baseSize, -i * baseSize, white)
-  }
-})
+const blockGroupColor = {
+  turnedLeft: '#948543',
+  turnedRight: '#900000',
+  blasteroid: '#000cb7',
+  movedRight: '#4d721c',
+  movedLeft: '#6f056b',
+  lineVertical: '#25ff25',
+  lineHorizontal: '#00abcd',
+  rectangle: '#e06f6f',
+}
+const camera: Camera = {
+  cameraHeightDistance: 150,
+  lookFromBlockId: 'tail1',
+  lookToBlockId: 'lead',
+}
 </script>
