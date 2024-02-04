@@ -26,6 +26,7 @@
       floor-texture="/hello.jpg"
       bounds-color="#ccc"
       :direction="gameSettings.direction"
+      :angles="angles"
     />
     <KeyboardHint @pause="tetrisActions.pause()" />
   </div>
@@ -35,13 +36,17 @@
 import partial from 'lodash/partial'
 import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
 import ThreeDView from '~/src/Common/Components/ThreeDView/ThreeDView.vue'
-import {GameGrid, GameSettings} from '~/src/Common/cpu/providers/types/Game'
-import {refState} from '~/src/Common/cpu/utils/state'
-import {timer} from '~/src/Common/cpu/utils/timer'
-import {EKeyCode, EMoveDirection, KeysToMoveMap,} from '~/src/Common/Types/GameTypes'
-import {Camera} from '~/src/Common/cpu/providers/types/Camera'
-import {keyboard} from '~/src/Common/cpu/utils/keyboard'
-import {useTetris} from '~/src/Tetris/cpu/composables/useTetris'
+import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
+import { refState } from '~/src/Common/cpu/utils/state'
+import { timer } from '~/src/Common/cpu/utils/timer'
+import {
+  EKeyCode,
+  EMoveDirection,
+  KeysToMoveMap,
+} from '~/src/Common/Types/GameTypes'
+import { Camera } from '~/src/Common/cpu/providers/types/Camera'
+import { keyboard } from '~/src/Common/cpu/utils/keyboard'
+import { useTetris } from '~/src/Tetris/cpu/composables/useTetris'
 
 const gameSettings = ref<GameSettings>({
   frameCounter: 1,
@@ -55,7 +60,7 @@ const gameGrid = ref<GameGrid>({
   blocks: [],
   gameSize: {
     height: 20,
-    width: 15,
+    width: 16,
   },
 })
 
@@ -98,8 +103,13 @@ const blockGroupColor = {
   rectangle: '#e06f6f',
 }
 const camera: Camera = {
-  cameraHeightDistance: 150,
+  cameraHeightDistance: 170,
   lookFromBlockId: 'tail1',
   lookToBlockId: 'lead',
+}
+const angles = {
+  x: 7,
+  y: 0,
+  z: 0,
 }
 </script>

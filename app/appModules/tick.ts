@@ -11,6 +11,7 @@ const newRotation: D3 = { x: 0, y: 0, z: 0 }
 const k = 50
 
 export function renderTick(
+  getAngles: FType<{ x: number; y: number; z: number }>,
   getGameGrid: FType<GameGrid>,
   getRenderService: FType<RenderService>,
   direction: FType<EMoveDirection>,
@@ -27,7 +28,7 @@ export function renderTick(
   const gameGrid = getGameGrid()
   const lookTo = cameraLookTo() || {
     x: Math.round(gameGrid.gameSize.width / 2),
-    y: gameGrid.gameSize.height,
+    y: Math.round(gameGrid.gameSize.height / 2),
   }
 
   let xMul = 1
@@ -69,6 +70,13 @@ export function renderTick(
     newRotation.x = MathUtils.degToRad(0)
     newRotation.y = MathUtils.degToRad(30)
     newRotation.z = MathUtils.degToRad(90)
+  }
+
+  const angles = getAngles()
+  if (angles) {
+    newRotation.x = MathUtils.degToRad(angles.x)
+    newRotation.y = MathUtils.degToRad(angles.y)
+    newRotation.z = MathUtils.degToRad(angles.z)
   }
 
   const newPosition = {

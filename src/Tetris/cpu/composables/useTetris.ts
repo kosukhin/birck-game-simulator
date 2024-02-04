@@ -228,7 +228,8 @@ export const useTetris = (
     doTimer(gameSettings.get().speed, () => {
       gameSettings.get().frameCounter += 1
       snakeMainCycle(gameGrid.get(), gameSettings.get())
-      !(gameSettings.get().isGameOver && gameSettings.get().isPaused) &&
+      !gameSettings.get().isGameOver &&
+        !gameSettings.get().isPaused &&
         nextFrame()
     })
   }

@@ -56,6 +56,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  angles: {
+    type: Object as PropType<{ x: number; y: number; z: number }>,
+    default: () => null,
+  },
 })
 
 const renderService = new RenderService()
@@ -69,6 +73,7 @@ renderService.applySceneConfig({
 const baseSize = 10
 const tickHandler = partial(
   renderTick,
+  () => props.angles,
   () => props.gameGrid,
   () => renderService,
   () => props.direction,
