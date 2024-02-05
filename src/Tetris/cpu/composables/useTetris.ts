@@ -16,12 +16,11 @@ type Shape = {
 
 let shape: Shape | null = null
 
-// Как запустить цикл игры?
 const snakeMainCycle = (gameGrid: GameGrid, gameSettings: GameSettings) => {
   !shape && createShape(gameGrid)
   stopShapeIfNeed(gameGrid)
   moveShapeDown(gameGrid)
-  incrementScore(checkLineFilled(gameGrid), gameGrid, gameSettings)
+  incrementScore(checkLineFilled(gameGrid), gameSettings)
   checkGameOver(gameGrid, gameSettings)
 }
 
@@ -45,18 +44,18 @@ const fallStaticBlocks = (gameGrid: GameGrid) => {
     fallStaticBlocks(gameGrid)
   }
 }
-// Убедиться что игра не закончена как ?
+
 const checkGameOver = (gameGrid: GameGrid, gameSettings: GameSettings) => {
   gameSettings.isGameOver = gameGrid.blocks.some((block) => {
     return block.y < 0
   })
 }
-// Как создать новую фигуру?
+
 const createShape = (gameGrid: GameGrid) => {
   shape = createRandomShape()
   gameGrid.blocks.push(...shape.blocks)
 }
-// Как определить остановку фигуру?
+
 const checkShapeMustStop = (gameGrid: GameGrid) => {
   return !shape || isShapeStuckToEnd(gameGrid) || isShapeStuckToBlock(gameGrid)
 }
@@ -117,7 +116,6 @@ const isShapeStuckToBlockByX = (gameGrid: GameGrid) => {
   )
 }
 
-// Как определить удаление линии?
 const checkLineFilled = (gameGrid: GameGrid): number => {
   const filled = removeFilledLines(gameGrid)
   if (filled) {
@@ -126,17 +124,12 @@ const checkLineFilled = (gameGrid: GameGrid): number => {
   }
   return filled
 }
-// Как увеличить счет если удалили линию?
-const incrementScore = (
-  filledLines: number,
-  gameGrid: GameGrid,
-  gameSettings: GameSettings
-) => {
+
+const incrementScore = (filledLines: number, gameSettings: GameSettings) => {
   gameSettings.score += filledLines
   gameSettings.speed -= filledLines * 10
 }
 
-// Как отреагировать на перемещение по X?
 const moveShapeByX = (x: number, gameGrid: GameGrid) => {
   new Intention(gameGrid)
     .predicate(() => {
@@ -203,7 +196,7 @@ const rotateShape = (
 
       if (direction === EMoveDirection.up) {
         rotateShapeBlocks(
-          rotationTransitions[direction][shape.rotation],
+          rotationTransitions[direction][(shape as Shape).rotation],
           shape as Shape,
           gameGrid
         )
@@ -212,10 +205,7 @@ const rotateShape = (
       return gameGrid
     })
 }
-// Как отреагировать на поворот фигуры?
-// Как отреагировать на ускорение фигуры
 
-// Как предоставить интерфейс управления игрой?
 export const useTetris = (
   getGameSettings: FType<State<GameSettings>>,
   getGameGrid: FType<State<GameGrid>>,
@@ -236,7 +226,10 @@ export const useTetris = (
 
   return {
     start: nextFrame,
-    pause() {},
+    pause() {
+      gameSettings.get().isPaused = !gameSettings.get().isPaused
+      gameSettings.get().isPaused && nextFrame()
+    },
     moveByX(x: number) {
       moveShapeByX(x, gameGrid.get())
     },
@@ -246,7 +239,6 @@ export const useTetris = (
     direction(newDirection: EMoveDirection) {
       rotateShape(newDirection, gameSettings.get(), gameGrid.get())
     },
-    stop() {},
   }
 }
 
@@ -350,8 +342,6 @@ const rotateShapeBlocks = (
 
 const minY = (blocks: Block[]) => Math.min(...blocks.map((b) => b.y))
 const minX = (blocks: Block[]) => Math.min(...blocks.map((b) => b.x))
-const maxY = (blocks: Block[]) => Math.max(...blocks.map((b) => b.y))
-const maxX = (blocks: Block[]) => Math.max(...blocks.map((b) => b.x))
 
 const createRandomShape = (): Shape => {
   const pos = { x: 5, y: -1 }
