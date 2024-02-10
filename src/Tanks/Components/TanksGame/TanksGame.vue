@@ -1,54 +1,74 @@
 <template>
   <div class="game screen">
-    <div v-if="game.isGameOver.value" class="game-over">
+    <div v-if="settings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${$services.lang.t('Score')}: ${game.score.value}`"
+        :sub-title="`${$services.lang.t('Score')}: ${settings.score}`"
         :title="$services.lang.t('Game over')"
         icon="error"
       />
     </div>
+    <RouterLink to="/three/snake"> Змейка 3д</RouterLink>
     <div class="grid-header">
-      {{ $services.lang.t('Score') }}: {{ game.score }}
+      {{ $services.lang.t('Score') }}: {{ settings.score }},
+      {{ $services.lang.t('Speed') }}:
+      {{ settings.speed }}
     </div>
-    <CanvasView :fps="20" :grid="game.grid" />
-    <KeyboardHint @pause="onPaused">
-      <SpaceHint />
-      <br />
-    </KeyboardHint>
+    <CanvasView :fps="10" :grid="grid" />
+    <KeyboardHint @pause="snakeActions.pause()" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-import SpaceHint from '../../../Common/Components/KeyboardHint/SpaceHint.vue'
-import { useService } from '~~/src/Common/Helpers/HService'
-import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
-import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
-import { EKeyCode, KeysToMoveMap } from '~~/src/Common/Types/GameTypes'
+import partial from 'lodash/partial'
+import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
+import { keyboard } from '~/src/Common/cpu/utils/keyboard'
+import { MGrid } from '~/src/Common/Models/MGrid'
+import {
+  EKeyCode,
+  EMoveDirection,
+  KeysToMoveMap,
+} from '~/src/Common/Types/GameTypes'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import { GameGrid, GameSettings } from '~~/src/Common/cpu/providers/types/Game'
+import { refState } from '~~/src/Common/cpu/utils/state'
+import { timer } from '~~/src/Common/cpu/utils/timer'
+import { useTanks } from '~~/src/Tanks/cpu/composables/useTanks'
 
-const keyboard = useService<SKeyboard>('keyboard')
-const game = new WfTanks()
-game.run()
+const settings = ref<GameSettings>({
+  isGameOver: false,
+  score: 0,
+  speed: 300,
+  isPaused: false,
+  frameCounter: 1,
+  direction: EMoveDirection.right,
+})
+const gameGrid = ref<GameGrid>({
+  blocks: [],
+  gameSize: {
+    height: 20,
+    width: 20,
+  },
+})
+const snakeActions = useTanks(
+  partial(refState, settings),
+  partial(refState, gameGrid),
+  timer
+)
+snakeActions.start()
 
-keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: EKeyCode) => {
+keyboard((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
-    game.moveTank(KeysToMoveMap[key])
-  }
-
-  if (key === EKeyCode.SPC) {
-    game.shoot()
+    snakeActions.direction(KeysToMoveMap[key])
   }
 })
 
-const emit = defineEmits(['grid'])
-onMounted(() => {
-  emit('grid', game.grid)
+const grid = new MGrid({
+  ...gameGrid.value.gameSize,
+  bgBitmap: gameGridToMGrid(gameGrid.value),
 })
 
-const onPaused = () => {
-  game.pause()
-}
+watchEffect(() => {
+  grid.setGrid(gameGridToMGrid(gameGrid.value))
+})
 </script>
