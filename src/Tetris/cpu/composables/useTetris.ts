@@ -175,7 +175,7 @@ const rotateShape = (
         shape as Shape,
         gameGrid
       )
-      if (checkShapeMustStop(gameGrid) || isShapeStuckByWidth(1, gameGrid)) {
+      if (checkShapeMustStop(gameGrid) || isShapeStuckByWidth(0, gameGrid)) {
         rotateShapeBlocks(
           (rotationTransitions as any)[backDirection][shape.rotation],
           shape as Shape,
