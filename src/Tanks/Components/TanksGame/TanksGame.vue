@@ -61,6 +61,9 @@ keyboard((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
     actions.direction(KeysToMoveMap[key])
   }
+  if (key === EKeyCode.SPC) {
+    actions.shoot()
+  }
 })
 
 const grid = new MGrid({

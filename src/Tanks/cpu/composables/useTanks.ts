@@ -4,9 +4,9 @@ import {
   GameGrid,
   GameSettings,
 } from './../../../Common/cpu/providers/types/Game'
-import { Shape } from '~~/src/Common/cpu/providers/types/Block'
-import { FType, State } from '~~/src/Common/cpu/utils/system'
 import { Intention } from '~~/src/Common/Library/Intention'
+import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
+import { FType, State } from '~~/src/Common/cpu/utils/system'
 
 export const useTanks = (
   getGameSettings: FType<State<GameSettings>>,
@@ -31,19 +31,17 @@ export const useTanks = (
 
   return {
     start: nextFrame,
+    shoot: throttle(() => {
+      shoot(tank, gameGrid.get())
+    }, 100),
     pause() {
       gameSettings.get().isPaused = !gameSettings.get().isPaused
       gameSettings.get().isPaused && nextFrame()
     },
-    moveByX(x: number) {
-      console.log(x, gameGrid.get())
-    },
-    moveDown() {
-      console.log(gameGrid.get())
-    },
     direction: throttle((newDirection: EMoveDirection) => {
       rotateTank(newDirection, gameGrid.get())
-      moveTank(newDirection, gameGrid.get())
+      tank.direction === newDirection && moveTank(newDirection, gameGrid.get())
+      tank.direction = newDirection
     }, 50),
   }
 }
@@ -100,24 +98,28 @@ const rotateTank = (direction: EMoveDirection, gameGrid: GameGrid) => {
 
 const TANK_SIZE = 3
 
+const isStuckToBounds = (
+  direction: EMoveDirection,
+  point: { x: number; y: number },
+  gameGrid: GameGrid,
+  size: number
+) => {
+  const isStuckToTop = direction === EMoveDirection.up && point.y <= 0
+  const isStuckToLeft = direction === EMoveDirection.left && point.x <= 0
+  const isStuckToRight =
+    direction === EMoveDirection.right &&
+    point.x >= gameGrid.gameSize.width - size
+  const isStuckToBottom =
+    direction === EMoveDirection.down &&
+    point.y >= gameGrid.gameSize.height - size
+
+  return isStuckToTop || isStuckToLeft || isStuckToRight || isStuckToBottom
+}
+
 const moveTank = (direction: EMoveDirection, gameGrid: GameGrid) => {
   new Intention(gameGrid)
     .predicate(() => {
-      const isStuckToTop = direction === EMoveDirection.up && tank.y <= 0
-      const isStuckToLeft = direction === EMoveDirection.left && tank.x <= 0
-      const isStuckToRight =
-        direction === EMoveDirection.right &&
-        tank.x >= gameGrid.gameSize.width - TANK_SIZE
-      const isStuckToBottom =
-        direction === EMoveDirection.down &&
-        tank.y >= gameGrid.gameSize.height - TANK_SIZE
-
-      return !(
-        isStuckToTop ||
-        isStuckToLeft ||
-        isStuckToRight ||
-        isStuckToBottom
-      )
+      return !isStuckToBounds(direction, tank, gameGrid, TANK_SIZE)
     })
     .map((gameGrid: GameGrid) => {
       const prevTankPoint = pick(tank, ['x', 'y'])
@@ -174,4 +176,59 @@ const tankRotations: Record<string, any> = {
     '5': { x: 1, y: 2 },
     '6': { x: 2, y: 2 },
   },
+}
+
+const shiftByDirection = (direction: EMoveDirection) => {
+  const shiftPoint = { x: 0, y: 0 }
+  direction === EMoveDirection.up && (shiftPoint.y -= 1)
+  direction === EMoveDirection.right && (shiftPoint.x += 1)
+  direction === EMoveDirection.down && (shiftPoint.y += 1)
+  direction === EMoveDirection.left && (shiftPoint.x -= 1)
+
+  return shiftPoint
+}
+
+const SHOOT_SPEED = 50
+
+const isTopOrLeft = (direction: EMoveDirection) => {
+  return direction === EMoveDirection.up || direction === EMoveDirection.left
+}
+
+const shoot = (fromShape: Shape, gameGrid: GameGrid) => {
+  const savedDirection = fromShape.direction
+  const shiftPoint = shiftByDirection(savedDirection)
+  const shootBlock: Block = {
+    x: fromShape.x + shiftPoint.y * (isTopOrLeft(fromShape.direction) ? -1 : 1),
+    y: fromShape.y + shiftPoint.x * (isTopOrLeft(fromShape.direction) ? -1 : 1),
+    id: uniqueId('shoot_'),
+    group: 'shoot',
+  }
+  gameGrid.blocks.push(shootBlock)
+  const shootInGrid = gameGrid.blocks.at(-1)
+  const nextShootFrame = () => {
+    setTimeout(() => {
+      const shiftPoint = shiftByDirection(savedDirection)
+      shootInGrid && (shootInGrid.x += shiftPoint.x)
+      shootInGrid && (shootInGrid.y += shiftPoint.y)
+      if (
+        shootInGrid &&
+        !isStuckToBounds(savedDirection, shootInGrid, gameGrid, 1)
+      ) {
+        nextShootFrame()
+      } else {
+        const blockIndex = gameGrid.blocks.findIndex(
+          (block) => block.id === shootBlock.id
+        )
+        gameGrid.blocks.splice(blockIndex, 1)
+      }
+    }, SHOOT_SPEED)
+  }
+  nextShootFrame()
+}
+
+const oppositeDirections = {
+  [EMoveDirection.up]: EMoveDirection.down,
+  [EMoveDirection.right]: EMoveDirection.left,
+  [EMoveDirection.down]: EMoveDirection.up,
+  [EMoveDirection.left]: EMoveDirection.right,
 }
