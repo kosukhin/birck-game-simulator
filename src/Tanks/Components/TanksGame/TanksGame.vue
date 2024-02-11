@@ -7,7 +7,7 @@
         icon="error"
       />
     </div>
-    <RouterLink to="/three/snake">Танки 3д</RouterLink>
+    <RouterLink to="/three/tanks">Танки 3д</RouterLink>
     <div class="grid-header">
       {{ $services.lang.t('Score') }}: {{ settings.score }},
       {{ $services.lang.t('Speed') }}:

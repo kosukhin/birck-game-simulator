@@ -1,292 +1,96 @@
 <template>
   <div>
+    <div class="text-center">
+      <RouterLink to="/simulator/tanks/">Классические танки</RouterLink>
+    </div>
     <h1>Танки 3Д</h1>
-    <div ref="canvasWrapper"></div>
-    <KeyboardHint @pause="onPaused">
-      <SpaceHint />
-      <br />
-    </KeyboardHint>
+    <div v-if="gameSettings.isGameOver" class="game-over">
+      <el-result
+        :sub-title="`${$services.lang.t('Score')}: ${gameSettings.score}`"
+        :title="$services.lang.t('Game over')"
+        icon="error"
+      />
+    </div>
+    <div class="grid-header text-center">
+      {{ $services.lang.t('Score') }}: {{ gameSettings.score }},
+      {{ $services.lang.t('Speed') }}:
+      {{ gameSettings.speed }}
+    </div>
+    <ThreeDView
+      no-animation
+      :frame-counter="gameSettings.frameCounter"
+      :speed="gameSettings.speed"
+      :camera="camera"
+      :game-grid="gameGrid"
+      :block-group-color="blockGroupColor"
+      floor-texture="/hello.jpg"
+      bounds-color="#ccc"
+      :direction="gameSettings.direction"
+      :angles="angles"
+    />
+    <KeyboardHint @pause="actions.pause()" />
   </div>
 </template>
 
-<script lang="ts" setup>
-import * as THREE from 'three'
-import { MathUtils } from 'three'
-import { useService } from '~~/src/Common/Helpers/HService'
-import { RenderService } from '~~/src/Common/Library/ThreeD/Services/RenderService'
-import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
+<script setup lang="ts">
+import partial from 'lodash/partial'
+import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import ThreeDView from '~/src/Common/Components/ThreeDView/ThreeDView.vue'
+import { Camera } from '~/src/Common/cpu/providers/types/Camera'
+import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
+import { keyboard } from '~/src/Common/cpu/utils/keyboard'
+import { refState } from '~/src/Common/cpu/utils/state'
+import { timer } from '~/src/Common/cpu/utils/timer'
 import {
   EKeyCode,
   EMoveDirection,
-  KeysToMoveCamera3Tanks,
   KeysToMoveMap,
-} from '~~/src/Common/Types/GameTypes'
-import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
-import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import SpaceHint from '~/src/Common/Components/KeyboardHint/SpaceHint.vue'
+} from '~/src/Common/Types/GameTypes'
+import { useTanks } from '~~/src/Tanks/cpu/composables/useTanks'
 
-const cameraType = ref('camera1')
-const direction = ref(EMoveDirection.down)
-const canvasWrapper = ref()
-const rserv = new RenderService()
-const game = new WfTanks()
-const keyboard = useService<SKeyboard>('keyboard')
-
-rserv.afterScene(async () => {
-  rserv.scene.background = new THREE.Color('skyblue')
-  const textureLoader = new THREE.TextureLoader()
-  const texture = await textureLoader.loadAsync('/images/textures/grass.jpg')
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-  texture.offset.set(0, 0)
-  texture.repeat.set(15, 50)
-  const floorGeometry = new THREE.PlaneGeometry(2400, 2400, 100, 1)
-  const floorMaterial = new THREE.MeshStandardMaterial({
-    map: texture,
-  })
-  const floor = new THREE.Mesh(floorGeometry, floorMaterial)
-  floor.position.set(100, -100, -10)
-  rserv.scene.add(floor)
+const gameSettings = ref<GameSettings>({
+  frameCounter: 1,
+  isGameOver: false,
+  score: 0,
+  speed: 300,
+  isPaused: false,
+  direction: EMoveDirection.right,
 })
-
-const explodeSound = () => rserv.sound('explode', '/sounds/explode.wav')
-const shootSound = () => rserv.sound('shoot', '/sounds/shoot.wav', true)
-
-game.addEvent('afterShoot', async () => {
-  const sound = await shootSound()
-  sound.play()
-  sound.setVolume(0.01)
-  setTimeout(() => {
-    sound.remove()
-  }, 300)
+const gameGrid = ref<GameGrid>({
+  blocks: [],
+  gameSize: {
+    height: 20,
+    width: 20,
+  },
 })
+const actions = useTanks(
+  partial(refState, gameSettings),
+  partial(refState, gameGrid),
+  timer
+)
+actions.start()
 
-game.addEvent('hit', async () => {
-  const sound = await explodeSound()
-  sound.play()
-  setTimeout(() => {
-    sound.stop()
-  }, 500)
-})
-
-keyboard.clearSubscribers()
-keyboard.registerSubscriber((key: EKeyCode) => {
-  if (key === EKeyCode.SPC) {
-    game.shoot()
-  }
-
-  if (cameraType.value === 'camera3') {
-    if (key === EKeyCode.Q) {
-      const newDirection =
-        KeysToMoveCamera3Tanks[game.tank.direction][EKeyCode.A]
-      game.moveTank(newDirection, false)
-      return
-    }
-
-    if (key === EKeyCode.E) {
-      const newDirection =
-        KeysToMoveCamera3Tanks[game.tank.direction][EKeyCode.D]
-      game.moveTank(newDirection, false)
-      return
-    }
-  }
-
+keyboard((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
-    let newDirection = KeysToMoveMap[key]
-
-    if (cameraType.value === 'camera3') {
-      if (key === EKeyCode.S) {
-        return
-      }
-
-      newDirection = KeysToMoveCamera3Tanks[game.tank.direction][key]
-    }
-
-    game.moveTank(newDirection)
+    actions.direction(KeysToMoveMap[key])
+  }
+  if (key === EKeyCode.SPC) {
+    actions.shoot()
   }
 })
 
-const baseSize = 10
-rserv.setLeadId('tank_1_0')
-rserv.setCameraPointId('tank_1_1')
-rserv.setGameSpeed(100)
-game.afterNextFrame(() => {
-  rserv.setLastUpdateTime(new Date().getTime())
-  direction.value = game.tank.direction
-  game.shoots.forEach((shoot) => {
-    const id = `shoot_${shoot.id}`
-    const cube = rserv.cubes[id]
-
-    if (shoot.isDone && cube) {
-      cube.visible = false
-      return
-    }
-
-    rserv.manageCube(
-      `shoot_${shoot.id}`,
-      shoot.x * baseSize,
-      -shoot.y * baseSize,
-      new THREE.Color('darkorange')
-    )
-  })
-
-  game.tank.bitmap.forEach((row, rowIndex) => {
-    row.forEach((isFilled, cellIndex) => {
-      const id = `tank_${cellIndex}_${rowIndex}`
-      const cube = rserv.cubes?.[id]
-      const cubeExists = rserv.hasCube(id)
-      if (isFilled) {
-        rserv.manageCube(
-          id,
-          (game.tank.x + cellIndex) * baseSize,
-          (-game.tank.y - rowIndex) * baseSize,
-          0x111111
-        )
-        cube && (cube.visible = true)
-      } else if (cubeExists) {
-        cube.visible = false
-      }
-    })
-  })
-
-  game.bots.forEach((bot) => {
-    bot.shoots.forEach((shoot) => {
-      const id = `bot_shoot_${shoot.id}`
-      const cube = rserv.cubes[id]
-      if (shoot.isDone && cube) {
-        cube.visible = false
-        return
-      }
-      rserv.manageCube(id, shoot.x * baseSize, -shoot.y * baseSize, 0x0000aa)
-    })
-
-    bot.tank.bitmap.forEach((row, rowIndex) => {
-      row.forEach((isFilled, cellIndex) => {
-        const id = `bot_${bot.type}_${cellIndex}_${rowIndex}`
-        const cube = rserv.cubes?.[id]
-        const cubeExists = rserv.hasCube(id)
-
-        if (isFilled) {
-          rserv.manageCube(
-            id,
-            (bot.tank.x + cellIndex) * baseSize,
-            (-bot.tank.y - rowIndex) * baseSize,
-            0xaa0000
-          )
-          cubeExists && (cube.visible = true)
-        } else if (cubeExists) {
-          cube.visible = false
-        }
-      })
-    })
-  })
-})
-
-const k = 50
-const rotateY = ref(0)
-const rotateX = ref(0)
-const rotateZ = ref(0)
-const useCustomRotation = ref(false)
-const positionZ = ref(90)
-
-const setRotation = ({ x, y, z }: any) => {
-  if (useCustomRotation.value) {
-    return
-  }
-
-  rotateZ.value = z
-  rotateX.value = x
-  rotateY.value = y
+const blockGroupColor = {
+  shoot: '#25ff25',
+  tank: '#ff2c2c',
 }
-
-rserv.setAfterAnimate(() => {
-  if (rserv.cameraType !== 3) {
-    return
-  }
-
-  const direction = game.tank.direction
-  const leadPoint = rserv.cubes[rserv.leadId]
-
-  if (!leadPoint) {
-    return
-  }
-
-  let x = leadPoint.position.x
-  let y = leadPoint.position.y
-
-  setRotation({ x: 0, y: 0, z: 0 })
-
-  if (direction === EMoveDirection.down) {
-    y += k
-    setRotation({ x: -45, y: 0, z: 180 })
-  }
-
-  if (direction === EMoveDirection.up) {
-    y -= k
-    setRotation({ x: 45, y: 0, z: 0 })
-  }
-
-  if (direction === EMoveDirection.right) {
-    x -= k
-    setRotation({ x: 0, y: -45, z: -90 })
-  }
-
-  if (direction === EMoveDirection.left) {
-    x += k
-    setRotation({ x: 0, y: 45, z: 90 })
-  }
-
-  const temp = new THREE.Vector3()
-  rserv.camera.position.lerp(temp, 0.7)
-  rserv.camera.position.z = positionZ.value
-  rserv.camera.position.x = x
-  rserv.camera.position.y = y
-
-  rserv.camera.lookAt(leadPoint.position)
-  rserv.camera.rotation.x = MathUtils.degToRad(rotateX.value)
-  rserv.camera.rotation.y = MathUtils.degToRad(rotateY.value)
-  rserv.camera.rotation.z = MathUtils.degToRad(rotateZ.value)
-})
-
-onMounted(() => {
-  rserv.render(canvasWrapper.value)
-  Promise.all([explodeSound(), shootSound()]).then(() => {
-    game.run()
-  })
-
-  const width = game.grid.width
-  const height = game.grid.height
-  const white = 0xffffff
-
-  for (let i = 0; i < width; i++) {
-    rserv.createCube('top' + i, i * baseSize, 1 * baseSize, white)
-    rserv.createCube('bottom' + i, i * baseSize, -height * baseSize, white)
-  }
-
-  for (let i = 0; i < height; i++) {
-    rserv.createCube('left' + i, -1 * baseSize, -i * baseSize, white)
-    rserv.createCube('right' + i, width * baseSize, -i * baseSize, white)
-  }
-
-  setTimeout(() => {
-    onChangeCamera('camera3')
-  })
-})
-
-const onChangeCamera = (type: string) => {
-  cameraType.value = type
-  if (type in rserv) {
-    ;(rserv as any)[type]()
-  }
+const camera: Camera = {
+  cameraHeightDistance: 200,
+  lookFromBlockId: 'tail1',
+  lookToBlockId: 'lead',
+}
+const angles = {
+  x: 7,
+  y: 0,
+  z: 0,
 }
 </script>
-
-<style lang="scss" scoped>
-.row {
-  display: flex;
-  flex-direction: row;
-
-  input {
-    flex-grow: 1;
-  }
-}
-</style>
