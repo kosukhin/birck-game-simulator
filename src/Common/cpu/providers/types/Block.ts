@@ -11,6 +11,7 @@ export interface Block {
   id: string
   group: string
   localId?: string
+  localGroup?: string
 }
 
 /**

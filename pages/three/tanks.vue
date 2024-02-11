@@ -83,6 +83,8 @@ const blockGroupColor = {
   shoot: '#25ff25',
   tank: '#ff2c2c',
   bot: '#00f',
+  bot2: '#0ff',
+  bot3: '#ccc',
 }
 const camera: Camera = {
   cameraHeightDistance: 200,

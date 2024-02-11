@@ -3,8 +3,7 @@ import { EMoveDirection } from './../../../Common/Types/GameTypes'
 import {
   GameGrid,
   GameSettings,
-  GameGrid,
-  GameGrid,
+  GameSettings,
 } from './../../../Common/cpu/providers/types/Game'
 import { Intention } from '~~/src/Common/Library/Intention'
 import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
@@ -25,7 +24,7 @@ export const useTanks = (
   const nextFrame = () => {
     doTimer(gameSettings.get().speed, () => {
       gameSettings.get().frameCounter += 1
-      tanksMainCycle(gameGrid.get())
+      tanksMainCycle(gameGrid.get(), gameSettings.get())
       !gameSettings.get().isGameOver &&
         !gameSettings.get().isPaused &&
         nextFrame()
@@ -35,7 +34,7 @@ export const useTanks = (
   return {
     start: nextFrame,
     shoot: throttle(() => {
-      shoot(tank, gameGrid.get())
+      shoot(tank, gameGrid.get(), gameSettings.get())
     }, 100),
     pause() {
       gameSettings.get().isPaused = !gameSettings.get().isPaused
@@ -50,10 +49,43 @@ export const useTanks = (
   }
 }
 
-const tanksMainCycle = (gameGrid: GameGrid) => {
-  // console.log(gameGrid.blocks.length)
+const tanksMainCycle = (gameGrid: GameGrid, gameSettings: GameSettings) => {
   if (!bots.size) {
-    bots.add(createBot(gameGrid))
+    bots.add(createBot(gameGrid, gameSettings))
+
+    if (gameSettings.score >= 5) {
+      bots.add(
+        createBot(
+          gameGrid,
+          gameSettings,
+          gameGrid.gameSize.width / 2 - TANK_SIZE,
+          'bot2'
+        )
+      )
+    }
+
+    if (gameSettings.score >= 10) {
+      bots.add(
+        createBot(
+          gameGrid,
+          gameSettings,
+          gameGrid.gameSize.width - TANK_SIZE,
+          'bot3'
+        )
+      )
+    }
+
+    if (gameSettings.score >= 15) {
+      bots.add(
+        createBot(
+          gameGrid,
+          gameSettings,
+          gameGrid.gameSize.width - TANK_SIZE,
+          'bot3',
+          gameGrid.gameSize.height / 2 - TANK_SIZE
+        )
+      )
+    }
   }
 }
 
@@ -73,20 +105,26 @@ const tank: Shape = {
   ],
 }
 
-const createBot = (gameGrid: GameGrid): Shape => {
-  const group = 'bot'
+const createBot = (
+  gameGrid: GameGrid,
+  gameSettings: GameSettings,
+  xShift = 0,
+  group: string = 'bot',
+  yShift = 0
+): Shape => {
+  const localGroup = uniqueId('bot_')
   const bot = {
-    x: gameGrid.gameSize.width - TANK_SIZE,
-    y: gameGrid.gameSize.height - TANK_SIZE,
+    x: gameGrid.gameSize.width - TANK_SIZE - xShift,
+    y: gameGrid.gameSize.height - TANK_SIZE - yShift,
     direction: EMoveDirection.right,
     blocks: [
-      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '0' },
-      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '1' },
-      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '2' },
-      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '3' },
-      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '4' },
-      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '5' },
-      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '6' },
+      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '0', localGroup },
+      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '1', localGroup },
+      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '2', localGroup },
+      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '3', localGroup },
+      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '4', localGroup },
+      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '5', localGroup },
+      { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '6', localGroup },
     ],
   }
   bots.add(bot)
@@ -94,46 +132,51 @@ const createBot = (gameGrid: GameGrid): Shape => {
   rotateTank(EMoveDirection.up, gameGrid, bot)
 
   const nextBotFrame = () => {
+    if (gameSettings.isGameOver) {
+      return
+    }
+
     const tankMidX = midX(tank, TANK_SIZE)
     const tankMidY = midY(tank, TANK_SIZE)
     const botMidX = midX(bot, TANK_SIZE)
     const botMidY = midY(bot, TANK_SIZE)
-    console.log('bot logic')
-    const isSameX = tank.x <= botMidX && botMidX <= maxX(tank, TANK_SIZE)
-    const isSameY = tank.y <= botMidY && botMidY <= maxY(tank, TANK_SIZE)
+
+    const isSameX = bot.x <= tankMidX && tankMidX <= maxX(bot, TANK_SIZE)
+    const isSameY = bot.y <= tankMidY && tankMidY <= maxY(bot, TANK_SIZE)
 
     if (isSameX || isSameY) {
       let shootDirection = EMoveDirection.up
 
-      if (isSameX && botMidX <= tankMidX) {
+      if (isSameX && botMidY < tankMidY) {
         shootDirection = EMoveDirection.down
       }
 
-      if (isSameX && botMidX >= tankMidX) {
+      if (isSameX && botMidY > tankMidY) {
         shootDirection = EMoveDirection.up
       }
 
-      if (isSameY && botMidY >= tankMidY) {
+      if (isSameY && botMidX > tankMidX) {
         shootDirection = EMoveDirection.left
       }
 
-      if (isSameY && botMidY <= tankMidY) {
+      if (isSameY && botMidY < tankMidY) {
         shootDirection = EMoveDirection.right
       }
 
       bot.direction = shootDirection
       rotateTank(bot.direction, gameGrid, bot)
-      shoot(bot, gameGrid)
+      shoot(bot, gameGrid, gameSettings)
     } else {
       const xDistance = tankMidX - botMidX + HMath.random(0, 4)
       const yDistance = tankMidY - botMidY + HMath.random(0, 4)
 
       if (Math.abs(yDistance) < Math.abs(xDistance)) {
-        bot.direction = yDistance < 0 ? EMoveDirection.down : EMoveDirection.up
+        bot.direction = yDistance >= 0 ? EMoveDirection.down : EMoveDirection.up
       } else {
         bot.direction =
-          xDistance < 0 ? EMoveDirection.right : EMoveDirection.left
+          xDistance >= 0 ? EMoveDirection.right : EMoveDirection.left
       }
+      rotateTank(bot.direction, gameGrid, bot)
       moveTank(bot, bot.direction, gameGrid)
     }
 
@@ -259,6 +302,26 @@ const tankRotations: Record<string, any> = {
   },
 }
 
+const isIntersected = (
+  shoot: Block,
+  excludeBlocks: Block[],
+  gameGrid: GameGrid
+) => {
+  const isExcluded = excludeBlocks.some((block) => {
+    return block.x === shoot.x && block.y === shoot.y
+  })
+
+  if (isExcluded) {
+    return false
+  }
+
+  const intersectedWith = gameGrid.blocks.find((block) => {
+    return block.x === shoot.x && block.y === shoot.y && block.id !== shoot.id
+  })
+
+  return intersectedWith
+}
+
 const shiftByDirection = (direction: EMoveDirection) => {
   const shiftPoint = { x: 0, y: 0 }
   direction === EMoveDirection.up && (shiftPoint.y -= 1)
@@ -275,7 +338,11 @@ const isTopOrLeft = (direction: EMoveDirection) => {
   return direction === EMoveDirection.up || direction === EMoveDirection.left
 }
 
-const shoot = (fromShape: Shape, gameGrid: GameGrid) => {
+const shoot = (
+  fromShape: Shape,
+  gameGrid: GameGrid,
+  gameSettings: GameSettings
+) => {
   const savedDirection = fromShape.direction
   const shiftPoint = shiftByDirection(savedDirection)
   const shootBlock: Block = {
@@ -288,6 +355,38 @@ const shoot = (fromShape: Shape, gameGrid: GameGrid) => {
   const shootInGrid = gameGrid.blocks.at(-1)
   const nextShootFrame = () => {
     setTimeout(() => {
+      const intersectedBlock = isIntersected(
+        shootBlock,
+        fromShape.blocks,
+        gameGrid
+      )
+      if (intersectedBlock) {
+        if (intersectedBlock.group === 'tank') {
+          gameSettings.isGameOver = true
+        }
+
+        if (intersectedBlock.group.indexOf('bot') === 0) {
+          gameSettings.score += 1
+          gameSettings.speed -= 10
+          bots.forEach((bot) => {
+            if (
+              bot.blocks.some((botBlock) => botBlock.id === intersectedBlock.id)
+            ) {
+              gameGrid.blocks = gameGrid.blocks.filter(
+                (block) => block.localGroup !== intersectedBlock.localGroup
+              )
+              bots.delete(bot)
+            }
+          })
+        }
+
+        const blockIndex = gameGrid.blocks.findIndex(
+          (block) => block.id === shootBlock.id
+        )
+        gameGrid.blocks.splice(blockIndex, 1)
+
+        return
+      }
       const shiftPoint = shiftByDirection(savedDirection)
       shootInGrid && (shootInGrid.x += shiftPoint.x)
       shootInGrid && (shootInGrid.y += shiftPoint.y)
