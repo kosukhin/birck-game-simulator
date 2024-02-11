@@ -7,14 +7,14 @@
         icon="error"
       />
     </div>
-    <RouterLink to="/three/snake"> Змейка 3д</RouterLink>
+    <RouterLink to="/three/snake">Танки 3д</RouterLink>
     <div class="grid-header">
       {{ $services.lang.t('Score') }}: {{ settings.score }},
       {{ $services.lang.t('Speed') }}:
       {{ settings.speed }}
     </div>
     <CanvasView :fps="10" :grid="grid" />
-    <KeyboardHint @pause="snakeActions.pause()" />
+    <KeyboardHint @pause="actions.pause()" />
   </div>
 </template>
 
@@ -50,16 +50,16 @@ const gameGrid = ref<GameGrid>({
     width: 20,
   },
 })
-const snakeActions = useTanks(
+const actions = useTanks(
   partial(refState, settings),
   partial(refState, gameGrid),
   timer
 )
-snakeActions.start()
+actions.start()
 
 keyboard((key: EKeyCode) => {
   if (KeysToMoveMap[key] !== undefined) {
-    snakeActions.direction(KeysToMoveMap[key])
+    actions.direction(KeysToMoveMap[key])
   }
 })
 
@@ -69,6 +69,8 @@ const grid = new MGrid({
 })
 
 watchEffect(() => {
+  console.log('changed game')
+
   grid.setGrid(gameGridToMGrid(gameGrid.value))
 })
 </script>

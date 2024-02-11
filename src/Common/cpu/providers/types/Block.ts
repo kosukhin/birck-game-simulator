@@ -1,3 +1,5 @@
+import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+
 /**
  * Общая абстракция блока игры
  * тк вся игра состоит из блоков
@@ -9,4 +11,14 @@ export interface Block {
   id: string
   group: string
   localId?: string
+}
+
+/**
+ * Абстракция фигуры из блоков
+ */
+export interface Shape {
+  x: number
+  y: number
+  direction: EMoveDirection
+  blocks: Block[]
 }
