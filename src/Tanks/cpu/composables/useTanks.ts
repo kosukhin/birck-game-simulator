@@ -3,10 +3,13 @@ import { EMoveDirection } from './../../../Common/Types/GameTypes'
 import {
   GameGrid,
   GameSettings,
+  GameGrid,
+  GameGrid,
 } from './../../../Common/cpu/providers/types/Game'
 import { Intention } from '~~/src/Common/Library/Intention'
 import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
 import { FType, State } from '~~/src/Common/cpu/utils/system'
+import { HMath } from '~~/src/Common/Helpers/HMath'
 
 export const useTanks = (
   getGameSettings: FType<State<GameSettings>>,
@@ -17,7 +20,7 @@ export const useTanks = (
   const gameGrid = getGameGrid()
 
   gameGrid.get().blocks.push(...tank.blocks)
-  rotateTank(EMoveDirection.right, gameGrid.get())
+  rotateTank(EMoveDirection.right, gameGrid.get(), tank)
 
   const nextFrame = () => {
     doTimer(gameSettings.get().speed, () => {
@@ -39,8 +42,9 @@ export const useTanks = (
       gameSettings.get().isPaused && nextFrame()
     },
     direction: throttle((newDirection: EMoveDirection) => {
-      rotateTank(newDirection, gameGrid.get())
-      tank.direction === newDirection && moveTank(newDirection, gameGrid.get())
+      rotateTank(newDirection, gameGrid.get(), tank)
+      tank.direction === newDirection &&
+        moveTank(tank, newDirection, gameGrid.get())
       tank.direction = newDirection
     }, 50),
   }
@@ -48,9 +52,12 @@ export const useTanks = (
 
 const tanksMainCycle = (gameGrid: GameGrid) => {
   // console.log(gameGrid.blocks.length)
+  if (!bots.size) {
+    bots.add(createBot(gameGrid))
+  }
 }
 
-const bots: Shape[] = []
+const bots: Set<Shape> = new Set()
 const tank: Shape = {
   x: 0,
   y: 0,
@@ -66,11 +73,11 @@ const tank: Shape = {
   ],
 }
 
-const createBot = (botId: number): Shape => {
-  const group = 'bot' + botId
-  return {
-    x: 0,
-    y: 0,
+const createBot = (gameGrid: GameGrid): Shape => {
+  const group = 'bot'
+  const bot = {
+    x: gameGrid.gameSize.width - TANK_SIZE,
+    y: gameGrid.gameSize.height - TANK_SIZE,
     direction: EMoveDirection.right,
     blocks: [
       { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '0' },
@@ -82,18 +89,88 @@ const createBot = (botId: number): Shape => {
       { x: 0, y: 0, id: uniqueId('bot_'), group, localId: '6' },
     ],
   }
+  bots.add(bot)
+  gameGrid.blocks.push(...bot.blocks)
+  rotateTank(EMoveDirection.up, gameGrid, bot)
+
+  const nextBotFrame = () => {
+    const tankMidX = midX(tank, TANK_SIZE)
+    const tankMidY = midY(tank, TANK_SIZE)
+    const botMidX = midX(bot, TANK_SIZE)
+    const botMidY = midY(bot, TANK_SIZE)
+    console.log('bot logic')
+    const isSameX = tank.x <= botMidX && botMidX <= maxX(tank, TANK_SIZE)
+    const isSameY = tank.y <= botMidY && botMidY <= maxY(tank, TANK_SIZE)
+
+    if (isSameX || isSameY) {
+      let shootDirection = EMoveDirection.up
+
+      if (isSameX && botMidX <= tankMidX) {
+        shootDirection = EMoveDirection.down
+      }
+
+      if (isSameX && botMidX >= tankMidX) {
+        shootDirection = EMoveDirection.up
+      }
+
+      if (isSameY && botMidY >= tankMidY) {
+        shootDirection = EMoveDirection.left
+      }
+
+      if (isSameY && botMidY <= tankMidY) {
+        shootDirection = EMoveDirection.right
+      }
+
+      bot.direction = shootDirection
+      rotateTank(bot.direction, gameGrid, bot)
+      shoot(bot, gameGrid)
+    } else {
+      const xDistance = tankMidX - botMidX + HMath.random(0, 4)
+      const yDistance = tankMidY - botMidY + HMath.random(0, 4)
+
+      if (Math.abs(yDistance) < Math.abs(xDistance)) {
+        bot.direction = yDistance < 0 ? EMoveDirection.down : EMoveDirection.up
+      } else {
+        bot.direction =
+          xDistance < 0 ? EMoveDirection.right : EMoveDirection.left
+      }
+      moveTank(bot, bot.direction, gameGrid)
+    }
+
+    if (bots.has(bot)) {
+      setTimeout(() => {
+        nextBotFrame()
+      }, 200)
+    }
+  }
+  nextBotFrame()
+
+  return bot
 }
 
-const rotateTank = (direction: EMoveDirection, gameGrid: GameGrid) => {
+const getShapeBlocks = (shape: Shape, gameGrid: GameGrid) => {
+  const shapeIds = shape.blocks.map((b) => b.id)
+  return gameGrid.blocks.filter((b) => shapeIds.includes(b.id))
+}
+
+const rotateTank = (
+  direction: EMoveDirection,
+  gameGrid: GameGrid,
+  shape: Shape
+) => {
   const rotationRule = tankRotations[direction]
 
   gameGrid.blocks.forEach((block) => {
-    if (block.group !== 'tank') return
+    if (!isBlockInShape(block, shape)) return
     const position = rotationRule[block.localId as string]
 
-    block.x = position.x + tank.x
-    block.y = position.y + tank.y
+    block.x = position.x + shape.x
+    block.y = position.y + shape.y
   })
+}
+
+const isBlockInShape = (block: Block, shape: Shape) => {
+  return shape.blocks.findIndex((currBlock) => currBlock.id === block.id) > -1
 }
 
 const TANK_SIZE = 3
@@ -116,23 +193,27 @@ const isStuckToBounds = (
   return isStuckToTop || isStuckToLeft || isStuckToRight || isStuckToBottom
 }
 
-const moveTank = (direction: EMoveDirection, gameGrid: GameGrid) => {
+const moveTank = (
+  shape: Shape,
+  direction: EMoveDirection,
+  gameGrid: GameGrid
+) => {
   new Intention(gameGrid)
     .predicate(() => {
-      return !isStuckToBounds(direction, tank, gameGrid, TANK_SIZE)
+      return !isStuckToBounds(direction, shape, gameGrid, TANK_SIZE)
     })
     .map((gameGrid: GameGrid) => {
-      const prevTankPoint = pick(tank, ['x', 'y'])
-      direction === EMoveDirection.up && (tank.y -= 1)
-      direction === EMoveDirection.right && (tank.x += 1)
-      direction === EMoveDirection.down && (tank.y += 1)
-      direction === EMoveDirection.left && (tank.x -= 1)
+      const prevTankPoint = pick(shape, ['x', 'y'])
+      direction === EMoveDirection.up && (shape.y -= 1)
+      direction === EMoveDirection.right && (shape.x += 1)
+      direction === EMoveDirection.down && (shape.y += 1)
+      direction === EMoveDirection.left && (shape.x -= 1)
 
-      const shapeIds = tank.blocks.map((b) => b.id)
+      const shapeIds = shape.blocks.map((b) => b.id)
       const shapeBlocks = gameGrid.blocks.filter((b) => shapeIds.includes(b.id))
       shapeBlocks.forEach((block) => {
-        block.x += tank.x - prevTankPoint.x
-        block.y += tank.y - prevTankPoint.y
+        block.x += shape.x - prevTankPoint.x
+        block.y += shape.y - prevTankPoint.y
       })
 
       return gameGrid
@@ -231,4 +312,20 @@ const oppositeDirections = {
   [EMoveDirection.right]: EMoveDirection.left,
   [EMoveDirection.down]: EMoveDirection.up,
   [EMoveDirection.left]: EMoveDirection.right,
+}
+
+const midX = (tank: Shape, size: number): number => {
+  return tank.x + HMath.roundMin((size - 1) / 2)
+}
+
+const midY = (tank: Shape, size: number): number => {
+  return tank.y + HMath.roundMin((size - 1) / 2)
+}
+
+const maxX = (tank: Shape, size: number): number => {
+  return tank.x + size - 1
+}
+
+const maxY = (tank: Shape, size: number): number => {
+  return tank.y + size - 1
 }

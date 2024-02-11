@@ -82,6 +82,7 @@ keyboard((key: EKeyCode) => {
 const blockGroupColor = {
   shoot: '#25ff25',
   tank: '#ff2c2c',
+  bot: '#00f',
 }
 const camera: Camera = {
   cameraHeightDistance: 200,
