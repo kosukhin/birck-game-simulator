@@ -3,7 +3,6 @@ import { EMoveDirection } from './../../../Common/Types/GameTypes'
 import {
   GameGrid,
   GameSettings,
-  GameSettings,
 } from './../../../Common/cpu/providers/types/Game'
 import { Intention } from '~~/src/Common/Library/Intention'
 import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
@@ -41,6 +40,9 @@ export const useTanks = (
       gameSettings.get().isPaused && nextFrame()
     },
     direction: throttle((newDirection: EMoveDirection) => {
+      if (gameSettings.get().isGameOver) {
+        return
+      }
       rotateTank(newDirection, gameGrid.get(), tank)
       tank.direction === newDirection &&
         moveTank(tank, newDirection, gameGrid.get())
@@ -218,6 +220,24 @@ const isBlockInShape = (block: Block, shape: Shape) => {
 
 const TANK_SIZE = 3
 
+const isStuckToShape = (
+  shape: Shape,
+  gameGrid: GameGrid,
+  direction: EMoveDirection
+) => {
+  const shiftPoint = shiftByDirection(direction)
+  return gameGrid.blocks.some((block) => {
+    return shape.blocks.some((shapeBlock) => {
+      return (
+        shapeBlock.group !== block.group &&
+        ['tank', 'bot', 'bot2', 'bot3'].includes(block.group) &&
+        shapeBlock.x + shiftPoint.x === block.x &&
+        shapeBlock.y + shiftPoint.y === block.y
+      )
+    })
+  })
+}
+
 const isStuckToBounds = (
   direction: EMoveDirection,
   point: { x: number; y: number },
@@ -243,7 +263,10 @@ const moveTank = (
 ) => {
   new Intention(gameGrid)
     .predicate(() => {
-      return !isStuckToBounds(direction, shape, gameGrid, TANK_SIZE)
+      return (
+        !isStuckToBounds(direction, shape, gameGrid, TANK_SIZE) &&
+        !isStuckToShape(shape, gameGrid, direction)
+      )
     })
     .map((gameGrid: GameGrid) => {
       const prevTankPoint = pick(shape, ['x', 'y'])
