@@ -69,8 +69,6 @@ const grid = new MGrid({
 })
 
 watchEffect(() => {
-  console.log('changed game')
-
   grid.setGrid(gameGridToMGrid(gameGrid.value))
 })
 </script>
