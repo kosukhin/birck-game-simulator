@@ -1,4 +1,4 @@
-export const useBlateroid = (
+export const useBlasteroid = (
   getGameSettings: FType<State<GameSettings>>,
   getGameGrid: FType<State<GameGrid>>,
   doTimer: FType<void, [number, () => void]>

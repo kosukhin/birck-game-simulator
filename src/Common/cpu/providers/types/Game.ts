@@ -19,3 +19,8 @@ export interface GameGrid {
   blocks: Block[]
   gameSize: GameSize
 }
+
+export interface Game {
+  settings: GameSettings
+  grid: GameGrid
+}
