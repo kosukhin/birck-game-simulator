@@ -54,7 +54,17 @@ export const useBlasteroid = (
         ).do()
     },
     shoot() {
-      console.log('shoot')
+      if (!game.blasteroid) {
+        return
+      }
+      const shoot = createShoot(game.blasteroid, game)
+      pipe(
+        some(game),
+        chain(ensureShapeInBoundsByYAxis(shoot)),
+        map(debug('shoot going')),
+        map(moveShapeToDirection(shoot)),
+        repeat(50)
+      ).do()
     },
   }
 }
@@ -75,8 +85,6 @@ const renderGameFrame = (game: BlasteroidGame) => {
 }
 
 const createEnemy = (game: BlasteroidGame) => {
-  console.log('create enemy')
-
   const enemyPrefix = 'enemy_'
   const group = 'enemy'
   game.enemy = {
@@ -93,6 +101,18 @@ const createEnemy = (game: BlasteroidGame) => {
     ],
   }
   renderShapeToGrid(game.enemy, game.grid)
+}
+
+const createShoot = (fromShape: Shape, game: BlasteroidGame) => {
+  const shoot: Shape = {
+    x: fromShape.x,
+    y: fromShape.y,
+    direction: EMoveDirection.up,
+    blocks: [{ x: 0, y: 0, id: uniqueId('shoot_'), group: 'shoot' }],
+  }
+  renderShapeToGrid(shoot, game.grid)
+
+  return shoot
 }
 
 const ensureFieldIsNull = curry(
@@ -129,6 +149,18 @@ const ensureShapeInBoundsByXAxis = curry(
   }
 )
 
+const ensureShapeInBoundsByYAxis = curry(
+  (shape: Shape, game: BlasteroidGame) => {
+    const step = calculateShapeStepToDirection(shape)
+    const nextY = shape.y + step.yDelta
+    const shapeHeight = shape.height ?? 1
+
+    return nextY >= 0 && nextY + shapeHeight <= game.grid.gameSize.height
+      ? some(game)
+      : none()
+  }
+)
+
 const moveBlasteroidByX = curry((step: number, game: BlasteroidGame) => {
   game.blasteroid && (game.blasteroid.x += step)
   game.grid.blocks.forEach((block) => {
@@ -139,8 +171,6 @@ const moveBlasteroidByX = curry((step: number, game: BlasteroidGame) => {
 })
 
 const renderShapeToGrid = (shape: Shape, grid: GameGrid) => {
-  console.log('render shape', shape.blocks[0].group)
-
   shape.blocks.forEach((block) => {
     block.x += shape.x
     block.y += shape.y
@@ -168,7 +198,35 @@ const ensureNotPaused = (v: Game) => {
   return v.settings.isPaused ? none() : some(v)
 }
 
-const debug = (v) => {
-  console.log('debug:', v)
-  return v
+const calculateShapeStepToDirection = (shape: Shape) => {
+  const xDelta =
+    (shape.direction === EMoveDirection.left && -1) ||
+    (shape.direction === EMoveDirection.right && 1) ||
+    0
+  const yDelta =
+    (shape.direction === EMoveDirection.up && -1) ||
+    (shape.direction === EMoveDirection.down && 1) ||
+    0
+
+  return {
+    xDelta,
+    yDelta,
+  }
 }
+
+const moveShapeToDirection = curry((shape: Shape, game: BlasteroidGame) => {
+  const step = calculateShapeStepToDirection(shape)
+  shape.x += step.xDelta
+  shape.y += step.yDelta
+  game.grid.blocks.forEach((block) => {
+    if (block.group === shape.blocks[0].group) {
+      block.x += step.xDelta
+      block.y += step.yDelta
+    }
+  })
+})
+
+const debug = curry((message: string, v: any) => {
+  console.log('debug:', message)
+  return v
+})
