@@ -44,6 +44,8 @@ export const useBlasteroid = (
     ;[shoot, shoot2].forEach((currentShoot) => {
       pipe(
         some(game),
+        chain(ensureNotGameOver),
+        chain(ensureNotPaused),
         chain(ensureShapeInBoundsByYAxis(currentShoot)),
         map(moveShapeToDirection(currentShoot)),
         map(checkEnemyShooted(currentShoot)),
@@ -70,6 +72,8 @@ export const useBlasteroid = (
       game.blasteroid &&
         pipe(
           some(game),
+          chain(ensureNotGameOver),
+          chain(ensureNotPaused),
           chain(ensureShapeInBoundsByXAxis(game.blasteroid, step)),
           map(moveBlasteroidByX(step))
         ).do()
