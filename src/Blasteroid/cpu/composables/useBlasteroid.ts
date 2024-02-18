@@ -1,4 +1,4 @@
-import { curry, uniqueId } from 'lodash'
+import { curry, throttle, uniqueId } from 'lodash'
 import {
   LazyMonad,
   map,
@@ -16,6 +16,7 @@ import {
   GameSettings,
 } from '~~/src/Common/cpu/providers/types/Game'
 import { FType, State } from '~~/src/Common/cpu/utils/system'
+import { HMath } from '~~/src/Common/Helpers/HMath'
 
 type BlasteroidGame = Game & {
   blasteroid: Shape | null
@@ -32,6 +33,25 @@ export const useBlasteroid = (
     blasteroid: null,
     enemy: null,
   }
+
+  const onShoot = throttle(() => {
+    if (!game.blasteroid) {
+      return
+    }
+    const shoot = createShoot(game.blasteroid, 0, game)
+    const shoot2 = createShoot(game.blasteroid, 2, game)
+
+    ;[shoot, shoot2].forEach((currentShoot) => {
+      pipe(
+        some(game),
+        chain(ensureShapeInBoundsByYAxis(currentShoot)),
+        map(moveShapeToDirection(currentShoot)),
+        map(checkEnemyShooted(currentShoot)),
+        tap(removeShootIfStopped(currentShoot, game)),
+        repeat(50)
+      ).do()
+    })
+  }, 100)
 
   return {
     start() {
@@ -55,22 +75,7 @@ export const useBlasteroid = (
         ).do()
     },
     shoot() {
-      if (!game.blasteroid) {
-        return
-      }
-      const shoot = createShoot(game.blasteroid, 0, game)
-      const shoot2 = createShoot(game.blasteroid, 2, game)
-
-      ;[shoot, shoot2].forEach((currentShoot) => {
-        pipe(
-          some(game),
-          chain(ensureShapeInBoundsByYAxis(currentShoot)),
-          map(moveShapeToDirection(currentShoot)),
-          map(checkEnemyShooted(currentShoot)),
-          tap(removeShootIfStopped(currentShoot, game)),
-          repeat(50)
-        ).do()
-      })
+      onShoot()
     },
   }
 }
@@ -86,28 +91,104 @@ const startGame = (game: Game) =>
 
 const renderGameFrame = (game: BlasteroidGame) => {
   pipe(some(game), chain(ensureFieldIsNull('enemy')), map(createEnemy)).do()
-  moveEnemyDown()
-  console.log('render frame')
+  game.enemy &&
+    pipe(
+      some(game),
+      chain(ensureShapeInBoundsByYAxis(game.enemy)),
+      map(moveShapeToDirection(game.enemy)),
+      tap(checkGameOver(game))
+    ).do()
 }
+
+const checkGameOver = curry((game: BlasteroidGame, context: unknown) => {
+  context === null && (game.settings.isGameOver = true)
+})
 
 const createEnemy = (game: BlasteroidGame) => {
   const enemyPrefix = 'enemy_'
   const group = 'enemy'
+  const enemyShapeIndex = HMath.random(0, enemies.length - 1)
   game.enemy = {
-    x: Math.round(game.grid.gameSize.width / 2) - 2,
+    x: HMath.random(0, game.grid.gameSize.width - 5),
     y: 0,
-    direction: EMoveDirection.up,
-    width: 3,
-    height: 2,
-    blocks: [
-      { x: 1, y: 1, id: uniqueId(enemyPrefix), group },
-      { x: 0, y: 0, id: uniqueId(enemyPrefix), group },
-      { x: 1, y: 0, id: uniqueId(enemyPrefix), group },
-      { x: 2, y: 0, id: uniqueId(enemyPrefix), group },
-    ],
+    height: 3,
+    direction: EMoveDirection.down,
+    blocks: enemies[enemyShapeIndex].map((blockShape) => ({
+      ...blockShape,
+      id: uniqueId(enemyPrefix),
+      group,
+    })),
   }
   renderShapeToGrid(game.enemy, game.grid)
 }
+
+const enemies = [
+  [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 2, y: 0 },
+    { x: 3, y: 0 },
+    { x: 4, y: 0 },
+    { x: 0, y: 1 },
+    { x: 1, y: 1 },
+    { x: 2, y: 1 },
+    { x: 3, y: 1 },
+    { x: 4, y: 1 },
+    { x: 0, y: 2 },
+    { x: 1, y: 2 },
+    { x: 2, y: 2 },
+    { x: 3, y: 2 },
+    { x: 4, y: 2 },
+  ],
+  [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 2, y: 0 },
+    { x: 3, y: 0 },
+    { x: 4, y: 0 },
+    { x: 1, y: 1 },
+    { x: 2, y: 1 },
+    { x: 3, y: 1 },
+    { x: 2, y: 2 },
+  ],
+  [
+    { x: 2, y: 0 },
+    { x: 1, y: 1 },
+    { x: 2, y: 1 },
+    { x: 3, y: 1 },
+    { x: 0, y: 2 },
+    { x: 1, y: 2 },
+    { x: 2, y: 2 },
+    { x: 3, y: 2 },
+    { x: 4, y: 2 },
+    { x: 1, y: 3 },
+    { x: 2, y: 3 },
+    { x: 3, y: 3 },
+    { x: 2, y: 4 },
+  ],
+  [
+    { x: 1, y: 0 },
+    { x: 3, y: 0 },
+    { x: 0, y: 1 },
+    { x: 1, y: 1 },
+    { x: 2, y: 1 },
+    { x: 3, y: 1 },
+    { x: 4, y: 1 },
+    { x: 0, y: 2 },
+    { x: 1, y: 2 },
+    { x: 2, y: 2 },
+    { x: 3, y: 2 },
+    { x: 4, y: 2 },
+    { x: 1, y: 3 },
+    { x: 2, y: 3 },
+    { x: 3, y: 3 },
+    { x: 2, y: 4 },
+  ],
+  [
+    { x: 1, y: 0 },
+    { x: 3, y: 0 },
+  ],
+]
 
 const createShoot = (
   fromShape: Shape,
@@ -222,7 +303,7 @@ const renderShapeToGrid = (shape: Shape, grid: GameGrid) => {
   grid.blocks.push(...shape.blocks)
 }
 
-const moveEnemyDown = () => {}
+const moveEnemyDown = (game: BlasteroidGame) => {}
 
 const repeat = (milliseconds: number) => (context: LazyMonad) => {
   context.lazyMap((v) => {
@@ -272,6 +353,7 @@ const moveShapeToDirection = curry((shape: Shape, game: BlasteroidGame) => {
   return game
 })
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const debug = curry((message: string, v: any) => {
   console.log('debug:', message)
   return v
