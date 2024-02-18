@@ -20,20 +20,15 @@
 
 <script lang="ts" setup>
 import partial from 'lodash/partial'
+import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
+import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
+import { keyboard } from '~/src/Common/cpu/utils/keyboard'
+import { refState } from '~/src/Common/cpu/utils/state'
+import { MGrid } from '~/src/Common/Models/MGrid'
+import { EKeyCode, EMoveDirection } from '~/src/Common/Types/GameTypes'
+import { useBlasteroid } from '~~/src/Blasteroid/cpu/composables/useBlasteroid'
 import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
-import {
-  EKeyCode,
-  EMoveDirection,
-  KeysToMoveMap,
-} from '~/src/Common/Types/GameTypes'
-import { MGrid } from '~/src/Common/Models/MGrid'
-import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
-import { refState } from '~/src/Common/cpu/utils/state'
-import { timer } from '~/src/Common/cpu/utils/timer'
-import { keyboard } from '~/src/Common/cpu/utils/keyboard'
-import { useBlasteroid } from '~~/src/Blasteroid/cpu/composables/useBlasteroid'
 
 const gameSettings = ref<GameSettings>({
   isGameOver: false,
@@ -53,18 +48,13 @@ const gameGrid = ref<GameGrid>({
 
 const actions = useBlasteroid(
   partial(refState, gameSettings),
-  partial(refState, gameGrid),
-  timer
+  partial(refState, gameGrid)
 )
 actions.start()
 
 keyboard((key: EKeyCode) => {
-  if (EKeyCode.W === key) {
-    actions.direction(KeysToMoveMap[key])
-  }
-
-  if (EKeyCode.S === key) {
-    actions.moveDown()
+  if (key === EKeyCode.SPC) {
+    actions.shoot()
   }
 
   if (key === EKeyCode.A) {
