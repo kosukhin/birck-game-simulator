@@ -86,7 +86,7 @@ const startGame = (game: Game) =>
     chain(ensureNotGameOver),
     chain(ensureNotPaused),
     map(renderGameFrame),
-    repeat(game.settings.speed)
+    repeat(() => game.settings.speed)
   ).do()
 
 const renderGameFrame = (game: BlasteroidGame) => {
@@ -110,7 +110,7 @@ const createEnemy = (game: BlasteroidGame) => {
   const enemyShapeIndex = HMath.random(0, enemies.length - 1)
   game.enemy = {
     x: HMath.random(0, game.grid.gameSize.width - 5),
-    y: 0,
+    y: -1,
     height: 3,
     direction: EMoveDirection.down,
     blocks: enemies[enemyShapeIndex].map((blockShape) => ({
@@ -119,7 +119,12 @@ const createEnemy = (game: BlasteroidGame) => {
       group,
     })),
   }
+  game.enemy.height = calculateShapeHeight(game.enemy)
   renderShapeToGrid(game.enemy, game.grid)
+}
+
+const calculateShapeHeight = (shape: Shape) => {
+  return Math.max(...shape.blocks.map((block) => block.y - shape.y))
 }
 
 const enemies = [
@@ -185,8 +190,23 @@ const enemies = [
     { x: 2, y: 4 },
   ],
   [
-    { x: 1, y: 0 },
-    { x: 3, y: 0 },
+    { x: 0, y: 0 },
+    { x: 2, y: 0 },
+    { x: 4, y: 0 },
+    { x: 1, y: 1 },
+    { x: 2, y: 1 },
+    { x: 3, y: 1 },
+    { x: 0, y: 2 },
+    { x: 1, y: 2 },
+    { x: 2, y: 2 },
+    { x: 3, y: 2 },
+    { x: 4, y: 2 },
+    { x: 1, y: 3 },
+    { x: 2, y: 3 },
+    { x: 3, y: 3 },
+    { x: 0, y: 4 },
+    { x: 2, y: 4 },
+    { x: 4, y: 4 },
   ],
 ]
 
@@ -217,6 +237,7 @@ const checkEnemyShooted = curry((shoot: Shape, game: BlasteroidGame) => {
       shootBlock.y === block.y
     ) {
       game.settings.score += 1
+      game.settings.speed -= 1
       shoot.y -= 100
       return false
     }
@@ -303,13 +324,15 @@ const renderShapeToGrid = (shape: Shape, grid: GameGrid) => {
   grid.blocks.push(...shape.blocks)
 }
 
-const moveEnemyDown = (game: BlasteroidGame) => {}
-
-const repeat = (milliseconds: number) => (context: LazyMonad) => {
+const repeat = (milliseconds: Function | number) => (context: LazyMonad) => {
   context.lazyMap((v) => {
+    let ms = milliseconds
+    if (typeof milliseconds === 'function') {
+      ms = milliseconds()
+    }
     setTimeout(() => {
       context.do()
-    }, milliseconds)
+    }, ms as number)
     return v
   })
   return context
@@ -351,10 +374,4 @@ const moveShapeToDirection = curry((shape: Shape, game: BlasteroidGame) => {
   })
 
   return game
-})
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const debug = curry((message: string, v: any) => {
-  console.log('debug:', message)
-  return v
 })
