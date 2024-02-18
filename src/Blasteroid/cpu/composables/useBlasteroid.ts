@@ -90,6 +90,7 @@ const startGame = (game: Game) =>
   ).do()
 
 const renderGameFrame = (game: BlasteroidGame) => {
+  game.settings.frameCounter += 1
   pipe(some(game), chain(ensureFieldIsNull('enemy')), map(createEnemy)).do()
   game.enemy &&
     pipe(
