@@ -1,4 +1,4 @@
-import { Block } from '~~/src/Common/cpu/providers/types/Block'
+import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
 import { EMoveDirection } from '~/src/Common/Types/GameTypes'
 
 export interface GameSettings {
@@ -23,4 +23,9 @@ export interface GameGrid {
 export interface Game {
   settings: GameSettings
   grid: GameGrid
+}
+
+export interface ShapeInGame {
+  shape: Shape
+  game: Game
 }
