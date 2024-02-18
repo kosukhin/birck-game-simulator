@@ -2,13 +2,14 @@ import { curry, uniqueId } from 'lodash'
 import {
   LazyMonad,
   map,
+  tap,
   chain,
   none,
   pipe,
   some,
 } from './../../../Common/Library/adt'
 import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
-import { Shape } from '~~/src/Common/cpu/providers/types/Block'
+import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
 import {
   Game,
   GameGrid,
@@ -57,14 +58,19 @@ export const useBlasteroid = (
       if (!game.blasteroid) {
         return
       }
-      const shoot = createShoot(game.blasteroid, game)
-      pipe(
-        some(game),
-        chain(ensureShapeInBoundsByYAxis(shoot)),
-        map(debug('shoot going')),
-        map(moveShapeToDirection(shoot)),
-        repeat(50)
-      ).do()
+      const shoot = createShoot(game.blasteroid, 0, game)
+      const shoot2 = createShoot(game.blasteroid, 2, game)
+
+      ;[shoot, shoot2].forEach((currentShoot) => {
+        pipe(
+          some(game),
+          chain(ensureShapeInBoundsByYAxis(currentShoot)),
+          map(moveShapeToDirection(currentShoot)),
+          map(checkEnemyShooted(currentShoot)),
+          tap(removeShootIfStopped(currentShoot, game)),
+          repeat(50)
+        ).do()
+      })
     },
   }
 }
@@ -103,10 +109,16 @@ const createEnemy = (game: BlasteroidGame) => {
   renderShapeToGrid(game.enemy, game.grid)
 }
 
-const createShoot = (fromShape: Shape, game: BlasteroidGame) => {
+const createShoot = (
+  fromShape: Shape,
+  xDelta: number,
+  game: BlasteroidGame
+) => {
   const shoot: Shape = {
-    x: fromShape.x,
+    x: fromShape.x + xDelta,
     y: fromShape.y,
+    height: 1,
+    width: 1,
     direction: EMoveDirection.up,
     blocks: [{ x: 0, y: 0, id: uniqueId('shoot_'), group: 'shoot' }],
   }
@@ -114,6 +126,38 @@ const createShoot = (fromShape: Shape, game: BlasteroidGame) => {
 
   return shoot
 }
+
+const checkEnemyShooted = curry((shoot: Shape, game: BlasteroidGame) => {
+  const shootBlock = shoot.blocks[0] as Block
+  game.grid.blocks = game.grid.blocks.filter((block) => {
+    if (
+      block.group === 'enemy' &&
+      shootBlock.x === block.x &&
+      shootBlock.y === block.y
+    ) {
+      game.settings.score += 1
+      shoot.y -= 100
+      return false
+    }
+    return true
+  })
+
+  if (!game.grid.blocks.some((block) => block.group === 'enemy')) {
+    game.enemy = null
+  }
+
+  return game
+})
+
+const removeShootIfStopped = curry(
+  (shoot: Shape, game: BlasteroidGame, context: unknown | null) => {
+    if (context === null) {
+      game.grid.blocks = game.grid.blocks.filter(
+        (block) => block.id !== shoot.blocks[0]?.id
+      )
+    }
+  }
+)
 
 const ensureFieldIsNull = curry(
   (field: keyof BlasteroidGame, game: BlasteroidGame) => {
@@ -219,11 +263,13 @@ const moveShapeToDirection = curry((shape: Shape, game: BlasteroidGame) => {
   shape.x += step.xDelta
   shape.y += step.yDelta
   game.grid.blocks.forEach((block) => {
-    if (block.group === shape.blocks[0].group) {
+    if (shape.blocks.some((shapeBlock) => shapeBlock.id === block.id)) {
       block.x += step.xDelta
       block.y += step.yDelta
     }
   })
+
+  return game
 })
 
 const debug = curry((message: string, v: any) => {

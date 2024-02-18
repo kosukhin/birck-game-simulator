@@ -9,6 +9,7 @@ export const doMonad = (v: LazyMonad): LazyMonad => v.do()
 export const map = (fn: AnyFn) => (context: LazyMonad) => context.lazyMap(fn)
 export const chain = (fn: AnyFn) => (context: LazyMonad) =>
   context.lazyChain(fn)
+export const tap = (fn: AnyFn) => (context: LazyMonad) => context.lazyTap(fn)
 
 export const monad = (v: any) => new LazyMonad(v)
 export class LazyMonad {
@@ -59,6 +60,17 @@ export class LazyMonad {
 
   protected map(fn: (value: any) => any) {
     this.value = fn(this.value)
+    return this
+  }
+
+  // Выполняет колбэк в цепочке монады, но колбэк не влияет на цепочку монады
+  lazyTap(fn: (value: any) => void) {
+    const lastExecutor = this.executor
+    this.executor = (v: any) => {
+      const monad = lastExecutor(v) as LazyMonad
+      fn(monad.unSafeValue)
+      return monad
+    }
     return this
   }
 
