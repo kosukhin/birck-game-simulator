@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash'
+import { curry, uniqueId } from 'lodash'
 import {
   LazyMonad,
   map,
@@ -34,6 +34,11 @@ export const useBlasteroid = (
 
   return {
     start() {
+      pipe(
+        some(game),
+        chain(ensureFieldIsNull('blasteroid')),
+        map(createBlasteroid)
+      ).do()
       startGame(game)
     },
     pause() {
@@ -41,9 +46,16 @@ export const useBlasteroid = (
       !game.settings.isPaused && startGame(game)
     },
     moveByX(step: number) {
-      moveBlasteroidByX(step, game)
+      game.blasteroid &&
+        pipe(
+          some(game),
+          chain(ensureShapeInBoundsByXAxis(game.blasteroid, step)),
+          map(moveBlasteroidByX(step))
+        ).do()
     },
-    shoot() {},
+    shoot() {
+      console.log('shoot')
+    },
   }
 }
 
@@ -57,45 +69,78 @@ const startGame = (game: Game) =>
   ).do()
 
 const renderGameFrame = (game: BlasteroidGame) => {
-  createBlasteroidIfNeed(game)
-  createEnemyIfNeed()
+  pipe(some(game), chain(ensureFieldIsNull('enemy')), map(createEnemy)).do()
   moveEnemyDown()
   console.log('render frame')
 }
 
-const createEnemyIfNeed = () => {
+const createEnemy = (game: BlasteroidGame) => {
   console.log('create enemy')
-}
 
-const createBlasteroidIfNeed = (game: BlasteroidGame) => {
-  if (!game.blasteroid) {
-    game.blasteroid = {
-      x: 0,
-      y: game.grid.gameSize.height - 2,
-      direction: EMoveDirection.up,
-      blocks: [
-        { x: 1, y: 0, id: uniqueId('blas_'), group: 'blasteroid' },
-        { x: 0, y: 1, id: uniqueId('blas_'), group: 'blasteroid' },
-        { x: 1, y: 1, id: uniqueId('blas_'), group: 'blasteroid' },
-        { x: 2, y: 1, id: uniqueId('blas_'), group: 'blasteroid' },
-      ],
-    }
-
-    renderShapeToGrid(game.blasteroid, game.grid)
+  const enemyPrefix = 'enemy_'
+  const group = 'enemy'
+  game.enemy = {
+    x: Math.round(game.grid.gameSize.width / 2) - 2,
+    y: 0,
+    direction: EMoveDirection.up,
+    width: 3,
+    height: 2,
+    blocks: [
+      { x: 1, y: 1, id: uniqueId(enemyPrefix), group },
+      { x: 0, y: 0, id: uniqueId(enemyPrefix), group },
+      { x: 1, y: 0, id: uniqueId(enemyPrefix), group },
+      { x: 2, y: 0, id: uniqueId(enemyPrefix), group },
+    ],
   }
+  renderShapeToGrid(game.enemy, game.grid)
 }
 
-const ensureShapeInBounds = () => {}
+const ensureFieldIsNull = curry(
+  (field: keyof BlasteroidGame, game: BlasteroidGame) => {
+    return game[field] === null ? some(game) : none()
+  }
+)
 
-const moveBlasteroidByX = (step: number, game: BlasteroidGame) => {
+const createBlasteroid = (game: BlasteroidGame) => {
+  game.blasteroid = {
+    x: 0,
+    y: game.grid.gameSize.height - 2,
+    direction: EMoveDirection.up,
+    width: 3,
+    height: 2,
+    blocks: [
+      { x: 1, y: 0, id: uniqueId('blas_'), group: 'blasteroid' },
+      { x: 0, y: 1, id: uniqueId('blas_'), group: 'blasteroid' },
+      { x: 1, y: 1, id: uniqueId('blas_'), group: 'blasteroid' },
+      { x: 2, y: 1, id: uniqueId('blas_'), group: 'blasteroid' },
+    ],
+  }
+  renderShapeToGrid(game.blasteroid, game.grid)
+}
+
+const ensureShapeInBoundsByXAxis = curry(
+  (shape: Shape, xDelta: number, game: BlasteroidGame) => {
+    const nextX = shape.x + xDelta
+    const shapeWidth = shape.width ?? 1
+
+    return nextX >= 0 && nextX + shapeWidth <= game.grid.gameSize.width
+      ? some(game)
+      : none()
+  }
+)
+
+const moveBlasteroidByX = curry((step: number, game: BlasteroidGame) => {
+  game.blasteroid && (game.blasteroid.x += step)
   game.grid.blocks.forEach((block) => {
     if (block.group === 'blasteroid') {
       block.x += step
     }
   })
-}
+})
 
 const renderShapeToGrid = (shape: Shape, grid: GameGrid) => {
+  console.log('render shape', shape.blocks[0].group)
+
   shape.blocks.forEach((block) => {
     block.x += shape.x
     block.y += shape.y

@@ -22,4 +22,6 @@ export interface Shape {
   y: number
   direction: EMoveDirection
   blocks: Block[]
+  width?: number
+  height?: number
 }
