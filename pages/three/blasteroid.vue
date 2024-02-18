@@ -49,7 +49,7 @@ const gameSettings = ref<GameSettings>({
   frameCounter: 1,
   isGameOver: false,
   score: 0,
-  speed: 300,
+  speed: 400,
   isPaused: false,
   direction: EMoveDirection.right,
 })

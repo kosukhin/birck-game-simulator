@@ -120,12 +120,16 @@ const createEnemy = (game: BlasteroidGame) => {
       group,
     })),
   }
-  game.enemy.height = calculateShapeHeight(game.enemy)
   renderShapeToGrid(game.enemy, game.grid)
+  game.enemy.height = calculateShapeHeight(game.enemy, game)
 }
 
-const calculateShapeHeight = (shape: Shape) => {
-  return Math.max(...shape.blocks.map((block) => block.y - shape.y))
+const calculateShapeHeight = (shape: Shape, game: BlasteroidGame) => {
+  const shapeBlock = shape.blocks[0]
+  const shapeBlocks = game.grid.blocks.filter(
+    (block) => block.group === shapeBlock.group
+  )
+  return Math.max(...shapeBlocks.map((block) => block.y - shape.y)) + 1
 }
 
 const enemies = [
@@ -240,6 +244,7 @@ const checkEnemyShooted = curry((shoot: Shape, game: BlasteroidGame) => {
       game.settings.score += 1
       game.settings.speed -= 1
       shoot.y -= 100
+      game.enemy && (game.enemy.height = calculateShapeHeight(game.enemy, game))
       return false
     }
     return true
