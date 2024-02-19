@@ -1,11 +1,13 @@
 import * as THREE from 'three'
 import { Color, Mesh } from 'three'
 import { baseSize } from '~/src/Common/Constants/Three'
-import { reactOn } from '~/src/Common/Library/I'
+import { reactOn } from '~/src/common/library/I'
 import { Cube } from '~/src/Snake/Models'
 import { FloorModel } from '~~/app/appModules/common/floor/floorModel'
 import { Scene } from '~~/app/appModules/common/scene/scene'
-import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
+
+const baseSize = 10
 
 export class RenderService {
   additional: number = 1

@@ -1,5 +1,5 @@
 import { BaseModel } from '~/src/Base/BaseModel'
-import { EMoveDirection } from '~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
 import { Point } from '~/src/Snake/Models'
 
 export class Tick extends BaseModel {

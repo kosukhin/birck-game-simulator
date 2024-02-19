@@ -1,5 +1,5 @@
-import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
-import { EMoveDirection } from '~/src/Common/Types/GameTypes'
+import { Block, Shape } from '~~/src/common/types/Block'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
 
 export interface GameSettings {
   frameCounter: number

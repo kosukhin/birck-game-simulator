@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { useService } from '~~/src/Common/Helpers/HService'
+import { useService } from '~~/src/common/utils/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 
 const keyboard = useService<SKeyboard>('keyboard')

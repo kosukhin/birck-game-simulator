@@ -1,5 +1,5 @@
 import merge from 'lodash.merge'
-import { HLog } from '~~/src/Common/Helpers/HLog'
+import { HLog } from '~~/src/common/utils/HLog'
 
 export class HObjects {
   static clone(object: any): any {

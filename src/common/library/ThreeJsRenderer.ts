@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { MGrid } from '~/src/Common/Models/MGrid'
+import { MGrid } from '~~/src/common/models/MGrid'
 
 export class ThreeJsRenderer {
   #grid: MGrid

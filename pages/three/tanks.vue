@@ -12,8 +12,7 @@
       />
     </div>
     <div class="grid-header text-center">
-      {{ 'Score' }}: {{ gameSettings.score }},
-      {{ 'Speed' }}:
+      {{ 'Score' }}: {{ gameSettings.score }}, {{ 'Speed' }}:
       {{ gameSettings.speed }}
     </div>
     <ThreeDView
@@ -34,18 +33,18 @@
 
 <script setup lang="ts">
 import partial from 'lodash/partial'
-import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import ThreeDView from '~/src/Common/Components/ThreeDView/ThreeDView.vue'
-import { Camera } from '~/src/Common/cpu/providers/types/Camera'
-import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
-import { keyboard } from '~/src/Common/cpu/utils/keyboard'
-import { refState } from '~/src/Common/cpu/utils/state'
-import { timer } from '~/src/Common/cpu/utils/timer'
+import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
+import ThreeDView from '~~/src/common/components/ThreeDView/ThreeDView.vue'
+import { Camera } from '~~/src/common/types/Camera'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
+import { keyboard } from '~~/src/common/utils/keyboard'
+import { refState } from '~~/src/common/utils/state'
+import { timer } from '~~/src/common/utils/timer'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
-} from '~/src/Common/Types/GameTypes'
+} from '~~/src/common/types/GameTypes'
 import { useTanks } from '~~/src/Tanks/cpu/composables/useTanks'
 
 const gameSettings = ref<GameSettings>({

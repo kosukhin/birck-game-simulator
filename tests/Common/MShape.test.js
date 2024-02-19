@@ -1,4 +1,4 @@
-import { MShape } from '~~/src/Common/Models/MShape'
+import { MShape } from '~~/src/common/models/MShape'
 
 test('clear empty rows', () => {
   const shape = new MShape({

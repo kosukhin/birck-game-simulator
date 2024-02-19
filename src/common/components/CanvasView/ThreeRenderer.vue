@@ -6,8 +6,8 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import { MGrid } from '~~/src/Common/Models/MGrid'
-import { ThreeJsRenderer } from '~~/src/Common/Library/ThreeJsRenderer'
+import { MGrid } from '~~/src/common/models/MGrid'
+import { ThreeJsRenderer } from '~~/src/common/library/ThreeJsRenderer'
 
 const props = defineProps({
   grid: {

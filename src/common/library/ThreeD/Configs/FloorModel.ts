@@ -1,5 +1,5 @@
 import { BaseModel } from '~~/src/Common/Config/Model'
-import { TShapePosition } from '~~/src/Common/Types/GridTypes'
+import { TShapePosition } from '~~/src/common/types/GridTypes'
 
 export class FloorModel extends BaseModel {
   constructor(

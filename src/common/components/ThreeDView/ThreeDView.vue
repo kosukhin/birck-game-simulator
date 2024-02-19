@@ -9,15 +9,15 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import partial from 'lodash/partial'
-import { GameGrid } from '~/src/Common/cpu/providers/types/Game'
-import { Camera } from '~/src/Common/cpu/providers/types/Camera'
-import { RenderService } from '~/src/Common/Library/ThreeD/Services/RenderService'
+import { GameGrid } from '~~/src/common/types/Game'
+import { Camera } from '~~/src/common/types/Camera'
+import { RenderService } from '~/src/common/library/ThreeD/Services/RenderService'
 import { onTick } from '~/src/Snake/Services/render'
 import { Floor } from '~/app/appModules/common/floor'
 import { floorTexture } from '~/src/Snake/Constants/textures'
 import { renderTick } from '~/app/appModules/tick'
-import { EMoveDirection } from '~/src/Common/Types/GameTypes'
-import { Block } from '~~/src/Common/cpu/providers/types/Block'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
+import { Block } from '~~/src/common/types/Block'
 
 const props = defineProps({
   speed: {

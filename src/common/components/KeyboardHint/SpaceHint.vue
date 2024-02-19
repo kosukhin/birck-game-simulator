@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useService } from '~~/src/Common/Helpers/HService'
+import { useService } from '~~/src/common/utils/HService'
 import { SKeyboard } from '~~/src/Common/Services/SKeyboard'
 
 const onKeyPress = (keyCode: string) => {

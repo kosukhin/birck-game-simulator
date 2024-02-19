@@ -20,8 +20,8 @@
 
 <script lang="ts" setup>
 import { Ref } from 'vue'
-import { HApp } from '~~/src/Common/Helpers/HApp'
-import { useService } from '~~/src/Common/Helpers/HService'
+import { HApp } from '~~/src/common/utils/HApp'
+import { useService } from '~~/src/common/utils/HService'
 import { IDrawer, SDrawer } from '~~/src/Common/Services/SDrawer'
 
 const drawersHashNotReactive: Record<string, IDrawer> = {}

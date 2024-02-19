@@ -1,5 +1,5 @@
 import { Ref } from 'vue'
-import { State } from '~~/src/Common/cpu/utils/system'
+import { State } from '~~/src/common/utils/system'
 
 export const refState = <T>(ref: Ref<T>): State<T> => {
   return {

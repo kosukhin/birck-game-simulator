@@ -1,4 +1,4 @@
-import { HService } from '~~/src/Common/Helpers/HService'
+import { HService } from '~~/src/common/utils/HService'
 import { SLogger } from '~~/src/Common/Services/SLogger'
 
 export class HLog {

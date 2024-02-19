@@ -1,4 +1,4 @@
-import { EKeyCode } from '~/src/Common/Types/GameTypes'
+import { EKeyCode } from '~~/src/common/types/GameTypes'
 
 export const keyboard = (cb: (key: EKeyCode) => void) => {
   window.addEventListener('keypress', (e) => {

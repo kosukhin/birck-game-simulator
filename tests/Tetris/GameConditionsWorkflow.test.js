@@ -1,4 +1,4 @@
-import { MShape } from '~~/src/Common/Models/MShape'
+import { MShape } from '~~/src/common/models/MShape'
 import { WfTetrisConditions } from '~~/src/Tetris/Workflows/WfTetrisConditions'
 import { WfTetris } from '~~/src/Tetris/Workflows/WfTetris'
 

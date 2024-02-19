@@ -1,4 +1,4 @@
-import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
 import { WfTanks } from '~~/src/Tanks/Workflows/WfTanks'
 
 jest.useFakeTimers()

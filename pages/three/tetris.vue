@@ -12,8 +12,7 @@
       />
     </div>
     <div class="grid-header text-center">
-      {{ 'Score' }}: {{ gameSettings.score }},
-      {{ 'Speed' }}:
+      {{ 'Score' }}: {{ gameSettings.score }}, {{ 'Speed' }}:
       {{ gameSettings.speed }}
     </div>
     <ThreeDView
@@ -34,18 +33,18 @@
 
 <script setup lang="ts">
 import partial from 'lodash/partial'
-import KeyboardHint from '~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import ThreeDView from '~/src/Common/Components/ThreeDView/ThreeDView.vue'
-import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
-import { refState } from '~/src/Common/cpu/utils/state'
-import { timer } from '~/src/Common/cpu/utils/timer'
+import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
+import ThreeDView from '~~/src/common/components/ThreeDView/ThreeDView.vue'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
+import { refState } from '~~/src/common/utils/state'
+import { timer } from '~~/src/common/utils/timer'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
-} from '~/src/Common/Types/GameTypes'
-import { Camera } from '~/src/Common/cpu/providers/types/Camera'
-import { keyboard } from '~/src/Common/cpu/utils/keyboard'
+} from '~~/src/common/types/GameTypes'
+import { Camera } from '~~/src/common/types/Camera'
+import { keyboard } from '~~/src/common/utils/keyboard'
 import { useTetris } from '~/src/Tetris/cpu/composables/useTetris'
 
 const gameSettings = ref<GameSettings>({

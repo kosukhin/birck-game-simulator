@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import partial from 'lodash/partial'
 import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
-import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import KeyboardHint from '~~/src/common/сomponents/KeyboardHint/KeyboardHint.vue'
 import { useSnake } from '~~/src/snake/modules/snakeGame'
 import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 import { refState } from '~~/src/common/utils/state'
@@ -30,7 +30,7 @@ import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
-} from '~/src/Common/Types/GameTypes'
+} from '~~/src/common/types/GameTypes'
 import { MGrid } from '~~/src/common/models/MGrid'
 import { keyboard } from '~~/src/common/utils/keyboard'
 

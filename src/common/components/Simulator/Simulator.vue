@@ -22,11 +22,11 @@
 <script lang="ts" setup>
 import load from 'load-script'
 import { Platform } from '@element-plus/icons-vue'
-import { useService } from '~~/src/Common/Helpers/HService'
+import { useService } from '~~/src/common/utils/HService'
 import { SHooks } from '~~/src/Common/Services/SHooks'
-import NoGame from '~~/src/Common/Components/Simulator/NoGame.vue'
+import NoGame from '~~/src/common/components/Simulator/NoGame.vue'
 import { SConfig } from '~~/src/Common/Services/SConfig'
-import { MGrid } from '~~/src/Common/Models/MGrid'
+import { MGrid } from '~~/src/common/models/MGrid'
 
 let grid: MGrid | undefined
 const gamesList = {

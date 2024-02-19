@@ -1,4 +1,4 @@
-import { Observable } from '~~/src/Common/Library/Observable'
+import { Observable } from '~~/src/common/library/Observable'
 
 export class WebWorker {
   onmessage = new Observable<(event) => void>()

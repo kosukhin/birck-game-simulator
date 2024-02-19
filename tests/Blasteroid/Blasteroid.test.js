@@ -1,5 +1,5 @@
 import { WfBlasteroid } from '~~/src/Blasteroid/Workflows/WfBlasteroid'
-import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
 
 jest.useFakeTimers()
 

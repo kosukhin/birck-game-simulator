@@ -4,10 +4,10 @@ import {
   GameGrid,
   GameSettings,
 } from './../../../Common/cpu/providers/types/Game'
-import { Intention } from '~~/src/Common/Library/Intention'
-import { Block, Shape } from '~~/src/Common/cpu/providers/types/Block'
-import { FType, State } from '~~/src/Common/cpu/utils/system'
-import { HMath } from '~~/src/Common/Helpers/HMath'
+import { Intention } from '~~/src/common/library/Intention'
+import { Block, Shape } from '~~/src/common/types/Block'
+import { FType, State } from '~~/src/common/utils/system'
+import { HMath } from '~~/src/common/utils/HMath'
 
 export const useTanks = (
   getGameSettings: FType<State<GameSettings>>,

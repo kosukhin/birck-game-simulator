@@ -1,4 +1,4 @@
-import { HArray } from '~~/src/Common/Helpers/HArray'
+import { HArray } from '~~/src/common/utils/HArray'
 
 test('array rotation', () => {
   const arr = [

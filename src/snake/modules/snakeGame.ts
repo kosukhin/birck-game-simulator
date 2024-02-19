@@ -1,10 +1,10 @@
 import partial from 'lodash/partial'
-import { GameGrid, GameSettings } from '~~/src/Common/cpu/providers/types/Game'
-import { FType, State } from '~~/src/Common/cpu/utils/system'
-import { Block } from '~~/src/Common/cpu/providers/types/Block'
-import { EMoveDirection } from '~/src/Common/Types/GameTypes'
-import { HMath } from '~/src/Common/Helpers/HMath'
-import { isReverseDirection } from '~/src/Common/cpu/utils/game'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
+import { FType, State } from '~~/src/common/utils/system'
+import { Block } from '~~/src/common/types/Block'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
+import { HMath } from '~~/src/common/utils/HMath'
+import { isReverseDirection } from '~~/src/common/utils/game'
 
 export const useSnake = (
   getGameSettings: FType<State<GameSettings>>,

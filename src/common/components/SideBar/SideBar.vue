@@ -37,9 +37,9 @@
 
 <script lang="ts" setup>
 import { StarFilled } from '@element-plus/icons-vue'
-import { useService } from '~~/src/Common/Helpers/HService'
+import { useService } from '~~/src/common/utils/HService'
 import { SDrawer } from '~~/src/Common/Services/SDrawer'
-import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
+import LangChanger from '~~/src/common/components/LangChanger/LangChanger.vue'
 
 const afterClick = () => {
   useService<SDrawer>('drawer').close('menu')

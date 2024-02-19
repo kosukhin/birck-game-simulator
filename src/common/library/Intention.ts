@@ -1,4 +1,4 @@
-import { Functor } from '~/src/Common/Library/Functor'
+import { Functor } from '~/src/common/library/Functor'
 
 type Predicate = (value: any) => boolean
 

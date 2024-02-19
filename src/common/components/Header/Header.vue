@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { Menu } from '@element-plus/icons-vue'
-import { useService } from '~~/src/Common/Helpers/HService'
+import { useService } from '~~/src/common/utils/HService'
 import { SDrawer } from '~~/src/Common/Services/SDrawer'
 
 const openMenu = () => {
@@ -26,7 +26,7 @@ const openMenu = () => {
     name: 'menu',
     component: () =>
       defineAsyncComponent(
-        () => import('~~/src/Common/Components/SideBar/SideBar.vue')
+        () => import('~~/src/common/components/SideBar/SideBar.vue')
       ),
     direction: 'rtl',
     options: [],

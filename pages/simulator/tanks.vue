@@ -9,8 +9,7 @@
     </div>
     <RouterLink to="/three/tanks">Танки 3д</RouterLink>
     <div class="grid-header">
-      {{ 'Score' }}: {{ settings.score }},
-      {{ 'Speed' }}:
+      {{ 'Score' }}: {{ settings.score }}, {{ 'Speed' }}:
       {{ settings.speed }}
     </div>
     <CanvasView :fps="10" :grid="grid" />
@@ -20,20 +19,20 @@
 
 <script lang="ts" setup>
 import partial from 'lodash/partial'
-import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
-import { keyboard } from '~/src/Common/cpu/utils/keyboard'
-import { MGrid } from '~/src/Common/Models/MGrid'
+import { gameGridToMGrid } from '~/src/common/utils/game'
+import { keyboard } from '~/src/common/utils/keyboard'
+import { MGrid } from '~~/src/common/models/MGrid'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
-} from '~/src/Common/Types/GameTypes'
-import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
-import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { GameGrid, GameSettings } from '~~/src/Common/cpu/providers/types/Game'
-import { refState } from '~~/src/Common/cpu/utils/state'
-import { timer } from '~~/src/Common/cpu/utils/timer'
-import { useTanks } from '~~/src/Tanks/cpu/composables/useTanks'
+} from '~~/src/common/types/GameTypes'
+import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
+import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
+import { refState } from '~~/src/common/utils/state'
+import { timer } from '~~/src/common/utils/timer'
+import { useTanks } from '~~/src/tanks/modules/tanksGame'
 
 const settings = ref<GameSettings>({
   isGameOver: false,

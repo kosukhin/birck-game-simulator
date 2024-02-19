@@ -1,3 +1,3 @@
-import { createEffect } from '~/src/Common/Library/effect'
+import { createEffect } from '~/src/common/library/effect'
 
 export const sceneEffect = createEffect()

@@ -1,5 +1,5 @@
 import { Euler, Vector3 } from 'three'
-import { EKeyCode, EMoveDirection } from '~/src/Common/Types/GameTypes'
+import { EKeyCode, EMoveDirection } from '~~/src/common/types/GameTypes'
 import { BaseModel } from '~/src/Base/BaseModel'
 
 export class CameraModel extends BaseModel {

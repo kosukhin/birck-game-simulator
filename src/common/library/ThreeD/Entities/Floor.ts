@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { TShapePosition } from '~~/src/Common/Types/GridTypes'
+import { TShapePosition } from '~~/src/common/types/GridTypes'
 
 export function floor(
   texturePath: string,

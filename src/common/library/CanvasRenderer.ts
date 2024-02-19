@@ -1,7 +1,5 @@
-import { HLog } from '~~/src/Common/Helpers/HLog'
-import { useService } from '~~/src/Common/Helpers/HService'
-import { MGrid } from '~~/src/Common/Models/MGrid'
-import { SConnectors } from '~~/src/Common/Services/SConnectors'
+import { HLog } from '~~/src/common/utils/HLog'
+import { MGrid } from '~~/src/common/models/MGrid'
 
 const DOT_SIZE = 12
 
@@ -9,7 +7,7 @@ export class CanvasRenderer {
   #grid: MGrid
   #fps: number
   #canvas!: HTMLCanvasElement
-  #renderingIntervalPointer = null
+  #renderingIntervalPointer: any = null
   #ctx!: CanvasRenderingContext2D
 
   constructor(grid: MGrid, fps: number) {
@@ -33,17 +31,16 @@ export class CanvasRenderer {
       this.#canvas.height = Number(
         this.#grid.height * DOT_SIZE + this.#grid.height
       )
-      this.#ctx = this.#canvas.getContext('2d')
+      const context = this.#canvas.getContext('2d')
+      context && (this.#ctx = context)
 
       const delay = Math.round(1000 / this.#fps)
       const renderCycle = () => {
         this.#renderingIntervalPointer = setTimeout(() => {
-          useService<SConnectors>('connectors').browser.requestAnimationFrame(
-            () => {
-              this.renderFrame()
-              renderCycle()
-            }
-          )
+          requestAnimationFrame(() => {
+            this.renderFrame()
+            renderCycle()
+          })
         }, delay)
       }
       renderCycle()

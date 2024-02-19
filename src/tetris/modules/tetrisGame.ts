@@ -1,9 +1,9 @@
 import { random, uniqueId } from 'lodash'
-import { FType, State } from '~/src/Common/cpu/utils/system'
-import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
-import { Block } from '~/src/Common/cpu/providers/types/Block'
-import { EMoveDirection } from '~/src/Common/Types/GameTypes'
-import { Intention } from '~/src/Common/Library/Intention'
+import { FType, State } from '~~/src/common/utils/system'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
+import { Block } from '~~/src/common/types/Block'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
+import { Intention } from '~/src/common/library/Intention'
 
 type Rotation = '0' | '1' | '2' | '3'
 

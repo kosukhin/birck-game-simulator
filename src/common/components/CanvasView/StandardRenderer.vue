@@ -4,8 +4,8 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from 'vue'
-import { CanvasRenderer } from '~~/src/Common/Library/CanvasRenderer'
-import { MGrid } from '~~/src/Common/Models/MGrid'
+import { CanvasRenderer } from '~~/src/common/library/CanvasRenderer'
+import { MGrid } from '~~/src/common/models/MGrid'
 
 const props = defineProps({
   grid: {

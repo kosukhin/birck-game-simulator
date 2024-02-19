@@ -1,10 +1,10 @@
-import { HApp } from '~~/src/Common/Helpers/HApp'
-import { Observable } from '~~/src/Common/Library/Observable'
-import { ShapeMover } from '~~/src/Common/Library/ShapeMover'
-import { MGrid } from '~~/src/Common/Models/MGrid'
-import { MShape } from '~~/src/Common/Models/MShape'
-import { EMoveDirection } from '~~/src/Common/Types/GameTypes'
-import { TShapePosition } from '~~/src/Common/Types/GridTypes'
+import { HApp } from '~~/src/common/utils/HApp'
+import { Observable } from '~~/src/common/library/Observable'
+import { ShapeMover } from '~~/src/common/library/ShapeMover'
+import { MGrid } from '~~/src/common/models/MGrid'
+import { MShape } from '~~/src/common/models/MShape'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
+import { TShapePosition } from '~~/src/common/types/GridTypes'
 
 const SHOOT_SPEED = 50
 

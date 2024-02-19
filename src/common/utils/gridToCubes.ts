@@ -1,4 +1,4 @@
-import { TGrid } from '~/src/Common/Types/GridTypes'
+import { TGrid } from '~~/src/common/types/GridTypes'
 
 type CubeDto = {
   isFilled: boolean

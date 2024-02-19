@@ -1,7 +1,7 @@
-import { GameGrid } from '~/src/Common/cpu/providers/types/Game'
-import { Block } from '~/src/Common/cpu/providers/types/Block'
-import { TGrid } from '~/src/Common/Types/GridTypes'
-import { EMoveDirection, ReverseDirections } from '~/src/Common/Types/GameTypes'
+import { GameGrid } from '~~/src/common/types/Game'
+import { Block } from '~~/src/common/types/Block'
+import { TGrid } from '~~/src/common/types/GridTypes'
+import { EMoveDirection, ReverseDirections } from '~~/src/common/types/GameTypes'
 
 export const gameGridToMGrid = (gameGrid: GameGrid): TGrid => {
   const bgBitmap: number[][] = []
