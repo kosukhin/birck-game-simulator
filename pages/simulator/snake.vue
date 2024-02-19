@@ -2,15 +2,14 @@
   <div class="game screen">
     <div v-if="settings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${$services.lang.t('Score')}: ${settings.score}`"
-        :title="$services.lang.t('Game over')"
+        :sub-title="`${'Score'}: ${settings.score}`"
+        :title="'Game over'"
         icon="error"
       />
     </div>
     <RouterLink to="/three/snake"> Змейка 3д</RouterLink>
     <div class="grid-header">
-      {{ $services.lang.t('Score') }}: {{ settings.score }},
-      {{ $services.lang.t('Speed') }}:
+      {{ 'Score' }}: {{ settings.score }}, {{ 'Speed' }}:
       {{ settings.speed }}
     </div>
     <CanvasView :fps="10" :grid="grid" />
@@ -20,20 +19,20 @@
 
 <script lang="ts" setup>
 import partial from 'lodash/partial'
-import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
+import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
-import { useSnake } from '~~/src/Snake/cpu/composables/useSnake'
-import { GameGrid, GameSettings } from '~~/src/Common/cpu/providers/types/Game'
-import { refState } from '~~/src/Common/cpu/utils/state'
-import { timer } from '~~/src/Common/cpu/utils/timer'
-import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
+import { useSnake } from '~~/src/snake/modules/snakeGame'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
+import { refState } from '~~/src/common/utils/state'
+import { timer } from '~~/src/common/utils/timer'
+import { gameGridToMGrid } from '~/src/common/utils/game'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
 } from '~/src/Common/Types/GameTypes'
-import { MGrid } from '~/src/Common/Models/MGrid'
-import { keyboard } from '~/src/Common/cpu/utils/keyboard'
+import { MGrid } from '~~/src/common/models/MGrid'
+import { keyboard } from '~~/src/common/utils/keyboard'
 
 const settings = ref<GameSettings>({
   isGameOver: false,

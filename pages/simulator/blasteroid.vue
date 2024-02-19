@@ -2,15 +2,14 @@
   <div class="game screen">
     <div v-if="gameSettings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${$services.lang.t('Score')}: ${gameSettings.score}`"
-        :title="$services.lang.t('Game over')"
+        :sub-title="`${'Score'}: ${gameSettings.score}`"
+        :title="'Game over'"
         icon="error"
       />
     </div>
     <RouterLink to="/three/blasteroid">Бластероид 3д</RouterLink>
     <div class="grid-header">
-      {{ $services.lang.t('Score') }}: {{ gameSettings.score }},
-      {{ $services.lang.t('Speed') }}:
+      {{ 'Score' }}: {{ gameSettings.score }}, {{ 'Speed' }}:
       {{ gameSettings.speed }}
     </div>
     <CanvasView :fps="10" :grid="grid" />
@@ -20,15 +19,15 @@
 
 <script lang="ts" setup>
 import partial from 'lodash/partial'
-import { GameGrid, GameSettings } from '~/src/Common/cpu/providers/types/Game'
-import { gameGridToMGrid } from '~/src/Common/cpu/utils/game'
-import { keyboard } from '~/src/Common/cpu/utils/keyboard'
-import { refState } from '~/src/Common/cpu/utils/state'
-import { MGrid } from '~/src/Common/Models/MGrid'
-import { EKeyCode, EMoveDirection } from '~/src/Common/Types/GameTypes'
-import { useBlasteroid } from '~~/src/Blasteroid/cpu/composables/useBlasteroid'
-import CanvasView from '~~/src/Common/Components/CanvasView/CanvasView.vue'
-import KeyboardHint from '~~/src/Common/Components/KeyboardHint/KeyboardHint.vue'
+import { GameGrid, GameSettings } from '~/src/common/types/Game'
+import { gameGridToMGrid } from '~/src/common/utils/game'
+import { keyboard } from '~/src/common/utils/keyboard'
+import { refState } from '~/src/common/utils/state'
+import { MGrid } from '~/src/common/models/MGrid'
+import { EKeyCode, EMoveDirection } from '~/src/common/types/GameTypes'
+import { useBlasteroid } from '~~/src/blasteroid/modules/blasteroidGame'
+import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
+import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
 
 const gameSettings = ref<GameSettings>({
   isGameOver: false,

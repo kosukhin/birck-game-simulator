@@ -5,31 +5,19 @@
     </div>
     <nuxt-link to="/offer/">
       <el-button class="footer__button">
-        {{ $services.lang.t('Offer game') }}
+        {{ 'Offer game' }}
       </el-button>
     </nuxt-link>
     <div class="middle footer-content">
       <div class="footer-column">
-        <nuxt-link to="/simulator/tetris/"
-          >{{ $services.lang.t('Tetris') }}
-        </nuxt-link>
-        <nuxt-link to="/simulator/snake/"
-          >{{ $services.lang.t('Snake') }}
-        </nuxt-link>
-        <nuxt-link to="/simulator/tanks/"
-          >{{ $services.lang.t('Tanks') }}
-        </nuxt-link>
+        <nuxt-link to="/simulator/tetris/">{{ 'Tetris' }} </nuxt-link>
+        <nuxt-link to="/simulator/snake/">{{ 'Snake' }} </nuxt-link>
+        <nuxt-link to="/simulator/tanks/">{{ 'Tanks' }} </nuxt-link>
       </div>
       <div class="footer-column">
-        <nuxt-link to="/about/"
-          >{{ $services.lang.t('About project') }}
-        </nuxt-link>
-        <nuxt-link to="/new-game/"
-          >{{ $services.lang.t('Create new game') }}
-        </nuxt-link>
-        <nuxt-link to="/documentation/"
-          >{{ $services.lang.t('Documentation') }}
-        </nuxt-link>
+        <nuxt-link to="/about/">{{ 'About project' }} </nuxt-link>
+        <nuxt-link to="/new-game/">{{ 'Create new game' }} </nuxt-link>
+        <nuxt-link to="/documentation/">{{ 'Documentation' }} </nuxt-link>
       </div>
       <div class="footer-column">
         <LangChanger />
@@ -38,9 +26,7 @@
     <div class="footer-bottom">
       <div class="middle">
         {{
-          $services.lang.t(
-            'It is allowed to use the Software free of charge without restrictions'
-          )
+          'It is allowed to use the Software free of charge without restrictions'
         }}
         , MIT &copy;
       </div>
@@ -49,8 +35,8 @@
 </template>
 
 <script setup>
-import Breadcrumbs from '~~/src/Common/Components/Breadcrumbs/Breadcrumbs.vue'
-import LangChanger from '~~/src/Common/Components/LangChanger/LangChanger.vue'
+import Breadcrumbs from '~~/src/common/components/Breadcrumbs/Breadcrumbs.vue'
+import LangChanger from '~~/src/common/components/LangChanger/LangChanger.vue'
 </script>
 
 <style lang="scss" scoped>

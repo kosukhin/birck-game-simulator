@@ -1,6 +1,6 @@
 <template>
   <b class="keyhint__text">
-    {{ $services.lang.t('Fire') }}
+    {{ 'Fire' }}
   </b>
   <div class="keyhint__row">
     <div class="key key--as5" @click="onKeyPress('Space')">

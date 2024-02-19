@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { PropType, ref } from 'vue'
-import StandardRenderer from '~~/src/Common/Components/CanvasView/StandardRenderer.vue'
+import StandardRenderer from '~~/src/common/components/CanvasView/StandardRenderer.vue'
 import { MGrid } from '~~/src/Common/Models/MGrid'
 import { useService } from '~~/src/Common/Helpers/HService'
 import { SCookies } from '~~/src/Common/Services/SCookies'

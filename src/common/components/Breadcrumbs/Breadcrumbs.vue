@@ -1,12 +1,11 @@
 <template>
   <el-breadcrumb
-    v-show="breadcrumbs.getLinks().length > 1"
-    :key="breadcrumbs.renderCounter.value"
+    v-show="breadcrumbs.length > 1"
     class="breadcrumbs"
     separator="/"
   >
     <el-breadcrumb-item
-      v-for="link in breadcrumbs.getLinks()"
+      v-for="link in breadcrumbs"
       :key="link.link"
       :to="link.link"
       >{{ link.text() }}
@@ -15,10 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useService } from '~~/src/Common/Helpers/HService'
-import { SBreadcrumbs } from '~~/src/Common/Services/SBreadcrumbs'
-
-const breadcrumbs = useService<SBreadcrumbs>('breadcrumbs')
+const breadcrumbs: any[] = []
 </script>
 
 <style lang="scss" scoped>

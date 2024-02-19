@@ -2,15 +2,15 @@
   <div class="game screen">
     <div v-if="gameSettings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${$services.lang.t('Score')}: ${gameSettings.score}`"
-        :title="$services.lang.t('Game over')"
+        :sub-title="`${'Score'}: ${gameSettings.score}`"
+        :title="'Game over'"
         icon="error"
       />
     </div>
     <RouterLink to="/three/tetris">Тетрис 3д</RouterLink>
     <div class="grid-header">
-      {{ $services.lang.t('Score') }}: {{ gameSettings.score }},
-      {{ $services.lang.t('Speed') }}:
+      {{ 'Score' }}: {{ gameSettings.score }},
+      {{ 'Speed' }}:
       {{ gameSettings.speed }}
     </div>
     <CanvasView :fps="10" :grid="grid" />

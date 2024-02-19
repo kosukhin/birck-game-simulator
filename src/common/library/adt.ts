@@ -13,7 +13,10 @@ export const tap = (fn: AnyFn) => (context: LazyMonad) => context.lazyTap(fn)
 
 export const monad = (v: any) => new LazyMonad(v)
 export class LazyMonad {
-  protected executor: any = (v: any) => this.of(v)
+  protected executor: any = (v: any, result: AnyFn) => {
+    result(this.of(v))
+  }
+
   protected value: any
 
   get unSafeValue() {
@@ -28,34 +31,47 @@ export class LazyMonad {
     this.value = value
   }
 
+  executorNextStep(fn: AnyFn) {
+    return fn()
+  }
+
   do() {
-    return this.executor(this.value)
+    this.executor(this.value, (res: LazyMonad) => {
+      this.value = res.unSafeValue
+    })
+    return this
   }
 
   of(value: any) {
     return new LazyMonad(value)
   }
 
-  protected chain(fn: (value: any) => LazyMonad) {
-    return fn(this.value)
-  }
-
   lazyChain(fn: (value: any) => LazyMonad) {
-    const lastExecutor = this.executor
-    this.executor = (v: any) => {
-      const monad = lastExecutor(v) as LazyMonad
-      return monad.chain(fn)
-    }
-    return this
+    return this.modifyExecutor('chain', fn)
   }
 
   lazyMap(fn: (value: any) => any) {
+    return this.modifyExecutor('map', fn)
+  }
+
+  lazyTap(fn: (value: any) => void) {
+    return this.modifyExecutor('tap', fn)
+  }
+
+  modifyExecutor(method: 'map' | 'chain' | 'tap', fn: AnyFn) {
     const lastExecutor = this.executor
-    this.executor = (v: any) => {
-      const monad = lastExecutor(v) as LazyMonad
-      return monad.map(fn)
+    this.executor = (v: any, result: (v: any) => void) => {
+      lastExecutor(v, (monad: LazyMonad) => {
+        monad.executorNextStep((replaceMonad?: LazyMonad) => {
+          result(replaceMonad ? replaceMonad[method](fn) : monad[method](fn))
+        })
+      })
     }
     return this
+  }
+
+  protected chain(fn: (value: any) => LazyMonad) {
+    return fn(this.value)
   }
 
   protected map(fn: (value: any) => any) {
@@ -63,14 +79,8 @@ export class LazyMonad {
     return this
   }
 
-  // Выполняет колбэк в цепочке монады, но колбэк не влияет на цепочку монады
-  lazyTap(fn: (value: any) => void) {
-    const lastExecutor = this.executor
-    this.executor = (v: any) => {
-      const monad = lastExecutor(v) as LazyMonad
-      fn(monad.unSafeValue)
-      return monad
-    }
+  protected tap(fn: (value: any, error?: any) => any) {
+    fn(this.value, this.getError())
     return this
   }
 
@@ -80,7 +90,7 @@ export class LazyMonad {
 
   throwIfError() {
     if (this.getError()) {
-      throw new Error(this.getError() ?? 'Unknown error')
+      throw new Error(String(this.getError()))
     }
   }
 }
@@ -134,26 +144,19 @@ export class Left extends None {
 export const io = (v: (value: any) => Promise<any>) => new IO(v)
 export class IO extends LazyMonad {
   private io: (value: any) => Promise<any>
+  executorNextStep(fn: AnyFn) {
+    this.io(this.value)
+      .then((value) => {
+        fn(value)
+      })
+      .catch((e) => {
+        fn(left(e.message))
+      })
+  }
 
   constructor(v: (value: any) => Promise<any>) {
     super(null)
     this.io = v
-  }
-
-  protected chain(fn: (value: any) => LazyMonad) {
-    this.io(this.value).then((value) => {
-      this.value = value
-      super.chain(fn)
-    })
-    return this
-  }
-
-  protected map(fn: (value: any) => any) {
-    this.io(this.value).then((value) => {
-      this.value = value
-      super.map(fn)
-    })
-    return this
   }
 
   of(value: any) {

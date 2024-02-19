@@ -1,41 +1,25 @@
 <template>
   <div class="offer middle">
-    <h1>{{ $services.lang.t('Offer a game') }}</h1>
+    <h1>{{ 'Offer a game' }}</h1>
     <div v-show="isSuccessSubmitted">
-      <el-result
-        icon="success"
-        :title="$services.lang.t('Thanks for offer')"
-      >
+      <el-result icon="success" :title="'Thanks for offer'">
         <template #extra>
           <div class="offer__description">
             <p>
-              {{
-                $services.lang.t(
-                  'Unfortunately, this is a demo form, but you can'
-                )
-              }}
+              {{ 'Unfortunately, this is a demo form, but you can' }}
             </p>
-            <p>
-              {{ $services.lang.t('send the results by email') }}:
-              kosuha606@gmail.com
-            </p>
+            <p>{{ 'send the results by email' }}: kosuha606@gmail.com</p>
           </div>
           <el-button type="primary" @click="submitAgain">
-            {{ $services.lang.t('Back') }}
+            {{ 'Back' }}
           </el-button>
           <el-table
             class="offer__result"
             :data="Object.entries(formState)"
             style="width: 100%"
           >
-            <el-table-column
-              prop="0"
-              :label="$services.lang.t('Field')"
-            />
-            <el-table-column
-              prop="1"
-              :label="$services.lang.t('Result')"
-            />
+            <el-table-column prop="0" :label="'Field'" />
+            <el-table-column prop="1" :label="'Result'" />
           </el-table>
         </template>
       </el-result>
@@ -48,33 +32,27 @@
     >
       <el-row :gutter="10">
         <el-col :span="12">
-          <el-form-item
-            :label="$services.lang.t('What is your name?')"
-            prop="name"
-          >
+          <el-form-item :label="'What is your name?'" prop="name">
             <el-input
               v-model="formState.name"
               name="name"
-              :placeholder="$services.lang.t('John Smith')"
+              :placeholder="'John Smith'"
             />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="$services.lang.t('Post')" prop="duty">
+          <el-form-item :label="'Post'" prop="duty">
             <el-input
               v-model="formState.duty"
               name="duty"
-              :placeholder="$services.lang.t('Developer')"
+              :placeholder="'Developer'"
             />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item
-            :label="$services.lang.t('Work experience, years')"
-            prop="expiriense"
-          >
+          <el-form-item :label="'Work experience, years'" prop="expiriense">
             <el-slider
               v-model="formState.expiriense"
               :max="20"
@@ -87,15 +65,12 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item
-            :label="$services.lang.t('Describe the offer')"
-            prop="description"
-          >
+          <el-form-item :label="'Describe the offer'" prop="description">
             <el-input
               v-model="formState.description"
               name="description"
               type="textarea"
-              :placeholder="`${$services.lang.t('Cool game')}...`"
+              :placeholder="`${'Cool game'}...`"
               :maxlength="800"
               show-word-limit
               rows="13"
@@ -110,7 +85,7 @@
             type="primary"
             @click="submitForm(formRef)"
           >
-            {{ $services.lang.t('Send') }}
+            {{ 'Send' }}
           </el-button>
         </el-col>
       </el-row>
@@ -119,11 +94,8 @@
 </template>
 
 <script lang="ts" setup>
-import {FormRules, FormInstance} from 'element-plus'
-import {useService} from '~~/src/Common/Helpers/HService'
-import {SLanguage} from '~~/src/Common/Services/SLanguage'
+import { FormRules, FormInstance } from 'element-plus'
 
-const lang = useService<SLanguage>('lang')
 const formRef = ref()
 const formState = reactive({
   name: '',
@@ -135,28 +107,28 @@ const formRules = reactive<FormRules>({
   name: [
     {
       required: true,
-      message: () => lang.t('Need your name'),
+      message: () => 'Need your name',
       trigger: 'blur',
     },
   ],
   duty: [
     {
       required: true,
-      message: () => lang.t('Need your post'),
+      message: () => 'Need your post',
       trigger: 'blur',
     },
   ],
   expiriense: [
     {
       required: true,
-      message: () => lang.t('Need your experience'),
+      message: () => 'Need your experience',
       trigger: 'blur',
     },
   ],
   description: [
     {
       required: true,
-      message: () => lang.t('Need description'),
+      message: () => 'Need description',
       trigger: 'blur',
     },
   ],

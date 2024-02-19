@@ -1,7 +1,7 @@
 <template>
   <div ref="allTouches" class="keyhint">
     <b class="keyhint__text">
-      {{ $services.lang.t('Controls') }}
+      {{ 'Controls' }}
     </b>
     <div class="keyhint__row">
       <div ref="keyW" class="key key--w">
@@ -28,7 +28,7 @@
     <div class="keyhint__row">
       <div class="key--control">
         <div class="key__circle" @click="$emit('pause')"></div>
-        <span>{{ $services.lang.t('pause') }}</span>
+        <span>{{ 'pause' }}</span>
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@
   <div @click="afterClick">
     <div class="sidebar-group">
       <nuxt-link to="/simulator/"
-        >{{ $services.lang.t('Simulator') }}
+        >{{ 'Simulator' }}
       </nuxt-link>
     </div>
     <el-divider>
@@ -12,16 +12,16 @@
     </el-divider>
     <div class="sidebar-group">
       <nuxt-link to="/translation/"
-        >{{ $services.lang.t('Broadcasting online') }}
+        >{{ 'Broadcasting online' }}
       </nuxt-link>
       <nuxt-link to="/about/"
-        >{{ $services.lang.t('About project') }}
+        >{{ 'About project' }}
       </nuxt-link>
       <nuxt-link to="/new-game/"
-        >{{ $services.lang.t('Create new game') }}
+        >{{ 'Create new game' }}
       </nuxt-link>
       <nuxt-link to="/documentation/"
-        >{{ $services.lang.t('Documentation') }}
+        >{{ 'Documentation' }}
       </nuxt-link>
     </div>
     <el-divider>

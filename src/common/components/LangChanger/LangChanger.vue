@@ -5,11 +5,11 @@
     @click.prevent="changeLang('en')"
   >
     <img
-      :alt="$services.lang.t('Switch to') + ' en'"
+      :alt="'Switch to' + ' en'"
       class="flag"
       src="/images/flags/en.svg"
     />
-    {{ $services.lang.t('English') }}
+    {{ 'English' }}
   </a>
   <a
     :class="['flag-link', { selected: appStore.lang === 'ru' }]"
@@ -17,11 +17,11 @@
     @click.prevent="changeLang('ru')"
   >
     <img
-      :alt="$services.lang.t('Switch to') + ' ru'"
+      :alt="'Switch to' + ' ru'"
       class="flag"
       src="/images/flags/ru.svg"
     />
-    {{ $services.lang.t('Russian') }}
+    {{ 'Russian' }}
   </a>
 </template>
 

@@ -3,7 +3,7 @@ import { defineNuxtConfig } from 'nuxt/config'
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   ssr: false,
-  css: ['~~/src/Common/Assets/styles/global.scss'],
+  css: ['~~/src/common/assets/styles/global.scss'],
   modules: ['@nuxt/image-edge'],
   postcss: {
     plugins: {
@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         scss: {
           additionalData:
-            '@import "~~/src/Common/Assets/styles/colors.scss";@import "~~/src/Common/Assets/styles/mixins.scss";',
+            '@import "~~/src/common/assets/styles/colors.scss";@import "~~/src/common/assets/styles/mixins.scss";',
         },
       },
     },
