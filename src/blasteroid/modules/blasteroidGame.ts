@@ -99,6 +99,7 @@ const renderGameFrame = (game: BlasteroidGame) => {
       map(moveShapeToDirection(game.enemy)),
       tap(checkGameOver(game))
     ).do()
+  return game
 }
 
 const checkGameOver = curry((game: BlasteroidGame, context: unknown) => {
