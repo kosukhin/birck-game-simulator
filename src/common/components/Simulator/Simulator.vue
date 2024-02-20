@@ -1,6 +1,5 @@
 <template>
   <div class="tetris">
-    <component :is="gamesList[action] ?? gamesList.nogame" @grid="onSetGrid" />
     <div class="button-wrapper">
       <el-button
         :icon="Platform"
@@ -20,24 +19,10 @@
 </template>
 
 <script lang="ts" setup>
-import load from 'load-script'
 import { Platform } from '@element-plus/icons-vue'
-import { useService } from '~~/src/common/utils/HService'
-import { SHooks } from '~~/src/Common/Services/SHooks'
-import NoGame from '~~/src/common/components/Simulator/NoGame.vue'
-import { SConfig } from '~~/src/Common/Services/SConfig'
-import { MGrid } from '~~/src/common/models/MGrid'
 
-let grid: MGrid | undefined
-const gamesList = {
-  nogame: NoGame,
-}
-const configService = useService<SConfig>('config')
-let socketTimeInterval = null
+const socketTimeInterval: any = null
 const isTranslationStarted = ref(false)
-
-// Заполняем список игр через хук
-useService<SHooks>('hooks').gamesResolving.runSubscribers(gamesList)
 
 defineProps({
   action: {
@@ -46,34 +31,10 @@ defineProps({
   },
 })
 
-const onSetGrid = (newGrid) => {
-  grid = newGrid
-}
-
 const beginTranslation = () => {
   if (isTranslationStarted.value) {
     stopTranslation()
-    return
   }
-
-  isTranslationStarted.value = true
-  load(configService.config.socketHttpUrl + 'socket.io/socket.io.js', (err) => {
-    if (err) {
-      return
-    }
-
-    const socket = io(configService.config.socketWsUrl, {})
-
-    socketTimeInterval = setInterval(() => {
-      if (!grid) {
-        return
-      }
-
-      socket.emit('sendMessage', {
-        grid: grid.render(),
-      })
-    }, 300)
-  })
 }
 
 const stopTranslation = () => {

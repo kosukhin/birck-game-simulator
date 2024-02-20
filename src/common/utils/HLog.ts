@@ -1,13 +1,10 @@
-import { HService } from '~~/src/common/utils/HService'
-import { SLogger } from '~~/src/Common/Services/SLogger'
-
 export class HLog {
   static log(tag: string, ...messages: any[]) {
-    HService.get<SLogger>('logger').log(tag, ...messages)
+    console.log(tag, ...messages)
   }
 }
 
-export function useLog(tag): (...messages: any[]) => void {
+export function useLog(tag: string): (...messages: any[]) => void {
   return (...messages: any[]) => {
     HLog.log(tag, ...messages)
   }

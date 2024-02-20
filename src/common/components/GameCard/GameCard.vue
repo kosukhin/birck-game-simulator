@@ -17,11 +17,9 @@
 </template>
 
 <script lang="ts" setup>
-import { IGame } from '~~/src/Common/Data/Games'
-
 defineProps({
   game: {
-    type: Object as () => IGame,
+    type: Object,
     required: true,
   },
 })

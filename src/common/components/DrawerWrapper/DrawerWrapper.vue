@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-drawer
+    <!-- <el-drawer
       v-for="(drawerValue, drawerName) in drawersHash"
       :key="drawerName"
       :direction="drawersHashNotReactive[drawerName].direction"
@@ -14,33 +14,8 @@
           :options="drawersHashNotReactive[drawerName].options"
         />
       </div>
-    </el-drawer>
+    </el-drawer> -->
   </div>
 </template>
 
-<script lang="ts" setup>
-import { Ref } from 'vue'
-import { HApp } from '~~/src/common/utils/HApp'
-import { useService } from '~~/src/common/utils/HService'
-import { IDrawer, SDrawer } from '~~/src/Common/Services/SDrawer'
-
-const drawersHashNotReactive: Record<string, IDrawer> = {}
-const drawersHash: Ref<Record<string, boolean>> = ref({})
-const drawerService = useService<SDrawer>('drawer')
-const closed = (name: string) => {
-  drawerService.close(name)
-}
-
-drawerService.opening.registerSubscriber((drawer) => {
-  drawersHash.value[drawer.name] = true
-  drawersHashNotReactive[drawer.name] = drawer
-})
-
-drawerService.closing.registerSubscriber((name) => {
-  drawersHash.value[name] = false
-  HApp.wait(300).then(() => {
-    delete drawersHash.value[name]
-    delete drawersHashNotReactive[name]
-  })
-})
-</script>
+<script lang="ts" setup></script>

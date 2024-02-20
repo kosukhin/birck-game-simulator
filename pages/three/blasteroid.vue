@@ -42,7 +42,7 @@ import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 import { keyboard } from '~~/src/common/utils/keyboard'
 import { refState } from '~~/src/common/utils/state'
 import { EKeyCode, EMoveDirection } from '~~/src/common/types/GameTypes'
-import { useBlasteroid } from '~~/src/Blasteroid/cpu/composables/useBlasteroid'
+import { useBlasteroid } from '~~/src/blasteroid/modules/blasteroidGame'
 
 const gameSettings = ref<GameSettings>({
   frameCounter: 1,

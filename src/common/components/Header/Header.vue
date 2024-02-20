@@ -18,18 +18,6 @@
 
 <script lang="ts" setup>
 import { Menu } from '@element-plus/icons-vue'
-import { useService } from '~~/src/common/utils/HService'
-import { SDrawer } from '~~/src/Common/Services/SDrawer'
 
-const openMenu = () => {
-  useService<SDrawer>('drawer').open({
-    name: 'menu',
-    component: () =>
-      defineAsyncComponent(
-        () => import('~~/src/common/components/SideBar/SideBar.vue')
-      ),
-    direction: 'rtl',
-    options: [],
-  })
-}
+const openMenu = () => {}
 </script>

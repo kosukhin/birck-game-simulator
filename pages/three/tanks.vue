@@ -45,7 +45,7 @@ import {
   EMoveDirection,
   KeysToMoveMap,
 } from '~~/src/common/types/GameTypes'
-import { useTanks } from '~~/src/Tanks/cpu/composables/useTanks'
+import { useTanks } from '~~/src/tanks/modules/tanksGame'
 
 const gameSettings = ref<GameSettings>({
   frameCounter: 1,

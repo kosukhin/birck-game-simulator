@@ -45,7 +45,7 @@ import {
 } from '~~/src/common/types/GameTypes'
 import { Camera } from '~~/src/common/types/Camera'
 import { keyboard } from '~~/src/common/utils/keyboard'
-import { useTetris } from '~/src/Tetris/cpu/composables/useTetris'
+import { useTetris } from '~/src/tetris/modules/tetrisGame'
 
 const gameSettings = ref<GameSettings>({
   frameCounter: 1,
