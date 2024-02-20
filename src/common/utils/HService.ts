@@ -1,8 +1,6 @@
-import services from '~~/src/Injections/Services'
-
 export class HService {
   static get<T>(name: string): T {
-    return services[name]
+    return { name } as T
   }
 }
 

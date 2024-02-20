@@ -1,9 +1,5 @@
 <template>
-  <a
-    v-show="!$services.device.isMobile()"
-    href="https://github.com/kosukhin/brick-game-simulator"
-    target="_blank"
-  >
+  <a href="https://github.com/kosukhin/brick-game-simulator" target="_blank">
     <svg
       aria-hidden="true"
       class="forkme"

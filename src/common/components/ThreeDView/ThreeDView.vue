@@ -12,12 +12,11 @@ import partial from 'lodash/partial'
 import { GameGrid } from '~~/src/common/types/Game'
 import { Camera } from '~~/src/common/types/Camera'
 import { RenderService } from '~/src/common/library/ThreeD/Services/RenderService'
-import { onTick } from '~/src/Snake/Services/render'
-import { Floor } from '~/app/appModules/common/floor'
-import { floorTexture } from '~/src/Snake/Constants/textures'
-import { renderTick } from '~/app/appModules/tick'
 import { EMoveDirection } from '~~/src/common/types/GameTypes'
 import { Block } from '~~/src/common/types/Block'
+import { Floor } from '~~/src/common/library/floor'
+import { onTick, renderTick } from '~~/src/common/library/render'
+import { floorTexture } from '~~/src/common/library/constants'
 
 const props = defineProps({
   speed: {

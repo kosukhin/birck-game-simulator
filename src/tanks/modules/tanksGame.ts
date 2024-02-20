@@ -1,13 +1,10 @@
 import { pick, throttle, uniqueId } from 'lodash'
-import { EMoveDirection } from './../../../Common/Types/GameTypes'
-import {
-  GameGrid,
-  GameSettings,
-} from './../../../Common/cpu/providers/types/Game'
 import { Intention } from '~~/src/common/library/Intention'
 import { Block, Shape } from '~~/src/common/types/Block'
 import { FType, State } from '~~/src/common/utils/system'
 import { HMath } from '~~/src/common/utils/HMath'
+import { EMoveDirection } from '~~/src/common/types/GameTypes'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 
 export const useTanks = (
   getGameSettings: FType<State<GameSettings>>,
@@ -191,11 +188,6 @@ const createBot = (
   nextBotFrame()
 
   return bot
-}
-
-const getShapeBlocks = (shape: Shape, gameGrid: GameGrid) => {
-  const shapeIds = shape.blocks.map((b) => b.id)
-  return gameGrid.blocks.filter((b) => shapeIds.includes(b.id))
 }
 
 const rotateTank = (
@@ -427,13 +419,6 @@ const shoot = (
     }, SHOOT_SPEED)
   }
   nextShootFrame()
-}
-
-const oppositeDirections = {
-  [EMoveDirection.up]: EMoveDirection.down,
-  [EMoveDirection.right]: EMoveDirection.left,
-  [EMoveDirection.down]: EMoveDirection.up,
-  [EMoveDirection.left]: EMoveDirection.right,
 }
 
 const midX = (tank: Shape, size: number): number => {

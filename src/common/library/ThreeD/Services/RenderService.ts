@@ -1,13 +1,10 @@
 import * as THREE from 'three'
 import { Color, Mesh } from 'three'
-import { baseSize } from '~/src/Common/Constants/Three'
-import { reactOn } from '~/src/common/library/I'
-import { Cube } from '~/src/Snake/Models'
-import { FloorModel } from '~~/app/appModules/common/floor/floorModel'
-import { Scene } from '~~/app/appModules/common/scene/scene'
+import { baseSize } from '~/src/common/library/constants'
+import { Cube } from '~~/src/common/library/ThreeD/Entities/Cube'
+import { Scene } from '~~/src/common/library/ThreeD/Modules/scene/Scene'
+import { Floor } from '~~/src/common/library/floor'
 import { EMoveDirection } from '~~/src/common/types/GameTypes'
-
-const baseSize = 10
 
 export class RenderService {
   additional: number = 1
@@ -276,7 +273,7 @@ export class RenderService {
   }
 
   applySceneConfig(model: Scene) {
-    reactOn(this.afterScene.bind(this), async () => {
+    this.afterScene(async () => {
       // TODO обработать звуки
       this.scene.background = new Color(model.background)
       this.scene.add(await this.buildFloorByModel(model.floor))
@@ -296,7 +293,7 @@ export class RenderService {
     })
   }
 
-  async buildFloorByModel(model: FloorModel): Promise<Mesh> {
+  async buildFloorByModel(model: Floor): Promise<Mesh> {
     const textureLoader = new THREE.TextureLoader()
     const texture = await textureLoader.loadAsync(model.texture)
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping
