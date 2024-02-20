@@ -36,10 +36,12 @@ export class LazyMonad {
   }
 
   do() {
+    let monad: LazyMonad = this
     this.executor(this.value, (res: LazyMonad) => {
       this.value = res.unSafeValue
+      monad = res
     })
-    return this
+    return monad
   }
 
   of(value: any) {
@@ -150,7 +152,7 @@ export class IO extends LazyMonad {
         fn(value)
       })
       .catch((e) => {
-        fn(left(e.message))
+        e instanceof Error ? fn(left(e.message)) : fn(left(String(e)))
       })
   }
 
