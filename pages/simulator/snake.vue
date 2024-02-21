@@ -13,14 +13,12 @@
       {{ settings.speed }}
     </div>
     <CanvasView :fps="10" :grid="grid" />
-    <KeyboardHint @pause="snakeActions.pause()" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import partial from 'lodash/partial'
 import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
-import KeyboardHint from '~~/src/common/сomponents/KeyboardHint/KeyboardHint.vue'
 import { useSnake } from '~~/src/snake/modules/snakeGame'
 import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 import { refState } from '~~/src/common/utils/state'

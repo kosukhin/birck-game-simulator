@@ -9,6 +9,7 @@
     </div>
 
     <div class="middle">
+      {{ device }}
       <h2>{{ 'About project' }}</h2>
       <div class="article">
         <p>
@@ -37,7 +38,11 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useDevice } from '~~/src/common/composables/useDevice'
+
+const device = useDevice()
+</script>
 
 <style scoped>
 .main {
