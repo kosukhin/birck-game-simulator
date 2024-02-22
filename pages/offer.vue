@@ -1,17 +1,17 @@
 <template>
   <div class="offer middle">
-    <h1>{{ 'Offer a game' }}</h1>
+    <h1>{{ $t('Offer a game') }}</h1>
     <div v-show="isSuccessSubmitted">
-      <el-result icon="success" :title="'Thanks for offer'">
+      <el-result icon="success" :title="$t('Thanks for offer')">
         <template #extra>
           <div class="offer__description">
             <p>
-              {{ 'Unfortunately, this is a demo form, but you can' }}
+              {{ $t('Unfortunately, this is a demo form, but you can') }}
             </p>
-            <p>{{ 'send the results by email' }}: kosuha606@gmail.com</p>
+            <p>{{ $t('send the results by email') }}: kosuha606@gmail.com</p>
           </div>
           <el-button type="primary" @click="submitAgain">
-            {{ 'Back' }}
+            {{ $t('Back') }}
           </el-button>
           <el-table
             class="offer__result"
@@ -32,7 +32,7 @@
     >
       <el-row :gutter="10">
         <el-col :span="12">
-          <el-form-item :label="'What is your name?'" prop="name">
+          <el-form-item :label="$t('What is your name?')" prop="name">
             <el-input
               v-model="formState.name"
               name="name"
@@ -41,18 +41,18 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="'Post'" prop="duty">
+          <el-form-item :label="$t('Post')" prop="duty">
             <el-input
               v-model="formState.duty"
               name="duty"
-              :placeholder="'Developer'"
+              :placeholder="$t('Developer')"
             />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item :label="'Work experience, years'" prop="expiriense">
+          <el-form-item :label="$t('Work experience, years')" prop="expiriense">
             <el-slider
               v-model="formState.expiriense"
               :max="20"
@@ -65,7 +65,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item :label="'Describe the offer'" prop="description">
+          <el-form-item :label="$t('Describe the offer')" prop="description">
             <el-input
               v-model="formState.description"
               name="description"
@@ -85,7 +85,7 @@
             type="primary"
             @click="submitForm(formRef)"
           >
-            {{ 'Send' }}
+            {{ $t('Send') }}
           </el-button>
         </el-col>
       </el-row>

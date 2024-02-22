@@ -1,6 +1,6 @@
 <template>
   <div class="simulator middle">
-    <h1>{{ 'Games' }}</h1>
+    <h1>{{ $t('Games') }}</h1>
     <div class="games-list"></div>
   </div>
 </template>

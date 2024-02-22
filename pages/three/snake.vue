@@ -6,13 +6,13 @@
     <h1>Змейка 3Д</h1>
     <div v-if="settings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${'Score'}: ${settings.score}`"
-        :title="'Game over'"
+        :sub-title="`${$t('Score')}: ${settings.score}`"
+        :title="$t('Game over')"
         icon="error"
       />
     </div>
     <div class="grid-header text-center">
-      {{ 'Score' }}: {{ settings.score }}, {{ 'Speed' }}:
+      {{ $t('Score') }}: {{ settings.score }}, {{ $t('Speed') }}:
       {{ settings.speed }}
     </div>
     <ThreeDView
