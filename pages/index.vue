@@ -7,10 +7,8 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-
     <div class="middle">
-      {{ device }}
-      <h2>{{ 'About project' }}</h2>
+      <h2>{{ $t('About project') }}</h2>
       <div class="article">
         <p>
           {{ 'Welcome to the BrickGame Simulator project!' }}
@@ -38,12 +36,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useDevice } from '~~/src/common/composables/useDevice'
-
-const device = useDevice()
-</script>
-
 <style scoped>
 .main {
   display: flex;
@@ -52,5 +44,7 @@ const device = useDevice()
 
 .carousel {
   border-radius: 20px;
+  width: 1000px;
+  max-width: 100%;
 }
 </style>

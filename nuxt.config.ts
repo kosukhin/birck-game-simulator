@@ -4,7 +4,10 @@ import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
   ssr: false,
   css: ['~~/src/common/assets/styles/global.scss'],
-  modules: ['@nuxt/image-edge'],
+  modules: ['@nuxt/image-edge', '@nuxtjs/i18n'],
+  i18n: {
+    vueI18n: './i18n.config.ts',
+  },
   postcss: {
     plugins: {
       tailwindcss: {},
