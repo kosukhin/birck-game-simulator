@@ -7,17 +7,33 @@
         </el-avatar>
         BrickGame
       </nuxt-link>
-      <div class="menu" @click="openMenu">
+      <div class="menu" @click="isMenuOpened = true">
         <el-icon>
           <Menu />
         </el-icon>
       </div>
     </div>
+    <el-drawer
+      direction="rtl"
+      :model-value="isMenuOpened"
+      :size="device.isMobile ? '100%' : '30%'"
+      @closed="isMenuOpened = false"
+    >
+      <div>
+        <component :is="sidebarComponent" />
+      </div>
+    </el-drawer>
   </header>
 </template>
 
 <script lang="ts" setup>
 import { Menu } from '@element-plus/icons-vue'
+import { useDevice } from '~/src/common/composables/useDevice'
 
-const openMenu = () => {}
+const isMenuOpened = ref(false)
+const device = useDevice()
+
+const sidebarComponent = defineAsyncComponent(
+  () => import('~~/src/common/components/SideBar/SideBar.vue')
+)
 </script>
