@@ -6,10 +6,10 @@
       </div>
       <div class="game-card__content">
         <div class="game-card__title">
-          {{ game.title }}
+          {{ $t(game.title) }}
         </div>
         <div class="game-card__description">
-          {{ game.description }}
+          {{ $t(game.description) }}
         </div>
       </div>
     </article>

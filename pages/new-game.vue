@@ -4,14 +4,14 @@
       rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.3.2/styles/dark.min.css"
     />
-    <h1>
+    <h1 class="mb-4">
       {{ $t('Create a new game') }}
     </h1>
-    <p>
+    <p class="mb-4">
       {{ $t('To create a new game, create a directory, for example,') }}
       <el-tag>src/Arcanoid</el-tag>
     </p>
-    <p>
+    <p class="mb-4">
       {{ $t('Next, create a directory') }}
       <el-tag>Services</el-tag>
       {{ $t('and a file called, for example,') }}
@@ -23,7 +23,7 @@
         )
       }}
     </p>
-    <p>
+    <p class="mb-4">
       {{
         $t('For example, the code from the STetris service looks like this:')
       }}
@@ -40,10 +40,10 @@ export class STetris {
 }
             </code>
             </pre>
-    <p>
+    <p class="mb-4">
       {{ $t('The TetrisGame component is added to the games List') }}
     </p>
-    <p>
+    <p class="mb-4">
       {{
         $t(
           'After the work done, you will be able to open your game if you go to'
@@ -51,13 +51,13 @@ export class STetris {
       }}
       <el-tag>http://localhost:3000/simulator/arcanoid/</el-tag>
     </p>
-    <p>
+    <p class="mb-4">
       {{ $t('To create your own game, you only need to use 2 models:') }}
       <el-tag>MGrid</el-tag>
       {{ $t('and') }}
       <el-tag>MShape</el-tag>
     </p>
-    <p>
+    <p class="mb-4">
       <b>MGrid</b>
       {{
         $t(
@@ -67,7 +67,7 @@ export class STetris {
       <el-tag>render</el-tag>
       {{ $t('how to deploy the main two-dimensional array of the game') }}
     </p>
-    <p>
+    <p class="mb-4">
       <b>MShape</b>
       {{
         $t(
@@ -75,7 +75,7 @@ export class STetris {
         )
       }}
     </p>
-    <p>
+    <p class="mb-4">
       {{ $t('To see the results of your game, use the component') }}
       <el-tag>CanvasView</el-tag>
       .

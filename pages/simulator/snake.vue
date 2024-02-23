@@ -13,6 +13,7 @@
       {{ settings.speed }}
     </div>
     <CanvasView :fps="10" :grid="grid" />
+    <KeyboardHint @pause="snakeActions.pause" />
   </div>
 </template>
 
@@ -31,6 +32,7 @@ import {
 } from '~~/src/common/types/GameTypes'
 import { MGrid } from '~~/src/common/models/MGrid'
 import { keyboard } from '~~/src/common/utils/keyboard'
+import KeyboardHint from '~/src/common/components/KeyboardHint/KeyboardHint.vue'
 
 const settings = ref<GameSettings>({
   isGameOver: false,

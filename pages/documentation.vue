@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1>{{ $t('Documentation') }}</h1>
+    <h1 class="mb-4">{{ $t('Documentation') }}</h1>
 
     <div class="middle article">
-      <p>
+      <p class="mb-4">
         {{ $t('There are several types of documentation in the project.') }}
       </p>
-      <p>
+      <p class="mb-4">
         {{
           $t(
             'Documentation for the source code of the modules can be found here'
@@ -16,7 +16,7 @@
           {{ $t('Documentation for modules') }}
         </el-link>
       </p>
-      <p>
+      <p class="mb-4">
         {{
           $t(
             'Documentation on all the main points of the project is stored in the repository on GitHub'
