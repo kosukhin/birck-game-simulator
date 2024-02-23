@@ -35,7 +35,8 @@ export class LazyMonad {
     return fn()
   }
 
-  do() {
+  do(value?: any) {
+    value && (this.value = value)
     let monad: LazyMonad = this
     this.executor(this.value, (res: LazyMonad) => {
       this.value = res.unSafeValue
@@ -72,16 +73,16 @@ export class LazyMonad {
     return this
   }
 
-  protected chain(fn: (value: any) => LazyMonad) {
+  chain(fn: (value: any) => LazyMonad) {
     return fn(this.value)
   }
 
-  protected map(fn: (value: any) => any) {
+  map(fn: (value: any) => any) {
     this.value = fn(this.value)
     return this
   }
 
-  protected tap(fn: (value: any, error?: any) => any) {
+  tap(fn: (value: any, error?: any) => any) {
     fn(this.value, this.getError())
     return this
   }
@@ -103,14 +104,14 @@ export class None extends LazyMonad {
     return new None(value)
   }
 
-  protected chain(fn: (value: any) => LazyMonad) {
+  chain(fn: (value: any) => LazyMonad) {
     if (this.value !== null && this.value !== undefined) {
       super.chain(fn)
     }
     return this
   }
 
-  protected map(fn: (value: any) => any): this {
+  map(fn: (value: any) => any): this {
     if (this.value !== null && this.value !== undefined) {
       super.map(fn)
     }
@@ -118,7 +119,7 @@ export class None extends LazyMonad {
   }
 }
 
-export const some = (v: any) => new Some(v)
+export const some = (v?: any) => new Some(v)
 export class Some extends LazyMonad {
   of(value: any) {
     return new Some(value)

@@ -26,8 +26,18 @@
 </template>
 
 <script lang="ts" setup>
+import { useLocalStorage } from '~/src/common/composables/useLocalStorage'
+
 const { locale } = useI18n()
+const { get, set } = useLocalStorage()
+
+get('lang', 'ru').map((v: string) => {
+  locale.value = v
+  return v
+})
+
 const changeLang = (lang: string) => {
+  set(lang, 'lang')
   locale.value = lang
 }
 </script>
