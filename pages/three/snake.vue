@@ -25,7 +25,7 @@
       bounds-color="#ccc"
       :direction="settings.direction"
     />
-    <KeyboardHint @pause="game.pause()" />
+    <KeyboardHint @pause="snakeActions.pause()" />
   </div>
 </template>
 
@@ -37,7 +37,12 @@ import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 import { useSnake } from '~~/src/snake/modules/snakeGame'
 import { refState } from '~~/src/common/utils/state'
 import { timer } from '~~/src/common/utils/timer'
-import { EKeyCode, EMoveDirection } from '~~/src/common/types/GameTypes'
+import {
+  EKeyCode,
+  EMoveDirection,
+  KeysToMoveCamera3,
+  KeysToMoveMap,
+} from '~~/src/common/types/GameTypes'
 import { Camera } from '~~/src/common/types/Camera'
 import { keyboard } from '~~/src/common/utils/keyboard'
 
@@ -63,13 +68,19 @@ const snakeActions = useSnake(
 )
 snakeActions.start()
 
-// keyboard((key: EKeyCode) => {
-//   handleKey(
-//     () => key,
-//     () => settings.value.direction,
-//     snakeActions.changeDirection
-//   )
-// })
+keyboard((keyCode: EKeyCode) => {
+  if (keyCode === EKeyCode.W || keyCode === EKeyCode.S) {
+    return
+  }
+
+  if (KeysToMoveMap[keyCode] === undefined) {
+    return
+  }
+
+  const currentDirection = settings.value.direction
+  const newDirection = KeysToMoveCamera3[currentDirection][keyCode]
+  snakeActions.changeDirection(newDirection)
+})
 
 const blockGroupColor = {
   target: '#25ff25',
