@@ -12,7 +12,7 @@
       <div class="footer-column">
         <nuxt-link to="/simulator/tetris/">{{ $t('Tetris') }} </nuxt-link>
         <nuxt-link to="/simulator/snake/">{{ $t('Snake') }} </nuxt-link>
-        <nuxt-link to="/simulator/tanks/">{{ $t('Tanks') }} </nuxt-link>
+        <nuxt-link to="/simulator/">{{ $t('Simulator') }} </nuxt-link>
       </div>
       <div class="footer-column">
         <nuxt-link to="/about/">{{ $t('About project') }} </nuxt-link>

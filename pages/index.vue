@@ -34,10 +34,18 @@
     </div>
     <div class="middle">
       <h2>{{ $t('Popular games') }}</h2>
-      <div class="games-list"></div>
+      <div class="games-list">
+        <GameCard :game="games[0]" />
+        <GameCard :game="games[2]" />
+      </div>
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import GameCard from '~/src/common/components/GameCard/GameCard.vue'
+import { games } from '~/src/common/providers/games'
+</script>
 
 <style scoped>
 .main {
