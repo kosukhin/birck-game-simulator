@@ -1,7 +1,7 @@
 <template>
   <div @click="afterClick">
     <div class="sidebar-group">
-      <nuxt-link to="/simulator/">{{ 'Simulator' }} </nuxt-link>
+      <nuxt-link to="/simulator/">{{ $t('Simulator') }} </nuxt-link>
     </div>
     <el-divider>
       <el-icon>
@@ -9,10 +9,10 @@
       </el-icon>
     </el-divider>
     <div class="sidebar-group">
-      <nuxt-link to="/translation/">{{ 'Broadcasting online' }} </nuxt-link>
-      <nuxt-link to="/about/">{{ 'About project' }} </nuxt-link>
-      <nuxt-link to="/new-game/">{{ 'Create new game' }} </nuxt-link>
-      <nuxt-link to="/documentation/">{{ 'Documentation' }} </nuxt-link>
+      <nuxt-link to="/translation/">{{ $t('Broadcasting online') }} </nuxt-link>
+      <nuxt-link to="/about/">{{ $t('About project') }} </nuxt-link>
+      <nuxt-link to="/new-game/">{{ $t('Create new game') }} </nuxt-link>
+      <nuxt-link to="/documentation/">{{ $t('Documentation') }} </nuxt-link>
     </div>
     <el-divider>
       <el-icon>

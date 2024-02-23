@@ -8,10 +8,10 @@
         @click="beginTranslation"
       >
         <template v-if="isTranslationStarted">
-          {{ 'End the broadcast' }}
+          {{ $t('End the broadcast') }}
         </template>
         <template v-else>
-          {{ 'Start broadcasting' }}
+          {{ $t('Start broadcasting') }}
         </template>
       </el-button>
     </div>

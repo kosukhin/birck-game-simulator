@@ -1,35 +1,33 @@
 <template>
   <a
-    :class="['flag-link', { selected: appStore.lang === 'en' }]"
+    :class="['flag-link', { selected: locale === 'en' }]"
     href="#"
     @click.prevent="changeLang('en')"
   >
     <img
-      :alt="'Switch to' + ' en'"
+      :alt="$t('Switch to') + ' en'"
       class="flag"
       src="/images/flags/en.svg"
     />
-    {{ 'English' }}
+    {{ $t('English') }}
   </a>
   <a
-    :class="['flag-link', { selected: appStore.lang === 'ru' }]"
+    :class="['flag-link', { selected: locale === 'ru' }]"
     href="#"
     @click.prevent="changeLang('ru')"
   >
     <img
-      :alt="'Switch to' + ' ru'"
+      :alt="$t('Switch to') + ' ru'"
       class="flag"
       src="/images/flags/ru.svg"
     />
-    {{ 'Russian' }}
+    {{ $t('Russian') }}
   </a>
 </template>
 
 <script lang="ts" setup>
-import { useApplicationStore } from '~~/stores/application'
-
-const appStore = useApplicationStore()
-const changeLang = (lang) => {
-  appStore.setLang(lang)
+const { locale } = useI18n()
+const changeLang = (lang: string) => {
+  locale.value = lang
 }
 </script>

@@ -3,9 +3,7 @@ export default defineI18nConfig(() => ({
   locale: 'ru',
   globalInjection: true,
   messages: {
-    en: {
-      welcome: 'Welcome',
-    },
+    en: {},
     ru: {
       'About project': 'О проекте',
       Hello: 'Привет',

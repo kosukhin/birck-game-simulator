@@ -6,13 +6,13 @@
     <h1>Тетрис 3Д</h1>
     <div v-if="gameSettings.isGameOver" class="game-over">
       <el-result
-        :sub-title="`${'Score'}: ${gameSettings.score}`"
-        :title="'Game over'"
+        :sub-title="`${$t('Score')}: ${gameSettings.score}`"
+        :title="$t('Game over')"
         icon="error"
       />
     </div>
     <div class="grid-header text-center">
-      {{ 'Score' }}: {{ gameSettings.score }}, {{ 'Speed' }}:
+      {{ $t('Score') }}: {{ gameSettings.score }}, {{ $t('Speed') }}:
       {{ gameSettings.speed }}
     </div>
     <ThreeDView

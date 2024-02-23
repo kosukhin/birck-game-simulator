@@ -5,19 +5,19 @@
     </div>
     <nuxt-link to="/offer/">
       <el-button class="footer__button">
-        {{ 'Offer game' }}
+        {{ $t('Offer game') }}
       </el-button>
     </nuxt-link>
     <div class="middle footer-content">
       <div class="footer-column">
-        <nuxt-link to="/simulator/tetris/">{{ 'Tetris' }} </nuxt-link>
-        <nuxt-link to="/simulator/snake/">{{ 'Snake' }} </nuxt-link>
-        <nuxt-link to="/simulator/tanks/">{{ 'Tanks' }} </nuxt-link>
+        <nuxt-link to="/simulator/tetris/">{{ $t('Tetris') }} </nuxt-link>
+        <nuxt-link to="/simulator/snake/">{{ $t('Snake') }} </nuxt-link>
+        <nuxt-link to="/simulator/tanks/">{{ $t('Tanks') }} </nuxt-link>
       </div>
       <div class="footer-column">
-        <nuxt-link to="/about/">{{ 'About project' }} </nuxt-link>
-        <nuxt-link to="/new-game/">{{ 'Create new game' }} </nuxt-link>
-        <nuxt-link to="/documentation/">{{ 'Documentation' }} </nuxt-link>
+        <nuxt-link to="/about/">{{ $t('About project') }} </nuxt-link>
+        <nuxt-link to="/new-game/">{{ $t('Create new game') }} </nuxt-link>
+        <nuxt-link to="/documentation/">{{ $t('Documentation') }} </nuxt-link>
       </div>
       <div class="footer-column">
         <LangChanger />
@@ -26,7 +26,9 @@
     <div class="footer-bottom">
       <div class="middle">
         {{
-          'It is allowed to use the Software free of charge without restrictions'
+          $t(
+            'It is allowed to use the Software free of charge without restrictions'
+          )
         }}
         , MIT &copy;
       </div>
