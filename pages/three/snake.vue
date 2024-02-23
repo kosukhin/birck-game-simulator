@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="text-center">
-      <RouterLink to="/simulator/snake/">Классическая змейка</RouterLink>
+      <RouterLink to="/simulator/snake/">{{ $t('Classic snake') }}</RouterLink>
     </div>
-    <h1>Змейка 3Д</h1>
+    <h1>{{ $t('Snake 3D') }}</h1>
     <div v-if="settings.isGameOver" class="game-over">
       <el-result
         :sub-title="`${$t('Score')}: ${settings.score}`"

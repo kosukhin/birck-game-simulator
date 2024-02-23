@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="text-center">
-      <RouterLink to="/simulator/tanks/">Классические танки</RouterLink>
+      <RouterLink to="/simulator/tanks/">{{ $t('Classic tanks') }}</RouterLink>
     </div>
-    <h1>Танки 3Д</h1>
+    <h1>{{ $t('Tanks 3D') }}</h1>
     <div v-if="gameSettings.isGameOver" class="game-over">
       <el-result
         :sub-title="`${$t('Score')}: ${gameSettings.score}`"
@@ -27,7 +27,7 @@
       :direction="gameSettings.direction"
       :angles="angles"
     />
-    <KeyboardHint @pause="actions.pause()" />
+    <KeyboardHint @pause="actions.pause" />
   </div>
 </template>
 

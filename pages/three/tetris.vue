@@ -1,9 +1,11 @@
 <template>
   <div>
     <div class="text-center">
-      <RouterLink to="/simulator/tetris/">Классический тетрис</RouterLink>
+      <RouterLink to="/simulator/tetris/">{{
+        $t('Classic tetris')
+      }}</RouterLink>
     </div>
-    <h1>Тетрис 3Д</h1>
+    <h1>{{ $t('Tetris 3D') }}</h1>
     <div v-if="gameSettings.isGameOver" class="game-over">
       <el-result
         :sub-title="`${$t('Score')}: ${gameSettings.score}`"

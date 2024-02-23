@@ -7,7 +7,7 @@
         icon="error"
       />
     </div>
-    <RouterLink to="/three/blasteroid">Бластероид 3д</RouterLink>
+    <RouterLink to="/three/blasteroid">{{ $t('Blasteroid 3D') }}</RouterLink>
     <div class="grid-header">
       {{ $t('Score') }}: {{ gameSettings.score }}, {{ $t('Speed') }}:
       {{ gameSettings.speed }}

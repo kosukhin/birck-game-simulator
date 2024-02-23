@@ -7,7 +7,7 @@
         icon="error"
       />
     </div>
-    <RouterLink to="/three/tetris">Тетрис 3д</RouterLink>
+    <RouterLink to="/three/tetris">{{ $t('Tetris 3D') }}</RouterLink>
     <div class="grid-header">
       {{ $t('Score') }}: {{ gameSettings.score }}, {{ $t('Speed') }}:
       {{ gameSettings.speed }}

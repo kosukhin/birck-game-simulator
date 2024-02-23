@@ -2,10 +2,10 @@
   <div>
     <div class="text-center">
       <RouterLink to="/simulator/blasteroid/">
-        Классический бластероид
+        {{ $t('Classic blasteroid') }}
       </RouterLink>
     </div>
-    <h1>Бластероид 3Д</h1>
+    <h1>{{ $t('Blasteroid 3D') }}</h1>
     <div v-if="gameSettings.isGameOver" class="game-over">
       <el-result
         :sub-title="`${$t('Score')}: ${gameSettings.score}`"
