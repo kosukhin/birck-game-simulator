@@ -34,15 +34,13 @@
 </template>
 
 <script setup lang="ts">
-import partial from 'lodash/partial'
+import { useBlasteroid } from '~~/src/blasteroid/composables/blasteroidGame'
 import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
 import ThreeDView from '~~/src/common/components/ThreeDView/ThreeDView.vue'
 import { Camera } from '~~/src/common/types/Camera'
 import { GameGrid, GameSettings } from '~~/src/common/types/Game'
-import { keyboard } from '~~/src/common/utils/keyboard'
-import { refState } from '~~/src/common/utils/state'
 import { EKeyCode, EMoveDirection } from '~~/src/common/types/GameTypes'
-import { useBlasteroid } from '~~/src/blasteroid/composables/blasteroidGame'
+import { keyboard } from '~~/src/common/utils/keyboard'
 
 const gameSettings = ref<GameSettings>({
   frameCounter: 1,
@@ -60,8 +58,8 @@ const gameGrid = ref<GameGrid>({
   },
 })
 const actions = useBlasteroid(
-  partial(refState, gameSettings),
-  partial(refState, gameGrid)
+  () => gameSettings.value,
+  () => gameGrid.value
 )
 actions.start()
 

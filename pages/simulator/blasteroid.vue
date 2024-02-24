@@ -18,13 +18,11 @@
 </template>
 
 <script lang="ts" setup>
-import partial from 'lodash/partial'
+import { MGrid } from '~/src/common/models/MGrid'
 import { GameGrid, GameSettings } from '~/src/common/types/Game'
+import { EKeyCode, EMoveDirection } from '~/src/common/types/GameTypes'
 import { gameGridToMGrid } from '~/src/common/utils/game'
 import { keyboard } from '~/src/common/utils/keyboard'
-import { refState } from '~/src/common/utils/state'
-import { MGrid } from '~/src/common/models/MGrid'
-import { EKeyCode, EMoveDirection } from '~/src/common/types/GameTypes'
 import { useBlasteroid } from '~~/src/blasteroid/composables/blasteroidGame'
 import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
@@ -46,8 +44,8 @@ const gameGrid = ref<GameGrid>({
 })
 
 const actions = useBlasteroid(
-  partial(refState, gameSettings),
-  partial(refState, gameGrid)
+  () => gameSettings.value,
+  () => gameGrid.value
 )
 actions.start()
 
