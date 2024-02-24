@@ -4,7 +4,7 @@ import {
   saveToLocalStorage,
 } from '~/src/common/utils/browser'
 import { jsonParse } from '~/src/common/utils/json'
-import { chainSilentThenable, resolve } from '~~/src/common/utils/fp'
+import { skipNextThens, resolve } from '~~/src/common/utils/fp'
 
 export const useLocalStorage = () => {
   return {
@@ -16,12 +16,12 @@ export const useLocalStorage = () => {
 const getFn = (key: string, defaultValue: any = null) =>
   resolve(key)
     .then(ensureOnClientSidePromise)
-    .catch(chainSilentThenable)
+    .catch(skipNextThens)
     .then(getFromLocalStorage)
     .then(jsonParse(defaultValue))
 
 const setFn = (v: string, key: string) =>
   resolve(v)
     .then(ensureOnClientSidePromise)
-    .catch(chainSilentThenable)
+    .catch(skipNextThens)
     .then(saveToLocalStorage(key))

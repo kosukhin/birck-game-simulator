@@ -1,13 +1,5 @@
-import { curry, throttle, uniqueId } from 'lodash'
-import {
-  LazyMonad,
-  map,
-  tap,
-  chain,
-  none,
-  pipe,
-  some,
-} from '~~/src/common/library/adt'
+import { partial, curry, throttle, uniqueId } from 'lodash'
+import { skipNextThens, resolve, reject, noError } from '~~/src/common/utils/fp'
 import { EMoveDirection } from '~~/src/common/types/GameTypes'
 import { Block, Shape } from '~~/src/common/types/Block'
 import { Game, GameGrid, GameSettings } from '~~/src/common/types/Game'
@@ -17,6 +9,18 @@ import { HMath } from '~~/src/common/utils/HMath'
 type BlasteroidGame = Game & {
   blasteroid: Shape | null
   enemy: Shape | null
+}
+
+const animateShoot: any = (game: BlasteroidGame, shoot: Shape) => {
+  return resolve(game)
+    .then(ensureNotGameOver)
+    .then(ensureNotPaused)
+    .then(ensureShapeInBoundsByYAxis(shoot))
+    .catch(skipNextThens)
+    .then(moveShapeToDirection(shoot))
+    .then(checkEnemyShooted(shoot))
+    .then(repeat(() => animateShoot(game, shoot), 50))
+    .catch(removeShootIfStopped(shoot, game))
 }
 
 export const useBlasteroid = (
@@ -30,34 +34,22 @@ export const useBlasteroid = (
     enemy: null,
   }
 
+  const animateGameShoot = partial(animateShoot, game)
   const onShoot = throttle(() => {
-    if (!game.blasteroid) {
-      return
-    }
-    const shoot = createShoot(game.blasteroid, 0, game)
-    const shoot2 = createShoot(game.blasteroid, 2, game)
-
-    ;[shoot, shoot2].forEach((currentShoot) => {
-      pipe(
-        some(game),
-        chain(ensureNotGameOver),
-        chain(ensureNotPaused),
-        chain(ensureShapeInBoundsByYAxis(currentShoot)),
-        map(moveShapeToDirection(currentShoot)),
-        map(checkEnemyShooted(currentShoot)),
-        tap(removeShootIfStopped(currentShoot, game)),
-        repeat(50)
-      ).do()
-    })
+    game.blasteroid &&
+      [
+        createShoot(game.blasteroid, 0, game),
+        createShoot(game.blasteroid, 2, game),
+      ].forEach(animateGameShoot)
   }, 100)
 
   return {
     start() {
-      pipe(
-        some(game),
-        chain(ensureFieldIsNull('blasteroid')),
-        map(createBlasteroid)
-      ).do()
+      resolve(game)
+        .then(ensureFieldIsNull('blasteroid'))
+        .catch(skipNextThens)
+        .then(createBlasteroid)
+        .catch(noError)
       startGame(game)
     },
     pause() {
@@ -66,13 +58,13 @@ export const useBlasteroid = (
     },
     moveByX(step: number) {
       game.blasteroid &&
-        pipe(
-          some(game),
-          chain(ensureNotGameOver),
-          chain(ensureNotPaused),
-          chain(ensureShapeInBoundsByXAxis(game.blasteroid, step)),
-          map(moveBlasteroidByX(step))
-        ).do()
+        resolve(game)
+          .then(ensureNotGameOver)
+          .then(ensureNotPaused)
+          .then(ensureShapeInBoundsByXAxis(game.blasteroid, step))
+          .catch(skipNextThens)
+          .then(moveBlasteroidByX(step))
+          .catch(noError)
     },
     shoot() {
       onShoot()
@@ -80,30 +72,40 @@ export const useBlasteroid = (
   }
 }
 
-const startGame = (game: Game) =>
-  pipe(
-    some(game),
-    chain(ensureNotGameOver),
-    chain(ensureNotPaused),
-    map(renderGameFrame),
-    repeat(() => game.settings.speed)
-  ).do()
+const startGame = (game: Game): Promise<Game> =>
+  resolve(game)
+    .then(ensureNotGameOver)
+    .then(ensureNotPaused)
+    .catch(skipNextThens)
+    .then(renderGameFrame)
+    .then(
+      repeat(
+        () => startGame(game),
+        () => game.settings.speed
+      )
+    )
+    .catch(noError)
 
 const renderGameFrame = (game: BlasteroidGame) => {
   game.settings.frameCounter += 1
-  pipe(some(game), chain(ensureFieldIsNull('enemy')), map(createEnemy)).do()
+  resolve(game)
+    .then(ensureFieldIsNull('enemy'))
+    .catch(skipNextThens)
+    .then(createEnemy)
+    .catch(noError)
+
   game.enemy &&
-    pipe(
-      some(game),
-      chain(ensureShapeInBoundsByYAxis(game.enemy)),
-      map(moveShapeToDirection(game.enemy)),
-      tap(checkGameOver(game))
-    ).do()
+    resolve(game)
+      .then(ensureShapeInBoundsByYAxis(game.enemy))
+      .catch(skipNextThens)
+      .then(moveShapeToDirection(game.enemy))
+      .catch(checkGameOver(game))
+
   return game
 }
 
 const checkGameOver = curry((game: BlasteroidGame, context: unknown) => {
-  context === null && (game.settings.isGameOver = true)
+  context instanceof Error && (game.settings.isGameOver = true)
 })
 
 const createEnemy = (game: BlasteroidGame) => {
@@ -259,18 +261,17 @@ const checkEnemyShooted = curry((shoot: Shape, game: BlasteroidGame) => {
 })
 
 const removeShootIfStopped = curry(
-  (shoot: Shape, game: BlasteroidGame, context: unknown | null) => {
-    if (context === null) {
-      game.grid.blocks = game.grid.blocks.filter(
-        (block) => block.id !== shoot.blocks[0]?.id
-      )
-    }
+  (shoot: Shape, game: BlasteroidGame, context: any) => {
+    game.grid.blocks = game.grid.blocks.filter(
+      (block) => block.id !== shoot.blocks[0]?.id
+    )
+    return context
   }
 )
 
 const ensureFieldIsNull = curry(
   (field: keyof BlasteroidGame, game: BlasteroidGame) => {
-    return game[field] === null ? some(game) : none()
+    return game[field] === null ? resolve(game) : reject('field is not null')
   }
 )
 
@@ -292,25 +293,25 @@ const createBlasteroid = (game: BlasteroidGame) => {
 }
 
 const ensureShapeInBoundsByXAxis = curry(
-  (shape: Shape, xDelta: number, game: BlasteroidGame) => {
+  (shape: Shape, xDelta: number, game: Game) => {
     const nextX = shape.x + xDelta
     const shapeWidth = shape.width ?? 1
 
     return nextX >= 0 && nextX + shapeWidth <= game.grid.gameSize.width
-      ? some(game)
-      : none()
+      ? resolve(game)
+      : reject('out of  bounds by x')
   }
 )
 
 const ensureShapeInBoundsByYAxis = curry(
-  (shape: Shape, game: BlasteroidGame) => {
+  (shape: Shape, game: Game): Promise<Game> => {
     const step = calculateShapeStepToDirection(shape)
     const nextY = shape.y + step.yDelta
     const shapeHeight = shape.height ?? 1
 
     return nextY >= 0 && nextY + shapeHeight <= game.grid.gameSize.height
-      ? some(game)
-      : none()
+      ? resolve(game)
+      : reject('out of y bounds')
   }
 )
 
@@ -331,27 +332,25 @@ const renderShapeToGrid = (shape: Shape, grid: GameGrid) => {
   grid.blocks.push(...shape.blocks)
 }
 
-const repeat = (milliseconds: Function | number) => (context: LazyMonad) => {
-  context.lazyMap((v) => {
+const repeat = curry(
+  (fn: Function, milliseconds: Function | number, context: any) => {
     let ms = milliseconds
     if (typeof milliseconds === 'function') {
       ms = milliseconds()
     }
     setTimeout(() => {
-      context.do()
+      fn()
     }, ms as number)
-    return v
-  })
-  return context
-}
+    return context
+  },
+  3
+)
 
-const ensureNotGameOver = (v: Game) => {
-  return v.settings.isGameOver ? none() : some(v)
-}
+const ensureNotGameOver = (v: Game) =>
+  v.settings.isGameOver ? reject('gameover') : resolve(v)
 
-const ensureNotPaused = (v: Game) => {
-  return v.settings.isPaused ? none() : some(v)
-}
+const ensureNotPaused = (v: Game) =>
+  v.settings.isPaused ? reject('paused') : resolve(v)
 
 const calculateShapeStepToDirection = (shape: Shape) => {
   const xDelta =
@@ -369,16 +368,18 @@ const calculateShapeStepToDirection = (shape: Shape) => {
   }
 }
 
-const moveShapeToDirection = curry((shape: Shape, game: BlasteroidGame) => {
-  const step = calculateShapeStepToDirection(shape)
-  shape.x += step.xDelta
-  shape.y += step.yDelta
-  game.grid.blocks.forEach((block) => {
-    if (shape.blocks.some((shapeBlock) => shapeBlock.id === block.id)) {
-      block.x += step.xDelta
-      block.y += step.yDelta
-    }
-  })
+const moveShapeToDirection = curry(
+  (shape: Shape, game: BlasteroidGame): BlasteroidGame => {
+    const step = calculateShapeStepToDirection(shape)
+    shape.x += step.xDelta
+    shape.y += step.yDelta
+    game.grid.blocks.forEach((block) => {
+      if (shape.blocks.some((shapeBlock) => shapeBlock.id === block.id)) {
+        block.x += step.xDelta
+        block.y += step.yDelta
+      }
+    })
 
-  return game
-})
+    return game
+  }
+)

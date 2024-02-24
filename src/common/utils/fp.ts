@@ -16,11 +16,13 @@ export const resolve = Promise.resolve.bind(Promise)
 export const reject = (message: string) => Promise.reject(new Error(message))
 
 const createSilentThenable = (error: any) => ({
-  then() {},
-  catch() {},
-  finally(fn: Function) {
-    fn(error)
-    return this
+  then(...args: any[]) {
+    args[1](error)
+    return createSilentThenable(error)
   },
 })
-export const chainSilentThenable = (error: any) => createSilentThenable(error)
+export const skipNextThens = (error: any): any => {
+  return createSilentThenable(error)
+}
+
+export const noError = () => {}
