@@ -1,7 +1,6 @@
-import { chain, pipe, map, some } from '~~/src/common/library/adt'
+import { ensureOnClientSidePromise } from '~/src/common/providers/errors'
 import { triggerOnResize } from '~~/src/common/utils/browser'
-import { booleanToMonad } from '~~/src/common/utils/fp'
-import { ensureOnClientSide } from '~~/src/common/utils/predicates'
+import { chainSilentThenable, resolve } from '~~/src/common/utils/fp'
 
 type Device = {
   isMobile: boolean
@@ -16,12 +15,14 @@ export const useDevice = () => {
 }
 
 const MOBILE_WIDTH_LIMIT = 1024
-pipe(
-  some(device),
-  chain(booleanToMonad(ensureOnClientSide)),
-  triggerOnResize,
-  map((v: Device) => {
-    v.isMobile = window.innerWidth <= MOBILE_WIDTH_LIMIT
-    return v
-  })
-).do()
+const calculateDevice = () =>
+  resolve(device)
+    .then(ensureOnClientSidePromise)
+    .catch(chainSilentThenable)
+    .then(triggerOnResize(calculateDevice))
+    .then((v: Device) => {
+      v.isMobile = window.innerWidth <= MOBILE_WIDTH_LIMIT
+      return v
+    })
+
+calculateDevice()

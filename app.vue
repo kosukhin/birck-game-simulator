@@ -6,7 +6,7 @@
     </div>
     <NuxtPage />
   </div>
-  <ForkMe />
+  <ForkMe v-if="!device.isMobile" />
   <DrawerWrapper />
   <Footer />
 </template>
@@ -17,6 +17,7 @@ import Breadcrumbs from '~~/src/common/components/Breadcrumbs/Breadcrumbs.vue'
 import DrawerWrapper from '~~/src/common/components/DrawerWrapper/DrawerWrapper.vue'
 import Header from '~~/src/common/components/Header/Header.vue'
 import ForkMe from '~~/src/common/components/ForkMe/ForkMe.vue'
+import { useDevice } from '~/src/common/composables/useDevice'
 
 useHead({
   title: 'Brick Games Симулятор',
@@ -101,4 +102,6 @@ useHead({
     },
   ],
 })
+
+const device = useDevice()
 </script>

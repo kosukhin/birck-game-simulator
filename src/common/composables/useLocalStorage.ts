@@ -1,15 +1,10 @@
-import { errorNotClient } from '~/src/common/providers/errors'
+import { ensureOnClientSidePromise } from '~/src/common/providers/errors'
 import {
   getFromLocalStorage,
   saveToLocalStorage,
 } from '~/src/common/utils/browser'
 import { jsonParse } from '~/src/common/utils/json'
-import {
-  booleanToPromise,
-  chainSilentThenable,
-  resolve,
-} from '~~/src/common/utils/fp'
-import { ensureOnClientSide } from '~~/src/common/utils/predicates'
+import { chainSilentThenable, resolve } from '~~/src/common/utils/fp'
 
 export const useLocalStorage = () => {
   return {
@@ -20,13 +15,13 @@ export const useLocalStorage = () => {
 
 const getFn = (key: string, defaultValue: any = null) =>
   resolve(key)
-    .then(booleanToPromise(errorNotClient, ensureOnClientSide))
+    .then(ensureOnClientSidePromise)
     .catch(chainSilentThenable)
     .then(getFromLocalStorage)
     .then(jsonParse(defaultValue))
 
 const setFn = (v: string, key: string) =>
   resolve(v)
-    .then(booleanToPromise(errorNotClient, ensureOnClientSide))
+    .then(ensureOnClientSidePromise)
     .catch(chainSilentThenable)
     .then(saveToLocalStorage(key))

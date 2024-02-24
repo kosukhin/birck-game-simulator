@@ -1,18 +1,14 @@
 import { curry, debounce } from 'lodash'
-import { LazyMonad } from '~~/src/common/library/adt'
 
-export const triggerOnResize = (context: LazyMonad) => {
-  context.lazyMap((v) => {
-    window.addEventListener(
-      'resize',
-      debounce(() => {
-        context.do()
-      }, 100)
-    )
-    return v
-  })
+export const triggerOnResize = curry((fn: Function, context: any) => {
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      fn()
+    }, 100)
+  )
   return context
-}
+})
 
 export const saveToLocalStorage = curry((key: string, value: any) => {
   window.localStorage.setItem(key, JSON.stringify(value))
