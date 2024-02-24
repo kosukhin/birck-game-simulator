@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="middle">
-      <h2>{{ $t('Popular games') }}</h2>
+      <h2 class="mb-4">{{ $t('Popular games') }}</h2>
       <div class="games-list">
         <GameCard :game="games[0]" />
         <GameCard :game="games[2]" />
