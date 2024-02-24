@@ -25,7 +25,7 @@ import { keyboard } from '~/src/common/utils/keyboard'
 import { refState } from '~/src/common/utils/state'
 import { MGrid } from '~/src/common/models/MGrid'
 import { EKeyCode, EMoveDirection } from '~/src/common/types/GameTypes'
-import { useBlasteroid } from '~~/src/blasteroid/modules/blasteroidGame'
+import { useBlasteroid } from '~~/src/blasteroid/composables/blasteroidGame'
 import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
 
