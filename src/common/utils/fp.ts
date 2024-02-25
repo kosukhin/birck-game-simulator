@@ -13,6 +13,11 @@ export const booleanToPromise = curry(
 
 export const resolve = Promise.resolve.bind(Promise)
 
+export const whenFrameReady = <T extends any>(v: T): Promise<T> =>
+  new Promise((resolve) => {
+    requestAnimationFrame(() => resolve(v))
+  })
+
 export const reject = (message: string) => Promise.reject(new Error(message))
 
 const createSilentThenable = (error: any) => ({

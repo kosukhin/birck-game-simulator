@@ -26,7 +26,7 @@ import { checkGameOver } from '~/src/common/utils/game'
 import { moveShapeToDirection } from '~/src/common/utils/render'
 import { Shape } from '~~/src/common/types/Block'
 import { Game, GameGrid, GameSettings } from '~~/src/common/types/Game'
-import { noError, resolve, skipNextThens } from '~~/src/common/utils/fp'
+import { noError, skipNextThens, whenFrameReady } from '~~/src/common/utils/fp'
 import { FType } from '~~/src/common/utils/system'
 
 export const useBlasteroid = (
@@ -63,7 +63,7 @@ export const useBlasteroid = (
 }
 
 const animateShoot: any = (game: BlasteroidGame, shoot: Shape) =>
-  resolve(game)
+  whenFrameReady(game)
     .then(ensureNotGameOver)
     .then(ensureNotPaused)
     .then(ensureShapeInBoundsByYAxis(shoot))
@@ -74,7 +74,7 @@ const animateShoot: any = (game: BlasteroidGame, shoot: Shape) =>
     .catch(removeShootIfStopped(shoot, game))
 
 const startGame = (game: Game): Promise<Game> =>
-  resolve(game)
+  whenFrameReady(game)
     .then(ensureNotGameOver)
     .then(ensureNotPaused)
     .catch(skipNextThens)
@@ -89,14 +89,14 @@ const startGame = (game: Game): Promise<Game> =>
 
 const renderGameFrame = (game: BlasteroidGame) => {
   game.settings.frameCounter += 1
-  resolve(game)
+  whenFrameReady(game)
     .then(ensureFieldIsNull('enemy'))
     .catch(skipNextThens)
     .then(createEnemy)
     .catch(noError)
 
   game.enemy &&
-    resolve(game)
+    whenFrameReady(game)
       .then(ensureShapeInBoundsByYAxis(game.enemy))
       .catch(skipNextThens)
       .then(moveShapeToDirection(game.enemy))
@@ -106,14 +106,14 @@ const renderGameFrame = (game: BlasteroidGame) => {
 }
 
 const safeCreateBlasteroid = (game: BlasteroidGame) =>
-  resolve(game)
+  whenFrameReady(game)
     .then(ensureFieldIsNull('blasteroid'))
     .catch(skipNextThens)
     .then(createBlasteroid)
     .catch(noError)
 
 const safeMoveByX = (game: BlasteroidGame, blasteroid: Shape, step: number) =>
-  resolve(game)
+  whenFrameReady(game)
     .then(ensureNotGameOver)
     .then(ensureNotPaused)
     .then(ensureShapeInBoundsByXAxis(blasteroid, step))
