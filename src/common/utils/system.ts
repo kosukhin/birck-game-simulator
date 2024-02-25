@@ -10,6 +10,11 @@ export type FType<Ret extends any, Params extends Array<any> = []> = (
 ) => Ret
 
 export const debug = curry((message: string, v: any) => {
+  let isError = false
+  if (v instanceof Error) {
+    v = v.message
+    isError = true
+  }
   console.log(message.replace('{v}', JSON.stringify(v)))
-  return v
+  return isError ? Promise.reject(v) : Promise.resolve(v)
 })

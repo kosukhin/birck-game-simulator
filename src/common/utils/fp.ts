@@ -31,3 +31,7 @@ export const skipNextThens = (error: any): any => {
 }
 
 export const noError = () => {}
+
+export const fNot = (fn: Function) => {
+  return !fn()
+}
