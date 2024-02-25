@@ -30,21 +30,20 @@
 </template>
 
 <script setup lang="ts">
-import partial from 'lodash/partial'
+import { partial } from 'lodash'
+import { refValue } from '~/src/common/utils/state'
 import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
 import ThreeDView from '~~/src/common/components/ThreeDView/ThreeDView.vue'
+import { Camera } from '~~/src/common/types/Camera'
 import { GameGrid, GameSettings } from '~~/src/common/types/Game'
-import { useSnake } from '~~/src/snake/modules/snakeGame'
-import { refState } from '~~/src/common/utils/state'
-import { timer } from '~~/src/common/utils/timer'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveCamera3,
   KeysToMoveMap,
 } from '~~/src/common/types/GameTypes'
-import { Camera } from '~~/src/common/types/Camera'
 import { keyboard } from '~~/src/common/utils/keyboard'
+import { useSnake } from '~~/src/snake/modules/snakeGame'
 
 const settings = ref<GameSettings>({
   frameCounter: 1,
@@ -61,10 +60,10 @@ const gameGrid = ref<GameGrid>({
     width: 15,
   },
 })
+
 const snakeActions = useSnake(
-  partial(refState, settings),
-  partial(refState, gameGrid),
-  timer
+  partial(refValue, settings),
+  partial(refValue, gameGrid)
 )
 snakeActions.start()
 

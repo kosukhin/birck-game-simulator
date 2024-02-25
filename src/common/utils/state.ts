@@ -11,3 +11,5 @@ export const refState = <T>(ref: Ref<T>): State<T> => {
     },
   }
 }
+
+export const refValue = <T>(ref: Ref<T>): T => ref.value

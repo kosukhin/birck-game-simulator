@@ -1,6 +1,6 @@
 import { curry } from 'lodash'
-import { Shape } from '~/src/common/types/Block'
-import { Game } from '~/src/common/types/Game'
+import { Block, Shape } from '~/src/common/types/Block'
+import { Game, GameGrid } from '~/src/common/types/Game'
 import { EMoveDirection } from '~/src/common/types/GameTypes'
 
 export const calculateShapeStepToDirection = (shape: Shape) => {
@@ -39,4 +39,8 @@ export const renderShapeToGrid = (shape: Shape, grid: GameGrid) => {
     block.y += shape.y
   })
   grid.blocks.push(...shape.blocks)
+}
+
+export const renderBlocksToGrid = (blocks: Block[], grid: GameGrid) => {
+  grid.blocks.push(...blocks)
 }

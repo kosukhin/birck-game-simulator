@@ -19,20 +19,19 @@
 
 <script lang="ts" setup>
 import partial from 'lodash/partial'
-import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
-import { useSnake } from '~~/src/snake/modules/snakeGame'
-import { GameGrid, GameSettings } from '~~/src/common/types/Game'
-import { refState } from '~~/src/common/utils/state'
-import { timer } from '~~/src/common/utils/timer'
+import KeyboardHint from '~/src/common/components/KeyboardHint/KeyboardHint.vue'
 import { gameGridToMGrid } from '~/src/common/utils/game'
+import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
+import { MGrid } from '~~/src/common/models/MGrid'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
 } from '~~/src/common/types/GameTypes'
-import { MGrid } from '~~/src/common/models/MGrid'
 import { keyboard } from '~~/src/common/utils/keyboard'
-import KeyboardHint from '~/src/common/components/KeyboardHint/KeyboardHint.vue'
+import { refValue } from '~~/src/common/utils/state'
+import { useSnake } from '~~/src/snake/modules/snakeGame'
 
 const settings = ref<GameSettings>({
   isGameOver: false,
@@ -49,10 +48,10 @@ const gameGrid = ref<GameGrid>({
     width: 15,
   },
 })
+
 const snakeActions = useSnake(
-  partial(refState, settings),
-  partial(refState, gameGrid),
-  timer
+  partial(refValue, settings),
+  partial(refValue, gameGrid)
 )
 snakeActions.start()
 
