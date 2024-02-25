@@ -17,7 +17,7 @@ import { checkTargetEated, isGameOver } from '~/src/snake/utils/checks'
 import { changeDirection, destroy, moveForward } from '~/src/snake/utils/flow'
 import { moveTargetToRandomPlace } from '~/src/snake/utils/render'
 import { Game, GameGrid, GameSettings } from '~~/src/common/types/Game'
-import { FType, debug } from '~~/src/common/utils/system'
+import { FType } from '~~/src/common/utils/system'
 
 export const useSnake = (
   getGameSettings: FType<GameSettings>,
