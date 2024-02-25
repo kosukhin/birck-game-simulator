@@ -28,6 +28,7 @@ export const useSnake = (
     settings: getGameSettings(),
     target: snakeInitialTarget,
     snake: snakeInitialBlocks,
+    speedMultiplier: 1,
   }
 
   renderBlocksToGrid([game.target], game.grid)
@@ -35,7 +36,7 @@ export const useSnake = (
   moveTargetToRandomPlace(game.grid)
 
   return {
-    changeDirection: partial(changeDirection, game.settings),
+    changeDirection: partial(changeDirection, game),
     pause() {
       game.settings.isPaused = !game.settings.isPaused
       !game.settings.isPaused && startGame(game)
@@ -45,19 +46,7 @@ export const useSnake = (
   }
 }
 
-const renderGameFrame = (game: Game) => {
-  game.settings.frameCounter += 1
-  whenFrameReady(game)
-    .then(moveForward)
-    .then(booleanToPromise('game is over', () => !isGameOver(game)))
-    .catch(destroy.bind(null, game.settings))
-    .catch(skipNextThens)
-    .then(checkTargetEated)
-    .catch(noError)
-  return game
-}
-
-const startGame = (game: Game): Promise<Game> =>
+const startGame = (game: SnakeGame): Promise<Game> =>
   whenFrameReady(game)
     .then(ensureNotGameOver)
     .then(ensureNotPaused)
@@ -66,7 +55,22 @@ const startGame = (game: Game): Promise<Game> =>
     .then(
       repeat(
         () => startGame(game),
-        () => game.settings.speed
+        () => game.settings.speed / game.speedMultiplier
       )
     )
     .catch(noError)
+
+const renderGameFrame = (game: Game) => {
+  whenFrameReady(game)
+    .then(moveForward)
+    .then(booleanToPromise('game is over', () => !isGameOver(game)))
+    .catch(destroy.bind(null, game.settings))
+    .catch(skipNextThens)
+    .then(checkTargetEated)
+    .then((context: Game) => {
+      game.settings.frameCounter += 1
+      return context
+    })
+    .catch(noError)
+  return game
+}

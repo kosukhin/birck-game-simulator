@@ -68,7 +68,7 @@ const snakeActions = useSnake(
 snakeActions.start()
 
 keyboard((keyCode: EKeyCode) => {
-  if (keyCode === EKeyCode.W || keyCode === EKeyCode.S) {
+  if (keyCode === EKeyCode.S) {
     return
   }
 
@@ -77,7 +77,12 @@ keyboard((keyCode: EKeyCode) => {
   }
 
   const currentDirection = settings.value.direction
-  const newDirection = KeysToMoveCamera3[currentDirection][keyCode]
+  let newDirection = KeysToMoveCamera3[currentDirection][keyCode]
+
+  if (keyCode === EKeyCode.W) {
+    newDirection = currentDirection
+  }
+
   snakeActions.changeDirection(newDirection)
 })
 

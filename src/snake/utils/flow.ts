@@ -1,20 +1,31 @@
+import { debounce } from 'lodash'
 import { Game, GameSettings } from '~/src/common/types/Game'
 import { EMoveDirection } from '~/src/common/types/GameTypes'
 import { isReverseDirection } from '~/src/common/utils/game'
+import { SnakeGame } from '~/src/snake/providers/types'
 
 export const destroy = (gameSettings: GameSettings) => {
   gameSettings.isGameOver = true
 }
 
+const resetSpeedMultiplier = debounce((game: SnakeGame) => {
+  game.speedMultiplier = 1
+}, 100)
+
 export const changeDirection = (
-  gameSettings: GameSettings,
+  game: SnakeGame,
   newDirection: EMoveDirection
 ) => {
-  if (isReverseDirection(gameSettings.direction, newDirection)) {
+  if (isReverseDirection(game.settings.direction, newDirection)) {
     return
   }
 
-  gameSettings.direction = newDirection
+  if (game.settings.direction === newDirection) {
+    game.speedMultiplier = 3
+  }
+
+  game.settings.direction = newDirection
+  resetSpeedMultiplier(game)
 }
 
 export const moveForward = (game: Game) => {

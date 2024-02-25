@@ -115,6 +115,7 @@ onTick(renderService, (additional: number) => {
       props.blockGroupColor[block.group] ?? '#f00'
     )
   })
+
   tickHandler(additional)
 })
 
