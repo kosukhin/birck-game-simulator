@@ -37,17 +37,16 @@
 import partial from 'lodash/partial'
 import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
 import ThreeDView from '~~/src/common/components/ThreeDView/ThreeDView.vue'
+import { Camera } from '~~/src/common/types/Camera'
 import { GameGrid, GameSettings } from '~~/src/common/types/Game'
-import { refState } from '~~/src/common/utils/state'
-import { timer } from '~~/src/common/utils/timer'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
 } from '~~/src/common/types/GameTypes'
-import { Camera } from '~~/src/common/types/Camera'
 import { keyboard } from '~~/src/common/utils/keyboard'
-import { useTetris } from '~/src/tetris/modules/tetrisGame'
+import { refValue } from '~~/src/common/utils/state'
+import { useTetris } from '~~/src/tetris/composables/tetrisGame'
 
 const gameSettings = ref<GameSettings>({
   frameCounter: 1,
@@ -66,9 +65,8 @@ const gameGrid = ref<GameGrid>({
 })
 
 const tetrisActions = useTetris(
-  partial(refState, gameSettings),
-  partial(refState, gameGrid),
-  timer
+  partial(refValue, gameSettings),
+  partial(refValue, gameGrid)
 )
 tetrisActions.start()
 setTimeout(() => {

@@ -19,20 +19,19 @@
 
 <script lang="ts" setup>
 import partial from 'lodash/partial'
+import { useTetris } from '~/src/tetris/composables/tetrisGame'
 import CanvasView from '~~/src/common/components/CanvasView/CanvasView.vue'
 import KeyboardHint from '~~/src/common/components/KeyboardHint/KeyboardHint.vue'
+import { MGrid } from '~~/src/common/models/MGrid'
 import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 import {
   EKeyCode,
   EMoveDirection,
   KeysToMoveMap,
 } from '~~/src/common/types/GameTypes'
-import { MGrid } from '~~/src/common/models/MGrid'
 import { gameGridToMGrid } from '~~/src/common/utils/game'
-import { useTetris } from '~/src/tetris/modules/tetrisGame'
-import { refState } from '~~/src/common/utils/state'
-import { timer } from '~~/src/common/utils/timer'
 import { keyboard } from '~~/src/common/utils/keyboard'
+import { refValue } from '~~/src/common/utils/state'
 
 const gameSettings = ref<GameSettings>({
   isGameOver: false,
@@ -51,9 +50,8 @@ const gameGrid = ref<GameGrid>({
 })
 
 const tetrisActions = useTetris(
-  partial(refState, gameSettings),
-  partial(refState, gameGrid),
-  timer
+  partial(refValue, gameSettings),
+  partial(refValue, gameGrid)
 )
 tetrisActions.start()
 

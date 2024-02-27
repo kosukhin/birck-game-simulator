@@ -13,3 +13,7 @@ export type Shape = {
 export type TetrisGame = Game & {
   shape: Shape | null
 }
+
+export type ShapeContainer = {
+  shape: Shape
+}

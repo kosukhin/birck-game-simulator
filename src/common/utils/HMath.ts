@@ -1,3 +1,5 @@
+import { Block } from '~/src/common/types/Block'
+
 export class HMath {
   static random(min: number, max: number) {
     const value = Math.round(Math.random() * max)
@@ -17,3 +19,6 @@ export class HMath {
     return Math.abs(num)
   }
 }
+
+export const minY = (blocks: Block[]) => Math.min(...blocks.map((b) => b.y))
+export const minX = (blocks: Block[]) => Math.min(...blocks.map((b) => b.x))
