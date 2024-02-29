@@ -10,6 +10,7 @@ import {
 } from '~/src/common/utils/fp'
 import { rotationRules } from '~/src/tetris/providers/blocks'
 import { Shape, TetrisGame } from '~/src/tetris/providers/types'
+import { fallStaticBlocks, removeFilledLines } from '~/src/tetris/utils/flow'
 import { Block } from '~~/src/common/types/Block'
 import { Game, GameGrid, GameSettings } from '~~/src/common/types/Game'
 import { EMoveDirection } from '~~/src/common/types/GameTypes'
@@ -43,15 +44,13 @@ export const useTetris = (
   }
 }
 
-// TOOD композиция
-const checkLineFilled = (game: TetrisGame): number => {
-  const filled = removeFilledLines(game.grid)
-  if (filled) {
-    game.shape = null
-    fallStaticBlocks(game)
-  }
-  return filled
-}
+const checkLineFilled = (game: TetrisGame) =>
+  resolve(game)
+    .then(
+      booleanToPromise('no filled lines', () => !!removeFilledLines(game.grid))
+    )
+    .catch(skipNextThens)
+    .then(() => fallStaticBlocks(game))
 
 const moveShapeByX = (x: number, game: TetrisGame) => {
   resolve(game)
