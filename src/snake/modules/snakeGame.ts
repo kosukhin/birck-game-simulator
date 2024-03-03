@@ -1,13 +1,9 @@
 import partial from 'lodash/partial'
-import { wrapWithCatch } from './../../common/utils/fp'
+import { noError } from './../../common/utils/fp'
 import { repeat } from '~/src/common/utils/actions'
 import { ensureNotGameOver, ensureNotPaused } from '~/src/common/utils/checks'
-import {
-  booleanToPromise,
-  whenFrameReady,
-  wrapNoError,
-} from '~/src/common/utils/fp'
-import { pipePromise } from '~/src/common/utils/pipe'
+import { booleanToPromise, whenFrameReady } from '~/src/common/utils/fp'
+import { pass, pipe } from '~/src/common/utils/pipe'
 import {
   incrementFrameCounter,
   renderBlocksToGrid,
@@ -50,26 +46,24 @@ export const useSnake = (
   }
 }
 
-const renderGameFrame = wrapWithCatch(
-  pipePromise(
-    whenFrameReady,
-    moveForward,
-    booleanToPromise('game is over', (game: SnakeGame) => !isGameOver(game)),
-    checkTargetEated,
-    incrementFrameCounter
-  ),
-  (game: SnakeGame) => destroy(game.settings)
-)
-
-const startGame = wrapNoError(
-  pipePromise(
+const startGame = (game: SnakeGame) =>
+  pipe(
+    pass(game),
     whenFrameReady,
     ensureNotGameOver,
     ensureNotPaused,
     renderGameFrame,
     repeat(
-      (game: SnakeGame) => startGame(game),
+      startGame,
       (game: SnakeGame) => game.settings.speed / game.speedMultiplier
     )
-  )
-)
+  ).catch(noError)
+
+const renderGameFrame = (game: SnakeGame) =>
+  pipe(
+    pass(game),
+    moveForward,
+    booleanToPromise('game is over', (game: SnakeGame) => !isGameOver(game)),
+    checkTargetEated,
+    incrementFrameCounter
+  ).catch(destroy.bind(null, game.settings))

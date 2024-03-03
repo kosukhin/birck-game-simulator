@@ -45,3 +45,8 @@ export const wrapWithCatch = (
 export const fNot = (fn: Function) => {
   return !fn()
 }
+
+export const debug = (message: string) => (v?: any) => {
+  console.log(message.replace('%v', JSON.stringify(v)))
+  return v
+}
