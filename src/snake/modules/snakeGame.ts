@@ -1,13 +1,17 @@
 import partial from 'lodash/partial'
+import { wrapWithCatch } from './../../common/utils/fp'
 import { repeat } from '~/src/common/utils/actions'
 import { ensureNotGameOver, ensureNotPaused } from '~/src/common/utils/checks'
 import {
   booleanToPromise,
-  noError,
-  skipNextThens,
   whenFrameReady,
+  wrapNoError,
 } from '~/src/common/utils/fp'
-import { renderBlocksToGrid } from '~/src/common/utils/render'
+import { pipePromise } from '~/src/common/utils/pipe'
+import {
+  incrementFrameCounter,
+  renderBlocksToGrid,
+} from '~/src/common/utils/render'
 import {
   snakeInitialBlocks,
   snakeInitialTarget,
@@ -16,7 +20,7 @@ import { SnakeGame } from '~/src/snake/providers/types'
 import { checkTargetEated, isGameOver } from '~/src/snake/utils/checks'
 import { changeDirection, destroy, moveForward } from '~/src/snake/utils/flow'
 import { moveTargetToRandomPlace } from '~/src/snake/utils/render'
-import { Game, GameGrid, GameSettings } from '~~/src/common/types/Game'
+import { GameGrid, GameSettings } from '~~/src/common/types/Game'
 import { FType } from '~~/src/common/utils/system'
 
 export const useSnake = (
@@ -46,31 +50,26 @@ export const useSnake = (
   }
 }
 
-const startGame = (game: SnakeGame): Promise<Game> =>
-  whenFrameReady(game)
-    .then(ensureNotGameOver)
-    .then(ensureNotPaused)
-    .catch(skipNextThens)
-    .then(renderGameFrame)
-    .then(
-      repeat(
-        () => startGame(game),
-        () => game.settings.speed / game.speedMultiplier
-      )
-    )
-    .catch(noError)
+const renderGameFrame = wrapWithCatch(
+  pipePromise(
+    whenFrameReady,
+    moveForward,
+    booleanToPromise('game is over', (game: SnakeGame) => !isGameOver(game)),
+    checkTargetEated,
+    incrementFrameCounter
+  ),
+  (game: SnakeGame) => destroy(game.settings)
+)
 
-const renderGameFrame = (game: Game) => {
-  whenFrameReady(game)
-    .then(moveForward)
-    .then(booleanToPromise('game is over', () => !isGameOver(game)))
-    .catch(destroy.bind(null, game.settings))
-    .catch(skipNextThens)
-    .then(checkTargetEated)
-    .then((context: Game) => {
-      game.settings.frameCounter += 1
-      return context
-    })
-    .catch(noError)
-  return game
-}
+const startGame = wrapNoError(
+  pipePromise(
+    whenFrameReady,
+    ensureNotGameOver,
+    ensureNotPaused,
+    renderGameFrame,
+    repeat(
+      (game: SnakeGame) => startGame(game),
+      (game: SnakeGame) => game.settings.speed / game.speedMultiplier
+    )
+  )
+)

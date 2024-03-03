@@ -7,7 +7,7 @@ export const booleanToMonad = curry((boolPredicate: Function, v: any) => {
 
 export const booleanToPromise = curry(
   (error: string, boolPredicate: Function, v: any) => {
-    return boolPredicate() ? resolve(v) : reject(error)
+    return boolPredicate(v) ? resolve(v) : reject(error)
   }
 )
 
@@ -31,6 +31,16 @@ export const skipNextThens = (error: any): any => {
 }
 
 export const noError = () => {}
+
+export const wrapNoError = (fn: (v: any) => Promise<any>) => (v: any) =>
+  fn(v).catch(noError)
+
+export const wrapWithCatch = (
+  fn: (v: any) => Promise<any>,
+  catchFn: (context: any, ...args: any[]) => any
+) => {
+  return (v: any) => fn(v).catch((e) => catchFn(v, e))
+}
 
 export const fNot = (fn: Function) => {
   return !fn()

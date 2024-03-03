@@ -44,3 +44,8 @@ export const renderShapeToGrid = (shape: Shape, grid: GameGrid) => {
 export const renderBlocksToGrid = (blocks: Block[], grid: GameGrid) => {
   grid.blocks.push(...blocks)
 }
+
+export const incrementFrameCounter = (context: Game) => {
+  context.settings.frameCounter += 1
+  return context
+}

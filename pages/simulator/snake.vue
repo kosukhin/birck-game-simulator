@@ -12,6 +12,7 @@
       {{ $t('Score') }}: {{ settings.score }}, {{ $t('Speed') }}:
       {{ settings.speed }}
     </div>
+    {{ settings.isGameOver }}
     <CanvasView :fps="10" :grid="grid" />
     <KeyboardHint @pause="snakeActions.pause" />
   </div>

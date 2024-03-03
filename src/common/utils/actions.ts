@@ -4,10 +4,10 @@ export const repeat = curry(
   (fn: Function, milliseconds: Function | number, context: any) => {
     let ms = milliseconds
     if (typeof milliseconds === 'function') {
-      ms = milliseconds()
+      ms = milliseconds(context)
     }
     setTimeout(() => {
-      fn()
+      fn(context)
     }, ms as number)
     return context
   }
